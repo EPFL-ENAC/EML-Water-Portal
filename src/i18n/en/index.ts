@@ -7,6 +7,7 @@ export default {
   filters: 'Filters',
   it4r_contrib: 'UI/UX design, application development and deployment',
   layer: {
+    bv: 'Watershed',
     river: 'River',
   },
   layers: 'Layers',

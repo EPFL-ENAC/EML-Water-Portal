@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { BVLayerManager } from 'src/layers/bv';
 import { RiverLayerManager } from 'src/layers/river';
 import { Map } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
@@ -12,7 +13,7 @@ export const useMapStore = defineStore('map', () => {
 
   const map = ref<Map>();
 
-  const layerManagers = [new RiverLayerManager()];
+  const layerManagers = [new BVLayerManager(), new RiverLayerManager()];
 
   const layerSelections: LayerSelection[] = layerManagers.map(
     (lm) => ({ id: lm.getId(), visible: true })
