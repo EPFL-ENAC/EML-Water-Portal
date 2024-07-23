@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, Popup } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
@@ -34,6 +34,24 @@ export class MeteoLayerManager extends LayerManager<FilterParams> {
         'circle-stroke-color': 'orange',
         'circle-stroke-width': 1
       }
+    });
+
+    map.on('click', 'meteo', (e) => {
+      const feature = e.features ? e.features[0] : null;
+      if (!feature) return;
+      new Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(
+          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
+        )
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'meteo', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'meteo', () => {
+        map.getCanvas().style.cursor = '';
     });
   }
 

@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, Popup } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
@@ -50,6 +50,23 @@ export class BVLayerManager extends LayerManager<FilterParams> {
       }
     });
 
+    map.on('click', 'bv', (e) => {
+      const feature = e.features ? e.features[0] : null;
+      if (!feature) return;
+      new Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(
+          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
+        )
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'bv', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'bv', () => {
+        map.getCanvas().style.cursor = '';
+    });
   }
 
   setVisible(map: Map, visible: boolean): void {

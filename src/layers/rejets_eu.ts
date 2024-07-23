@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, Popup } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
@@ -34,6 +34,24 @@ export class RejetsEULayerManager extends LayerManager<FilterParams> {
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1
       }
+    });
+
+    map.on('click', 'rejets_eu', (e) => {
+      const feature = e.features ? e.features[0] : null;
+      if (!feature) return;
+      new Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(
+          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
+        )
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'rejets_eu', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'rejets_eu', () => {
+        map.getCanvas().style.cursor = '';
     });
   }
 
