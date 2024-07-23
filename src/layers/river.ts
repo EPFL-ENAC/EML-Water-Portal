@@ -2,8 +2,9 @@ import { Map } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
+import { fileStoreUrl } from 'src/boot/api';
 
-const GEOJSON_URL = 'https://enacit4r-cdn.epfl.ch/water-portal/2024-07-22T16:51/geojson/river.geojson';
+const GEOJSON_URL = `${fileStoreUrl}/geojson/river.geojson`;
 
 export class RiverLayerManager extends LayerManager<FilterParams> {
 
@@ -45,6 +46,7 @@ export class RiverLayerManager extends LayerManager<FilterParams> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   filter(map: Map, filter: FilterParams): void {
     // filter by stationName ?
     return;

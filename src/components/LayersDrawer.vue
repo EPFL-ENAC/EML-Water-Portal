@@ -7,7 +7,7 @@
     <q-item
       v-for="layer in mapStore.layerSelections"
       :key="layer.id"
-      class="q-pl-sm q-pr-sm"
+      class="q-pt-none q-pb-none q-pl-sm q-pr-sm"
     >
       <q-item-section>
         <q-checkbox
@@ -56,21 +56,6 @@ export default defineComponent({
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();
-
-const clusterColors = [
-  {
-    color: 'cyan-5',
-    label: '< 100'
-  },  
-  {
-    color: 'yellow-6',
-    label: '100 - 750'
-  },
-  {
-    color: 'pink-3',
-    label: '> 750'
-  }
-]
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);

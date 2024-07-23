@@ -9,6 +9,8 @@ export default {
   layer: {
     bv: 'Watershed',
     river: 'River',
+    conduite_ec: 'Pipes',
+    conduite_principale_ec: 'Outlet pipes'
   },
   layers: 'Layers',
   legends: 'Legends',

@@ -10,6 +10,8 @@ declare module '@vue/runtime-core' {
 
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch/';
 
+const fileStoreUrl =  `${cdnUrl}water-portal/2024-07-22T16:51`;
+
 const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
 
 const api = axios.create({
@@ -28,4 +30,4 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api, baseUrl, cdnUrl };
+export { api, baseUrl, cdnUrl, fileStoreUrl };
