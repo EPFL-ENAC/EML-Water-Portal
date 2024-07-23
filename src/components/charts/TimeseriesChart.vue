@@ -1,12 +1,11 @@
 <template>
-  <div v-if="option.series" :style="`height: ${height + 300}px;`">
+  <div v-if="option.series" :style="`height: ${height + 0}px;`">
     <e-charts
       ref="chart"
       autoresize
       :init-options="initOptions"
       :option="option"
       :update-options="updateOptions"
-      class="q-ma-md"
       :loading="loading"
     />
   </div>
@@ -24,7 +23,7 @@ import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { SVGRenderer } from 'echarts/renderers';
 import { initOptions, updateOptions } from './utils';
-import { timeData, data1, data2 } from 'src/utils/faker';
+import { timeData, data1 } from 'src/utils/faker';
 import {
   TitleComponent,
   TooltipComponent,
@@ -73,10 +72,6 @@ function buildOptions() {
   loading.value = false;
 
   const newOption: EChartsOption = {
-    // title: {
-    //   text: props.source,
-    //   left: 'center'
-    // },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -121,16 +116,10 @@ function buildOptions() {
     ],
     grid: [
       {
-        left: 60,
-        right: 50,
-        //height: '70%'
+        top: 30,
+        left: 80,
+        right: 20,
       },
-      // {
-      //   left: 60,
-      //   right: 50,
-      //   top: '55%',
-      //   height: '35%'
-      // }
     ],
     xAxis: [
       {
@@ -139,45 +128,20 @@ function buildOptions() {
         axisLine: { onZero: true },
         data: timeData
       },
-      // {
-      //   gridIndex: 1,
-      //   type: 'category',
-      //   boundaryGap: false,
-      //   axisLine: { onZero: true },
-      //   data: timeData,
-      //   position: 'top'
-      // }
     ],
     yAxis: [
       {
         name: `${props.source} <unit>`,
         type: 'value',
-        max: 500
       },
-      // {
-      //   gridIndex: 1,
-      //   name: 'Rainfall(mm)',
-      //   type: 'value',
-      //   inverse: true
-      // }
     ],
     series: [
       {
         name: props.source,
         type: 'line',
         symbolSize: 8,
-        // prettier-ignore
         data: data1
       },
-      // {
-      //   name: 'Rainfall',
-      //   type: 'line',
-      //   xAxisIndex: 1,
-      //   yAxisIndex: 1,
-      //   symbolSize: 8,
-      //   // prettier-ignore
-      //   data: data2
-      // }
   ]
 };
   option.value = newOption;

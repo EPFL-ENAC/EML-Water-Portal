@@ -32,9 +32,8 @@
                 :label="measure.label"
                 header-class="bg-grey-2 text-bold"
               >
-              <div class="q-pa-md">
-                    <timeseries-chart :source="measure.key" :height="100" />
-                  </div>
+                    <timeseries-chart :source="measure.key" :height="200" class="q-pa-sm" />
+               
               </q-expansion-item>
             </template>
           </q-list>
