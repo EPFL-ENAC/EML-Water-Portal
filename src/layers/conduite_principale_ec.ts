@@ -1,4 +1,4 @@
-import { Map, Popup } from 'maplibre-gl';
+import { Map } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
@@ -32,24 +32,6 @@ export class ConduitePrincipaleECLayerManager extends LayerManager<FilterParams>
         'line-color': 'red',
         'line-width': 5
       }
-    });
-
-    map.on('click', 'conduite_principale_ec', (e) => {
-      const feature = e.features ? e.features[0] : null;
-      if (!feature) return;
-      new Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(
-          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
-        .addTo(map);
-    });
-
-    map.on('mouseenter', 'conduite_principale_ec', () => {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'conduite_principale_ec', () => {
-        map.getCanvas().style.cursor = '';
     });
   }
 
