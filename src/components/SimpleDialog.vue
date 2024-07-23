@@ -9,7 +9,7 @@
           {{ title }}
         </div>
         <div v-if="props.content">
-          <q-markdown :src="props.content" />
+          <q-markdown :src="props.content" no-heading-anchor-links />
         </div>
         <slot></slot>
       </q-card-section>
