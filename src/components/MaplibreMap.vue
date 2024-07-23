@@ -12,9 +12,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
-import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 import 'maplibregl-theme-switcher/styles.css';
-import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
 import { ThemeSwitcherControl, ThemeDefinition } from 'maplibregl-theme-switcher';
 import {
   AttributionControl,
@@ -29,7 +27,6 @@ import {
   type StyleSpecification
 } from 'maplibre-gl';
 import { DivControl } from 'src/utils/control';
-import { geocoderApi } from 'src/utils/geocoder';
 import { Settings } from 'src/stores/settings';
 
 interface Props {
@@ -40,7 +37,6 @@ interface Props {
   maxZoom?: number
   themes?: ThemeDefinition[]
   position?: boolean | string | undefined
-  geocoder?: boolean | string | undefined
   attribution?: string,
   height?: string,
   width?: string,
@@ -53,7 +49,6 @@ const props = withDefaults(defineProps<Props>(), {
   minZoom: 0,
   maxZoom: undefined,
   position: false,
-  geocoder: false,
   height: '95vh',
   width: '100vw',
 });
@@ -109,17 +104,6 @@ onMounted(() => {
       compact: true,
       customAttribution: props.attribution || DEFAULT_ATTRIBUTION 
   }));
-
-  if (props.geocoder === true || props.geocoder === 'true') {
-    map.addControl(
-      new MaplibreGeocoder(geocoderApi, {
-        maplibregl: { Marker },
-        showResultsWhileTyping: true,
-        language: locale.value
-      }),
-      'top-left'
-    )
-  }
 
   map.on('click', (event: MapMouseEvent) => {
     emit('map:click', event, map as Map);
