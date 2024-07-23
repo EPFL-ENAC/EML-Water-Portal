@@ -65,7 +65,7 @@ const settingsStore = useSettingsStore();
 const { locale } = useI18n({ useScope: 'global' });
 const DEFAULT_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.swisstopo.admin.ch/" target="_blank">Swisstopo</a>, <a href="https://www.epfl.ch/" target="_blank">EPFL</a>';
 // to be adapted to the style.json
-const DEFAULT_THEME = 'classic';
+const DEFAULT_THEME = 'light';
 const THEMES: ThemeDefinition[] = [
   { id: 'classic', label: 'Classic' },
   { id: 'light', label: 'Light' },

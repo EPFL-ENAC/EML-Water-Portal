@@ -15,7 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
     if (settings.value != undefined) return settings.value;
     let settingsData: Settings = {
       intro_shown: false,
-      theme: 'classic',
+      theme: 'light',
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);
     // cookies.get() declares to return a string but apparently it automatically parses the JSON string to an object
