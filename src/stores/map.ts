@@ -3,6 +3,10 @@ import { BVLayerManager } from 'src/layers/bv';
 import { RiverLayerManager } from 'src/layers/river';
 import { ConduiteECLayerManager } from 'src/layers/conduite_ec';
 import { ConduitePrincipaleECLayerManager } from 'src/layers/conduite_principale_ec';
+import { DebitVHVLayerManager } from 'src/layers/debit_vhv';
+import { RejetsECLayerManager } from 'src/layers/rejets_ec';
+import { RejetsEULayerManager } from 'src/layers/rejets_eu';
+import { MeteoLayerManager } from 'src/layers/meteo';
 import { Map } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
 
@@ -15,10 +19,19 @@ export const useMapStore = defineStore('map', () => {
 
   const map = ref<Map>();
 
-  const layerManagers = [new BVLayerManager(), new RiverLayerManager(), new ConduiteECLayerManager(), new ConduitePrincipaleECLayerManager()];
+  const layerManagers = [
+    new BVLayerManager(),
+    new RiverLayerManager(),
+    new ConduiteECLayerManager(),
+    new ConduitePrincipaleECLayerManager(),
+    new DebitVHVLayerManager(),
+    new RejetsECLayerManager(),
+    new RejetsEULayerManager(),
+    new MeteoLayerManager(),
+  ];
 
   const layerSelections: LayerSelection[] = layerManagers.map(
-    (lm) => ({ id: lm.getId(), visible: !['conduite_ec'].includes(lm.getId()) })
+    (lm) => ({ id: lm.getId(), visible: !['bv', 'conduite_ec'].includes(lm.getId()) })
   );
 
   /**

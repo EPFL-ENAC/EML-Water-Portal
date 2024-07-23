@@ -4,57 +4,42 @@ import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
-const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
+const GEOJSON_URL = `${fileStoreUrl}/geojson/meteo.geojson`;
 
-export class BVLayerManager extends LayerManager<FilterParams> {
+export class MeteoLayerManager extends LayerManager<FilterParams> {
 
   data: FeatureCollection | null = null;
 
   getId(): string {
-    return 'bv';
+    return 'meteo';
   }
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
     this.data = await response.json() as FeatureCollection;
 
-    map.addSource('bv', {
+    map.addSource('meteo', {
       type: 'geojson',
       data: this.data
     });
 
     map.addLayer({
-      id: 'bv',
-      type: 'fill',
-      source: 'bv',
+      id: 'meteo',
+      type: 'circle',
+      source: 'meteo',
       paint: {
-        'fill-opacity': 0.5,
-        'fill-color': '#33C9EB',
-      },
-      layout: {
-        visibility: 'none'
+        'circle-opacity': 0.8,
+        'circle-radius': 10,
+        'circle-color': 'yellow',
+        'circle-stroke-color': 'orange',
+        'circle-stroke-width': 1
       }
     });
-    
-    map.addLayer({
-      id: 'bv-outline',
-      type: 'line',
-      source: 'bv',
-      paint: {
-        'line-opacity': 0.8,
-        'line-color': '#346EEB',
-        'line-width': 1
-      },
-      layout: {
-        visibility: 'none'
-      }
-    });
-
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['bv', 'bv-outline'].forEach(id => {
+    ['meteo'].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',

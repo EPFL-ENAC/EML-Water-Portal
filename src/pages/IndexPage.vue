@@ -1,6 +1,6 @@
 <template>
   <q-page >
-    <div class="row">
+    <div class="row items-center justify-evenly">
     <maplibre-map
       position
       :zoom="15"

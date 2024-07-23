@@ -4,57 +4,42 @@ import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
-const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
+const GEOJSON_URL = `${fileStoreUrl}/geojson/debit_vhv.geojson`;
 
-export class BVLayerManager extends LayerManager<FilterParams> {
+export class DebitVHVLayerManager extends LayerManager<FilterParams> {
 
   data: FeatureCollection | null = null;
 
   getId(): string {
-    return 'bv';
+    return 'debit_vhv';
   }
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
     this.data = await response.json() as FeatureCollection;
 
-    map.addSource('bv', {
+    map.addSource('debit_vhv', {
       type: 'geojson',
       data: this.data
     });
 
     map.addLayer({
-      id: 'bv',
-      type: 'fill',
-      source: 'bv',
+      id: 'debit_vhv',
+      type: 'circle',
+      source: 'debit_vhv',
       paint: {
-        'fill-opacity': 0.5,
-        'fill-color': '#33C9EB',
-      },
-      layout: {
-        visibility: 'none'
+        'circle-opacity': 0.8,
+        'circle-radius': 10,
+        'circle-color': '#66ff00',
+        'circle-stroke-color': '#008000',
+        'circle-stroke-width': 1
       }
     });
-    
-    map.addLayer({
-      id: 'bv-outline',
-      type: 'line',
-      source: 'bv',
-      paint: {
-        'line-opacity': 0.8,
-        'line-color': '#346EEB',
-        'line-width': 1
-      },
-      layout: {
-        visibility: 'none'
-      }
-    });
-
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['bv', 'bv-outline'].forEach(id => {
+    ['debit_vhv'].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',
