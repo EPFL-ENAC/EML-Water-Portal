@@ -19,7 +19,7 @@
         </div>
       </template>
       <template v-slot:separator>
-        <q-btn color="accent" text-color="white" size="4px" icon="drag_indicator" />
+        <q-btn color="accent" text-color="white" size="4px" icon="drag_indicator" style="cursor: grab;" />
       </template>
       <template v-slot:after>
         <div>

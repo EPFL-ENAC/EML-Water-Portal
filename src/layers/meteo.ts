@@ -33,6 +33,9 @@ export class MeteoLayerManager extends LayerManager<FilterParams> {
         'circle-color': 'yellow',
         'circle-stroke-color': 'orange',
         'circle-stroke-width': 1
+      },
+      layout: {
+        visibility: 'none'
       }
     });
 

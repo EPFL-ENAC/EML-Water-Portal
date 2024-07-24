@@ -33,6 +33,9 @@ export class RejetsECLayerManager extends LayerManager<FilterParams> {
         'circle-color': '#7fffd4',
         'circle-stroke-color': '#318ce7',
         'circle-stroke-width': 1
+      },
+      layout: {
+        visibility: 'none'
       }
     });
 

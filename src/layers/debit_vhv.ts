@@ -33,6 +33,9 @@ export class DebitVHVLayerManager extends LayerManager<FilterParams> {
         'circle-color': '#66ff00',
         'circle-stroke-color': '#008000',
         'circle-stroke-width': 1
+      },
+      layout: {
+        visibility: 'none'
       }
     });
 

@@ -4,47 +4,39 @@ import { LayerManager } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
-const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
+const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
-export class BVLayerManager extends LayerManager<FilterParams> {
+export class SensorsLayerManager extends LayerManager<FilterParams> {
 
   data: FeatureCollection | null = null;
 
   getId(): string {
-    return 'bv';
+    return 'sensors';
   }
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
     this.data = await response.json() as FeatureCollection;
 
-    map.addSource('bv', {
+    map.addSource('sensors', {
       type: 'geojson',
       data: this.data
     });
 
     map.addLayer({
-      id: 'bv',
-      type: 'fill',
-      source: 'bv',
+      id: 'sensors',
+      type: 'circle',
+      source: 'sensors',
       paint: {
-        'fill-opacity': 0.5,
-        'fill-color': '#33C9EB',
-      }
-    });
-    
-    map.addLayer({
-      id: 'bv-outline',
-      type: 'line',
-      source: 'bv',
-      paint: {
-        'line-opacity': 0.8,
-        'line-color': '#346EEB',
-        'line-width': 1
+        'circle-opacity': 0.8,
+        'circle-radius': 10,
+        'circle-color': '#9400D3',
+        'circle-stroke-color': 'black',
+        'circle-stroke-width': 1
       }
     });
 
-    map.on('click', 'bv', (e) => {
+    map.on('click', 'sensors', (e) => {
       const feature = e.features ? e.features[0] : null;
       if (!feature) return;
       new Popup()
@@ -55,17 +47,17 @@ export class BVLayerManager extends LayerManager<FilterParams> {
         .addTo(map);
     });
 
-    map.on('mouseenter', 'bv', () => {
+    map.on('mouseenter', 'sensors', () => {
         map.getCanvas().style.cursor = 'pointer';
     });
-    map.on('mouseleave', 'bv', () => {
+    map.on('mouseleave', 'sensors', () => {
         map.getCanvas().style.cursor = '';
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['bv', 'bv-outline'].forEach(id => {
+    ['sensors'].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',

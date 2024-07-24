@@ -78,19 +78,6 @@ function buildOptions() {
         animation: false
       }
     },
-    legend: {
-      data: [props.source],
-      left: 10
-    },
-    toolbox: {
-      feature: {
-        dataZoom: {
-          yAxisIndex: 'none'
-        },
-        restore: {},
-        saveAsImage: {}
-      }
-    },
     axisPointer: {
       link: [
         {

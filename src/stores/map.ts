@@ -7,6 +7,7 @@ import { DebitVHVLayerManager } from 'src/layers/debit_vhv';
 import { RejetsECLayerManager } from 'src/layers/rejets_ec';
 import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
+import { SensorsLayerManager } from 'src/layers/sensors';
 import { Map } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
 
@@ -20,10 +21,11 @@ export const useMapStore = defineStore('map', () => {
   const map = ref<Map>();
 
   const layerManagers = [
-    new BVLayerManager(),
     new RiverLayerManager(),
-    new ConduiteECLayerManager(),
+    new SensorsLayerManager(),
     new ConduitePrincipaleECLayerManager(),
+    new BVLayerManager(),
+    new ConduiteECLayerManager(),
     new DebitVHVLayerManager(),
     new RejetsECLayerManager(),
     new RejetsEULayerManager(),
@@ -31,7 +33,7 @@ export const useMapStore = defineStore('map', () => {
   ];
 
   const layerSelections: LayerSelection[] = layerManagers.map(
-    (lm) => ({ id: lm.getId(), visible: !['bv', 'conduite_ec'].includes(lm.getId()) })
+    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
   );
 
   /**

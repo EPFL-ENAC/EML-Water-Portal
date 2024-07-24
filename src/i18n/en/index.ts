@@ -15,6 +15,7 @@ export default {
     meteo: 'Meteo stations',
     rejets_ec: 'Discharges (clear waters)',
     rejets_eu: 'Discharges (waste)',
+    sensors: 'Sensors'
   },
   layers: 'Layers',
   legends: 'Legends',
