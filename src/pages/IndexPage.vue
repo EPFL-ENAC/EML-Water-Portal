@@ -23,7 +23,7 @@
       </template>
       <template v-slot:after>
         <div>
-          <q-list>
+          <q-list v-if="!measuresStore.loading">
             <template v-for="measure in measureOptions" :key="measure.key">
               <q-expansion-item
                 switch-toggle-side
@@ -32,11 +32,13 @@
                 :label="measure.label"
                 header-class="bg-grey-2 text-bold"
               >
-                    <timeseries-chart :source="measure.key" :height="200" class="q-pa-sm" />
-               
+                <timeseries-chart :measure="measure.key" :height="200" class="q-pa-sm" />
               </q-expansion-item>
             </template>
           </q-list>
+          <div v-else class="text-center q-pa-xl">
+            <q-spinner-dots color="primary" size="100px" />
+          </div>
         </div>
       </template>
     </q-splitter>
@@ -51,6 +53,7 @@ import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
+const measuresStore = useMeasuresStore();
 
 const splitterModel = ref(30);
 
@@ -63,10 +66,11 @@ const measureOptions = computed(() => {
     { key: 'dissolved_oxygen', label: 'Dissolved oxygen' },
     { key: 'ph', label: 'pH' },
     { key: 'oxidation_reduction_potential', label: 'Oxidation-reduction potential' },
-    { key: 'depth', label: 'Depth' },
     { key: 'water_level', label: 'Water level' },
   ]
 })
+
+onMounted(() => measuresStore.loadDatasets());
 
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {

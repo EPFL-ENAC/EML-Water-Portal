@@ -81,6 +81,7 @@ declare global {
   const useI18n: typeof import('vue-i18n')['useI18n']
   const useLink: typeof import('vue-router')['useLink']
   const useMapStore: typeof import('./stores/map')['useMapStore']
+  const useMeasuresStore: typeof import('./stores/measures')['useMeasuresStore']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useSettingsStore: typeof import('./stores/settings')['useSettingsStore']
@@ -175,6 +176,7 @@ declare module 'vue' {
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useMapStore: UnwrapRef<typeof import('./stores/map')['useMapStore']>
+    readonly useMeasuresStore: UnwrapRef<typeof import('./stores/measures')['useMeasuresStore']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
@@ -262,6 +264,7 @@ declare module '@vue/runtime-core' {
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useMapStore: UnwrapRef<typeof import('./stores/map')['useMapStore']>
+    readonly useMeasuresStore: UnwrapRef<typeof import('./stores/measures')['useMeasuresStore']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
