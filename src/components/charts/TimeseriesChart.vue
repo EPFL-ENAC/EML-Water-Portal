@@ -108,10 +108,10 @@ function buildOptions() {
     ],
     grid: [
       {
-        top: 20,
+        top: 10,
         left: 30,
         right: 20,
-        bottom: 30
+        bottom: 60
       },
     ],
     xAxis: sensors.value.map((s) => {

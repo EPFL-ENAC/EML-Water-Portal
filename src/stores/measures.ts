@@ -5,7 +5,7 @@ import { parse, format } from 'date-fns';
 
 const TIMESERIES_URL = `${fileStoreUrl}/timeseries`;
 const DATASETS_URL = `${TIMESERIES_URL}/datasets.json`;
-const DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss.SSS';
+const DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 
 interface PapaResults {
   data: string[][];
