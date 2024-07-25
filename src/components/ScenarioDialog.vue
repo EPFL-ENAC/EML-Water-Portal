@@ -13,7 +13,7 @@
         </div>
       </q-card-section>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
-        <q-btn flat :label="$t('close')" color="primary" v-close-popup />
+        <q-btn flat :label="$t('apply')" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>

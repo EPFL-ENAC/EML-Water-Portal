@@ -29,7 +29,7 @@ export class BVLayerManager extends LayerManager<FilterParams> {
       source: 'bv',
       paint: {
         'fill-opacity': 0.5,
-        'fill-color': '#33C9EB',
+        'fill-color': '#00a79f',
       }
     });
     

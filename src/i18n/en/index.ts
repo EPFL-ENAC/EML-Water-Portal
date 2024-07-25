@@ -17,12 +17,17 @@ export default {
     rejets_eu: 'Discharges (waste)',
     sensors: 'Sensors'
   },
-  layers: 'Layers',
-  legends: 'Legends',
+  apply: 'Apply',
+  close: 'Close',
   home: 'Home',
   introduction: 'Introduction',
+  layers: 'Layers',
+  legends: 'Legends',
+  other_layers: 'Other layers',
   reset_filters: 'Reset filters',
   resources: 'Resources',
+  scenario_for_watershed: 'Scenario for watershed: {name}',
+  scenario_info: 'Select a watershed to apply a scenario.',
+  scenario: 'Scenario',
   source_code: 'Source Code',
-  scenario_for_watershed: 'Scenario for watershed: {name}'
 };
