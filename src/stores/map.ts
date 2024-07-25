@@ -20,6 +20,7 @@ export const useMapStore = defineStore('map', () => {
 
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
+  const sensorsFilter = ref<string[]>([]);
 
   const layerManagers = [
     new RiverLayerManager(),
@@ -105,16 +106,30 @@ export const useMapStore = defineStore('map', () => {
     console.log(feature);
     if (name === 'bv') {
       bvSelected.value = feature;
+    } else if (name === 'sensors') {
+      const id = feature.properties.name;
+      if (sensorsFilter.value.includes(id)) {
+        sensorsFilter.value = sensorsFilter.value.filter((val) => val !== id);
+      } else {
+        sensorsFilter.value.push(id);
+        sensorsFilter.value.sort();
+      }
     }
+  }
+
+  function resetSensorFilters() {
+    sensorsFilter.value = [];
   }
 
   return {
     map,
     layerSelections,
     bvSelected,
+    sensorsFilter,
     applyFilters,
     applyLayerVisibility,
     initLayers,
+    resetSensorFilters,
   };
 
 });

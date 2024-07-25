@@ -75,6 +75,10 @@
         @click="onResetFilters" 
         class="q-mt-xs q-pl-xs q-pr-xs float-right "/>
     </q-item-label>
+    <q-item>
+      <span v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</span>
+      <span v-else>{{ filterLabel }}</span>
+    </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="info" class="q-pb-xs"/>
       <span class="q-ml-sm">{{ $t('legends') }}</span>
@@ -106,6 +110,8 @@ const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
 
+const filterLabel = computed(() => mapStore.sensorsFilter.join(', '));
+
 const sensorColors = [
   {
     color: '#9400D3',
@@ -131,6 +137,7 @@ function onToggleLayer(layerId: string) {
 
 function onResetFilters() {
   filtersStore.reset();
+  mapStore.resetSensorFilters();
   onUpdatedFilter();
 }
 
