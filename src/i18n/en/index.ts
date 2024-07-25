@@ -23,5 +23,6 @@ export default {
   introduction: 'Introduction',
   reset_filters: 'Reset filters',
   resources: 'Resources',
-  source_code: 'Source Code'
+  source_code: 'Source Code',
+  scenario_for_watershed: 'Scenario for watershed: {name}'
 };

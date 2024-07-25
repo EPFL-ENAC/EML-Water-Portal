@@ -8,7 +8,7 @@ import { RejetsECLayerManager } from 'src/layers/rejets_ec';
 import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
-import { Map } from 'maplibre-gl';
+import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
 
 export type LayerSelection = {
@@ -19,6 +19,7 @@ export type LayerSelection = {
 export const useMapStore = defineStore('map', () => {
 
   const map = ref<Map>();
+  const bvSelected = ref<MapGeoJSONFeature>();
 
   const layerManagers = [
     new RiverLayerManager(),
@@ -85,7 +86,7 @@ export const useMapStore = defineStore('map', () => {
       layerSelections.map((layer) => {
         const manager = getLayerManager(layer.id);
         if (!manager) return Promise.resolve();
-        return manager.append(mapInstance);
+        return manager.append(mapInstance, onFeaturesSelected);
       })
     );
   }
@@ -99,9 +100,18 @@ export const useMapStore = defineStore('map', () => {
     return layerManagers.find((lm) => lm.getId() === id);
   }
 
+  function onFeaturesSelected(name: string, feature: MapGeoJSONFeature) {
+    console.log(name);
+    console.log(feature);
+    if (name === 'bv') {
+      bvSelected.value = feature;
+    }
+  }
+
   return {
     map,
     layerSelections,
+    bvSelected,
     applyFilters,
     applyLayerVisibility,
     initLayers,

@@ -1,6 +1,6 @@
-import { Map, Popup } from 'maplibre-gl';
+import { Map } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
-import { LayerManager } from 'src/layers/models';
+import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
@@ -14,7 +14,7 @@ export class BVLayerManager extends LayerManager<FilterParams> {
     return 'bv';
   }
 
-  async append(map: Map): Promise<void> {
+  async append(map: Map, selectionCallback: FeatureSelectionCallback): Promise<void> {
     const response = await fetch(GEOJSON_URL);
     this.data = await response.json() as FeatureCollection;
 
@@ -47,12 +47,8 @@ export class BVLayerManager extends LayerManager<FilterParams> {
     map.on('click', 'bv', (e) => {
       const feature = e.features ? e.features[0] : null;
       if (!feature) return;
-      new Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(
-          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
-        .addTo(map);
+      selectionCallback(this.getId(), feature);
+      // TODO highlight the feature as being selected
     });
 
     map.on('mouseenter', 'bv', () => {

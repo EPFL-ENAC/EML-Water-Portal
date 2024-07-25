@@ -43,19 +43,22 @@
       </template>
     </q-splitter>
     
+    <scenario-dialog v-model="showScenario" />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import MaplibreMap from 'components/MaplibreMap.vue';
+import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map, MapMouseEvent } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
+import ScenarioDialog from 'src/components/ScenarioDialog.vue';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
 const measuresStore = useMeasuresStore();
 
 const splitterModel = ref(30);
+const showScenario = ref(false);
 
 const measureOptions = computed(() => {
   return [
@@ -71,6 +74,13 @@ const measureOptions = computed(() => {
 })
 
 onMounted(() => measuresStore.loadDatasets());
+
+watch(() => mapStore.bvSelected, () => {
+  if (mapStore.bvSelected) {
+    showScenario.value = true;
+    console.log(mapStore.bvSelected);
+  }
+});
 
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {

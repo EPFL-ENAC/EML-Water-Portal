@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 
 export abstract class LayerManager<T> {
   
@@ -10,7 +10,7 @@ export abstract class LayerManager<T> {
   /**
    * Add the layer to the map.
    */
-  abstract append(map: Map): Promise<void>;
+  abstract append(map: Map, selectionCallback: FeatureSelectionCallback): Promise<void>;
 
   /**
    * Set the visibility of the layer.
@@ -22,4 +22,8 @@ export abstract class LayerManager<T> {
    */
   abstract filter(map: Map, filter: T): void;
  
+}
+
+export interface FeatureSelectionCallback {
+  (name: string, feature: MapGeoJSONFeature): void
 }

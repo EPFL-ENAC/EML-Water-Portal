@@ -25,15 +25,15 @@ export class SensorsLayerManager extends LayerManager<FilterParams> {
 
     map.addLayer({
       id: 'sensors',
-      type: 'circle',
       source: 'sensors',
+      type: 'circle',
       paint: {
         'circle-opacity': 0.8,
         'circle-radius': 10,
         'circle-color': '#9400D3',
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1
-      }
+      },
     });
 
     map.on('click', 'sensors', (e) => {
