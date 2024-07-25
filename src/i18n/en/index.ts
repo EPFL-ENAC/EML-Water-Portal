@@ -29,5 +29,6 @@ export default {
   scenario_for_watershed: 'Scenario for watershed: {name}',
   scenario_info: 'Select a watershed to apply a scenario.',
   scenario: 'Scenario',
+  sensors: 'Sensors',
   source_code: 'Source Code',
 };

@@ -79,6 +79,15 @@
       <q-icon name="info" class="q-pb-xs"/>
       <span class="q-ml-sm">{{ $t('legends') }}</span>
     </q-item-label>
+    <q-item-label>
+      <span class="q-ml-md">{{ $t('sensors') }}</span>
+    </q-item-label>
+    <q-item v-for="sensor in sensorColors" :key="sensor.color">
+      <q-item-section avatar>
+        <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{ sensor.label }}</q-avatar>
+      </q-item-section>
+      <q-item-section>{{ sensor.device }}</q-item-section>
+    </q-item>
   </q-list>
 </template>
 
@@ -96,6 +105,24 @@ const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
 
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
+
+const sensorColors = [
+  {
+    color: '#9400D3',
+    label: 'A',
+    device: 'In-Situ'
+  },  
+  {
+    color: '#3FD400',
+    label: 'B',
+    device: 'Ruskin'
+  },
+  {
+    color: '#51bbd6',
+    label: 'C',
+    device: 'Ijinus'
+  }
+]
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);

@@ -27,3 +27,21 @@ a:hover.epfl {
 li + li {
   margin-top: 10px;
 }
+
+.maplibregl-popup {
+  max-width: 100% !important;
+  table {
+    border-collapse: collapse;
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      ul {
+        padding-left: 15px;
+      }
+    }
+    tr:nth-child(even) td{
+      background-color: $grey-3;
+    }
+  }
+}
+

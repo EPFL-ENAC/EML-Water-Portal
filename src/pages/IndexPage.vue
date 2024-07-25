@@ -89,7 +89,7 @@ function onMapLoaded(map: Map) {
 }
 
 function onMapClick(event: MapMouseEvent) {
-  console.log('Map clicked at:', event.lngLat);
+  console.debug('Map clicked at:', event.lngLat);
   // custom popup
   // new Popup()
   //   .setLngLat(event.lngLat)
