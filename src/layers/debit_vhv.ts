@@ -29,7 +29,13 @@ export class DebitVHVLayerManager extends LayerManager<FilterParams> {
       source: 'debit_vhv',
       paint: {
         'circle-opacity': 0.8,
-        'circle-radius': 10,
+        'circle-radius': [
+          'step',
+          ['zoom'],
+          2,   // Radius at zoom levels below 10
+          10, 5,   // Radius at zoom level 10 and above
+          15, 10  // Radius at zoom level 15 and above
+        ],
         'circle-color': '#66ff00',
         'circle-stroke-color': '#008000',
         'circle-stroke-width': 1

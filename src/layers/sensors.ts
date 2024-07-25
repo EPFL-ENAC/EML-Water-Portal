@@ -29,7 +29,13 @@ export class SensorsLayerManager extends LayerManager<FilterParams> {
       type: 'circle',
       paint: {
         'circle-opacity': 0.8,
-        'circle-radius': 10,
+        'circle-radius': [
+          'step',
+          ['zoom'],
+          2,   // Radius at zoom levels below 10
+          10, 5,   // Radius at zoom level 10 and above
+          15, 10  // Radius at zoom level 15 and above
+        ],
         'circle-color': [
                 'case',
                 ['==', ['index-of', 'A', ['get', 'name']], 0], '#9400D3', // color if name starts with 'A'

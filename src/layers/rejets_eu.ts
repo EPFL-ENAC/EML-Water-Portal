@@ -29,7 +29,13 @@ export class RejetsEULayerManager extends LayerManager<FilterParams> {
       source: 'rejets_eu',
       paint: {
         'circle-opacity': 0.8,
-        'circle-radius': 10,
+        'circle-radius': [
+          'step',
+          ['zoom'],
+          2,   // Radius at zoom levels below 10
+          10, 5,   // Radius at zoom level 10 and above
+          15, 10  // Radius at zoom level 15 and above
+        ],
         'circle-color': '#a52a2a',
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1
