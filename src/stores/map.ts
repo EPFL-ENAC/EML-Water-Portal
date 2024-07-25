@@ -108,17 +108,21 @@ export const useMapStore = defineStore('map', () => {
       bvSelected.value = feature;
     } else if (name === 'sensors') {
       const id = feature.properties.name;
-      if (sensorsFilter.value.includes(id)) {
-        sensorsFilter.value = sensorsFilter.value.filter((val) => val !== id);
-      } else {
-        sensorsFilter.value.push(id);
-        sensorsFilter.value.sort();
-      }
+      toggleSensorFilter(id); 
     }
   }
 
   function resetSensorFilters() {
     sensorsFilter.value = [];
+  }
+
+  function toggleSensorFilter(id: string) {
+    if (sensorsFilter.value.includes(id)) {
+      sensorsFilter.value = sensorsFilter.value.filter((val) => val !== id);
+    } else {
+      sensorsFilter.value.push(id);
+      sensorsFilter.value.sort();
+    }
   }
 
   return {
@@ -130,6 +134,7 @@ export const useMapStore = defineStore('map', () => {
     applyLayerVisibility,
     initLayers,
     resetSensorFilters,
+    toggleSensorFilter,
   };
 
 });

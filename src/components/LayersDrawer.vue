@@ -77,7 +77,11 @@
     </q-item-label>
     <q-item>
       <span v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</span>
-      <span v-else>{{ filterLabel }}</span>
+      <div v-else>
+        <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" color="secondary" text-color="white" size="sm">
+          {{ id }}
+        </q-chip>
+      </div>
     </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="info" class="q-pb-xs"/>
@@ -110,7 +114,6 @@ const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
 
-const filterLabel = computed(() => mapStore.sensorsFilter.join(', '));
 
 const sensorColors = [
   {
@@ -143,5 +146,9 @@ function onResetFilters() {
 
 function onUpdatedFilter() {
   mapStore.applyFilters(filtersStore.asParams());
+}
+
+function onRemoveSensorFilter(id: string) {
+  mapStore.toggleSensorFilter(id);
 }
 </script>
