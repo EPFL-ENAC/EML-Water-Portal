@@ -1,6 +1,13 @@
 <template>
   <q-list>
     <q-item-label header class="text-h6">
+      <q-icon name="model_training" class="q-pb-xs"/>
+      <span class="q-ml-sm">{{ $t('scenario') }}</span>
+    </q-item-label>
+    <q-item>
+      <div class="text-help">{{ $t('scenario_info') }}</div>
+    </q-item>
+    <q-item-label header class="text-h6">
       <q-icon name="layers" class="q-pb-xs"/>
       <span class="q-ml-sm">{{ $t('layers') }}</span>
     </q-item-label>
@@ -53,13 +60,6 @@
         </q-item>
       </q-expansion-item>
     </q-list>
-    <q-item-label header class="text-h6">
-      <q-icon name="model_training" class="q-pb-xs"/>
-      <span class="q-ml-sm">{{ $t('scenario') }}</span>
-    </q-item-label>
-    <q-item>
-      <div class="text-help">{{ $t('scenario_info') }}</div>
-    </q-item>
     <q-item-label header>
       <span class="text-h6">
         <q-icon name="filter_alt" class="q-pb-xs"/>
