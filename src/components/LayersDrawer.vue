@@ -78,7 +78,7 @@
     <q-item>
       <span v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</span>
       <div v-else>
-        <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" color="secondary" text-color="white" size="sm">
+        <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
           {{ id }}
         </q-chip>
       </div>
@@ -114,7 +114,6 @@ const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
 
-
 const sensorColors = [
   {
     color: '#9400D3',
@@ -132,6 +131,10 @@ const sensorColors = [
     device: 'Ijinus'
   }
 ]
+
+function getSensorColor(id: string) {
+  return sensorColors.find((opt) => id.startsWith(opt.label))?.color;
+}
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);
