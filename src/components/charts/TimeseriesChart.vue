@@ -23,7 +23,7 @@ import ECharts from 'vue-echarts';
 import type { EChartsOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
-import { SVGRenderer } from 'echarts/renderers';
+import { CanvasRenderer } from 'echarts/renderers';
 import { initOptions, updateOptions } from './utils';
 import {
   TitleComponent,
@@ -33,7 +33,7 @@ import {
 } from 'echarts/components';
 
 use([
-  SVGRenderer,
+  CanvasRenderer,
   LineChart,
   TitleComponent,
   TooltipComponent,
@@ -42,7 +42,7 @@ use([
 ]);
 
 interface Props {
-  measure: string,
+  measure: string;
   height?: number;
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -55,16 +55,19 @@ const chart = shallowRef(null);
 const option = ref<EChartsOption>({});
 const loading = ref(false);
 
-const sensors = computed(() => measuresStore.datasets ? measuresStore.datasets?.sensors.filter((sensor) => sensor.columns.find((col) => col.measure === props.measure && col.data)) : [])
+const sensors = computed(() =>
+  measuresStore.datasets
+    ? measuresStore.datasets?.sensors.filter((sensor) =>
+        sensor.columns.find((col) => col.measure === props.measure && col.data),
+      )
+    : [],
+);
 
-onMounted(initChartOptions)
+onMounted(initChartOptions);
 
-watch(
-  [() => measuresStore.loading, () => sensors.value],
-  () => {
-    initChartOptions();
-  }
-)
+watch([() => measuresStore.loading, () => sensors.value], () => {
+  initChartOptions();
+});
 
 function initChartOptions() {
   if (sensors.value.length === 0 || measuresStore.loading) {
@@ -77,18 +80,19 @@ function initChartOptions() {
 function buildOptions() {
   loading.value = true;
   const newOption: EChartsOption = {
+    renderer: 'canvas',
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        animation: false
-      }
+        animation: false,
+      },
     },
     axisPointer: {
       link: [
         {
-          xAxisIndex: 'all'
-        }
-      ]
+          xAxisIndex: 'all',
+        },
+      ],
     },
     dataZoom: [
       {
@@ -96,7 +100,7 @@ function buildOptions() {
         realtime: true,
         start: 90,
         end: 100,
-        xAxisIndex: [0, 1]
+        xAxisIndex: [0, 1],
       },
       // {
       //   type: 'inside',
@@ -111,14 +115,14 @@ function buildOptions() {
         top: 10,
         left: 30,
         right: 20,
-        bottom: 60
+        bottom: 60,
       },
     ],
     xAxis: sensors.value.map((s) => {
       return {
         type: 'time',
         boundaryGap: false,
-      }
+      };
     }),
     yAxis: [
       {
@@ -127,18 +131,21 @@ function buildOptions() {
       },
     ],
     series: sensors.value.map((s) => {
-      const timestamps = s.columns.find((col) => col.measure === 'timestamp')?.data;
-      const colData = s.columns.find((col) => col.measure === props.measure)?.data;
+      const timestamps = s.columns.find(
+        (col) => col.measure === 'timestamp',
+      )?.data;
+      const colData = s.columns.find(
+        (col) => col.measure === props.measure,
+      )?.data;
       return {
         name: s.name,
         type: 'line',
         symbolSize: 0,
-        data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]) 
+        data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
       };
-    })
-};
+    }),
+  };
   option.value = newOption;
   loading.value = false;
 }
-
 </script>
