@@ -46,8 +46,8 @@ import { DivControl } from 'src/utils/control';
 import { Settings } from 'src/stores/settings';
 
 interface Props {
-  styleSpec: string | StyleSpecification | undefined;
-  center: LngLatLike;
+  styleSpec?: string | StyleSpecification | undefined;
+  center?: LngLatLike;
   zoom?: number;
   minZoom?: number;
   maxZoom?: number;
@@ -57,7 +57,6 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   styleSpec: 'style.json',
-  center: [6.575, 46.5218] as LngLatLike,
   zoom: 12,
   aspectRatio: undefined,
   minZoom: 0,

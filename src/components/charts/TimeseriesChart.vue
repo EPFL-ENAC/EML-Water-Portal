@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="option.series" :style="`height: ${height}px;`">
+    <div v-if="option.series" :style="`height: ${height}px; width: 100%;`">
       <e-charts
         ref="chart"
         autoresize
@@ -31,6 +31,7 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
+import { debounce } from 'quasar';
 
 use([
   CanvasRenderer,
@@ -44,14 +45,25 @@ use([
 interface Props {
   measure: string;
   height?: number;
+  rangeMin?: Date;
+  rangeMax?: Date;
+  isExpanded?: boolean;
+  debounceTime?: number;
+  range?: [Date, Date];
 }
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
+  rangeMin: undefined,
+  rangeMax: undefined,
+  isExpanded: true,
+  debounceTime: 20,
+  range: undefined,
 });
 
 const measuresStore = useMeasuresStore();
 
-const chart = shallowRef(null);
+const chart = shallowRef<typeof ECharts | null>(null);
+
 const option = ref<EChartsOption>({});
 const loading = ref(false);
 
@@ -63,12 +75,6 @@ const sensors = computed(() =>
     : [],
 );
 
-onMounted(initChartOptions);
-
-watch([() => measuresStore.loading, () => sensors.value], () => {
-  initChartOptions();
-});
-
 function initChartOptions() {
   if (sensors.value.length === 0 || measuresStore.loading) {
     return;
@@ -77,12 +83,44 @@ function initChartOptions() {
   buildOptions();
 }
 
+onMounted(() => {
+  initChartOptions();
+});
+
+watch([() => measuresStore.loading, () => sensors.value], () => {
+  initChartOptions();
+});
+
+const debouncedRangeChange = debounce(onRangeChange, props.debounceTime);
+
+watch(
+  () => props.range,
+  () => {
+    if (props.isExpanded) debouncedRangeChange();
+  },
+);
+
+function onRangeChange() {
+  if (chart.value !== null && props.range !== undefined) {
+    if (chart.value !== null && props.isExpanded) {
+      chart.value.dispatchAction({
+        type: 'dataZoom',
+        dataZoomIndex: 0,
+        startValue: props.range[0],
+        endValue: props.range[1],
+      });
+    }
+  }
+}
+
 function buildOptions() {
   loading.value = true;
   const newOption: EChartsOption = {
     renderer: 'canvas',
+    animation: false,
     tooltip: {
       trigger: 'axis',
+      appendTo: document.getElementById('q-page-content') as HTMLElement,
       axisPointer: {
         animation: false,
       },
@@ -96,32 +134,23 @@ function buildOptions() {
     },
     dataZoom: [
       {
-        show: true,
-        realtime: true,
-        start: 90,
-        end: 100,
-        xAxisIndex: [0, 1],
+        type: 'inside',
+        xAxisIndex: 0,
       },
-      // {
-      //   type: 'inside',
-      //   realtime: true,
-      //   start: 0,
-      //   end: 100,
-      //   xAxisIndex: [0, 1]
-      // }
     ],
     grid: [
       {
         top: 10,
         left: 30,
         right: 20,
-        bottom: 60,
+        bottom: 30,
       },
     ],
     xAxis: sensors.value.map((s) => {
       return {
         type: 'time',
-        boundaryGap: false,
+        min: props.rangeMin,
+        max: props.rangeMax,
       };
     }),
     yAxis: [
