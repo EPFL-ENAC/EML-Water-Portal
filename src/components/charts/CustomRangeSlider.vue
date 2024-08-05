@@ -13,19 +13,18 @@
 import noUiSlider from 'nouislider';
 import { PipsMode, type API as SliderAPI } from 'nouislider';
 import 'nouislider/dist/nouislider.css';
-import { defineModel, onUnmounted, onMounted, ref, watch } from 'vue';
+import { onUnmounted, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  min: Date;
-  max: Date;
   step?: number;
 }>();
 
 const slider = ref<SliderAPI | null>(null);
 const sliderHTML = ref<HTMLDivElement | null>(null);
-const testValue = defineModel<[Date, Date]>({ required: true });
 const playing = ref(false);
 let playInterval: NodeJS.Timeout | undefined;
+
+const timeseriesStore = useTimeseriesChartsStore();
 
 const defaultStep = 60 * 60 * 1000; //step is hour
 
@@ -35,10 +34,9 @@ const updateSlider = () => {
   }
 
   if (sliderHTML.value) {
-    const minMs = props.min.getTime();
-    const maxMs = props.max.getTime();
+    const minMs = timeseriesStore.MIN_DATE.getTime();
+    const maxMs = timeseriesStore.MAX_DATE.getTime();
 
-    console.log(minMs, maxMs);
     slider.value = noUiSlider.create(sliderHTML.value, {
       start: [minMs, maxMs],
       tooltips: [formatterTooltip, formatterTooltip],
@@ -46,8 +44,8 @@ const updateSlider = () => {
       behaviour: 'drag',
       step: props.step || defaultStep,
       range: {
-        min: minMs,
-        max: maxMs,
+        min: new Date(timeseriesStore.timeRange[0]).getTime(),
+        max: new Date(timeseriesStore.timeRange[1]).getTime(),
       },
       pips: {
         mode: PipsMode.Steps,
@@ -57,10 +55,9 @@ const updateSlider = () => {
       },
     });
     slider.value.on('update', (values) => {
-      testValue.value = values.map((val) => new Date(Number(val))) as [
-        Date,
-        Date,
-      ];
+      timeseriesStore.timeRange = values.map(
+        (val) => new Date(Number(val)),
+      ) as [Date, Date];
     });
   }
 };
@@ -69,14 +66,17 @@ const play = () => {
   if (!slider.value || playing.value) return;
   playing.value = true;
   const [min, max] = (slider.value.get() as [string, string]).map(Number);
-  if (max === props.max.getTime()) {
+  if (max === timeseriesStore.MAX_DATE.getTime()) {
     const range = max - min;
-    slider.value.set([props.min.getTime(), props.min.getTime() + range]);
+    slider.value.set([
+      timeseriesStore.MIN_DATE.getTime(),
+      timeseriesStore.MIN_DATE.getTime() + range,
+    ]);
   }
   playInterval = setInterval(() => {
     if (slider.value) {
       const current = (slider.value.get() as [string, string]).map(Number);
-      if (current[1] >= props.max.getTime()) {
+      if (current[1] >= timeseriesStore.MAX_DATE.getTime()) {
         stop();
       } else {
         slider.value.set([
@@ -103,7 +103,7 @@ onUnmounted(() => {
 });
 
 watch(
-  () => [props.min, props.max, props.step],
+  () => [timeseriesStore.MIN_DATE, timeseriesStore.MAX_DATE, props.step],
   () => {
     updateSlider();
   },

@@ -8,6 +8,7 @@
         :option="option"
         :update-options="updateOptions"
         :loading="loading"
+        @highlight="onHighlight"
       />
     </div>
   </div>
@@ -18,9 +19,10 @@ export default defineComponent({
   name: 'TimeseriesChart',
 });
 </script>
+
 <script setup lang="ts">
 import ECharts from 'vue-echarts';
-import type { EChartsOption } from 'echarts';
+import type { EChartsOption, ECElementEvent } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -45,22 +47,30 @@ use([
 interface Props {
   measure: string;
   height?: number;
-  rangeMin?: Date;
-  rangeMax?: Date;
   isExpanded?: boolean;
   debounceTime?: number;
-  range?: [Date, Date];
 }
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  rangeMin: undefined,
-  rangeMax: undefined,
   isExpanded: true,
   debounceTime: 20,
-  range: undefined,
 });
 
+// Keep it in case new feature requires this trick
+// const onDataZoomChange = (e: ECElementEvent) => {
+//   if (!e.batch || !props.range) return;
+//   const { start, end } = e.batch[0];
+//   const rangeMs = props.range.map((r) => r.getTime());
+//   const diff = rangeMs[1] - rangeMs[0];
+//   const startMs = rangeMs[0] + (diff * start) / 100;
+//   const endMs = rangeMs[1] + (diff * end) / 100;
+//   emits('dataZoomChange', [new Date(startMs), new Date(endMs)]);
+// };
+
+// emits('axisPointerChange', e.event.value);
+
 const measuresStore = useMeasuresStore();
+const timeseriesStore = useTimeseriesChartsStore();
 
 const chart = shallowRef<typeof ECharts | null>(null);
 
@@ -75,6 +85,12 @@ const sensors = computed(() =>
     : [],
 );
 
+const timestamps = computed(() =>
+  sensors.value.length > 0
+    ? sensors.value[0].columns.find((col) => col.measure === 'timestamp')?.data
+    : [],
+);
+
 function initChartOptions() {
   if (sensors.value.length === 0 || measuresStore.loading) {
     return;
@@ -82,6 +98,14 @@ function initChartOptions() {
   option.value = {};
   buildOptions();
 }
+
+const onHighlight = (e: ECElementEvent) => {
+  const idx = e.batch[0].dataIndex;
+  const timestamp = timestamps.value
+    ? new Date(timestamps.value[idx])
+    : undefined;
+  timeseriesStore.axisPointer = timestamp;
+};
 
 onMounted(() => {
   initChartOptions();
@@ -94,20 +118,20 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
 const debouncedRangeChange = debounce(onRangeChange, props.debounceTime);
 
 watch(
-  () => props.range,
+  () => [timeseriesStore.timeRange, props.isExpanded],
   () => {
     if (props.isExpanded) debouncedRangeChange();
   },
 );
 
 function onRangeChange() {
-  if (chart.value !== null && props.range !== undefined) {
+  if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
     if (chart.value !== null && props.isExpanded) {
       chart.value.dispatchAction({
         type: 'dataZoom',
         dataZoomIndex: 0,
-        startValue: props.range[0],
-        endValue: props.range[1],
+        startValue: timeseriesStore.timeRange[0],
+        endValue: timeseriesStore.timeRange[1],
       });
     }
   }
@@ -149,8 +173,8 @@ function buildOptions() {
     xAxis: sensors.value.map((s) => {
       return {
         type: 'time',
-        min: props.rangeMin,
-        max: props.rangeMax,
+        min: timeseriesStore.MIN_DATE,
+        max: timeseriesStore.MAX_DATE,
       };
     }),
     yAxis: [
@@ -174,6 +198,7 @@ function buildOptions() {
       };
     }),
   };
+
   option.value = newOption;
   loading.value = false;
 }

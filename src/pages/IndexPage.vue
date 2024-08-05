@@ -36,6 +36,10 @@
                 switch-toggle-side
                 expand-separator
                 dense
+                :default-opened="
+                  measure.key === 'water_temperature' ||
+                  measure.key === 'water_level'
+                "
                 :label="measure.label"
                 header-class="bg-grey-2 text-bold"
                 @update:model-value="
@@ -45,9 +49,6 @@
                 <timeseries-chart
                   :measure="measure.key"
                   :height="200"
-                  :range-min="minDate"
-                  :range-max="maxDate"
-                  :range="timeRange"
                   :is-expanded="isExpanded[measure.key]"
                   :debounce-time="measure.key == 'water_temperature' ? 80 : 30"
                   class="q-pa-sm"
@@ -59,11 +60,7 @@
             <q-spinner-dots color="primary" size="100px" />
           </div>
 
-          <custom-range-slider
-            v-model="timeRange"
-            :min="minDate"
-            :max="maxDate"
-          ></custom-range-slider>
+          <custom-range-slider />
         </div>
       </template>
     </q-splitter>
@@ -87,22 +84,19 @@ const measuresStore = useMeasuresStore();
 const splitterModel = ref(30);
 const showScenario = ref(false);
 
-const minDate = new Date('2024-04-08T12:00:00.000Z');
-const maxDate = new Date('2024-07-15T00:00:00.000Z');
-
 const measureOptions = computed(() => {
   return [
+    { key: 'water_level', label: 'Water level' },
     { key: 'water_temperature', label: 'Water Temperature' },
-    { key: 'air_temperature', label: 'Air Temperature' },
-    { key: 'electro_conductivity', label: 'Specific electro-conductivity' },
-    { key: 'turbidity', label: 'Turbidity' },
+    { key: 'electro_conductivity', label: 'Electrical conductivity' },
     { key: 'dissolved_oxygen', label: 'Dissolved oxygen' },
     { key: 'ph', label: 'pH' },
+    { key: 'turbidity', label: 'Turbidity' },
     {
       key: 'oxidation_reduction_potential',
       label: 'Oxidation-reduction potential',
     },
-    { key: 'water_level', label: 'Water level' },
+    { key: 'air_temperature', label: 'Air Temperature' },
   ];
 });
 
@@ -119,8 +113,6 @@ const updateExpansionState = (measureKey: string, expanded: boolean) => {
   isExpanded[measureKey] = expanded;
   console.log(isExpanded);
 };
-
-const timeRange = ref<[Date, Date]>([minDate, maxDate]);
 
 onMounted(() => measuresStore.loadDatasets());
 
