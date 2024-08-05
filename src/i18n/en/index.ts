@@ -15,10 +15,11 @@ export default {
     meteo: 'Meteo stations',
     rejets_ec: 'Discharges (clear waters)',
     rejets_eu: 'Discharges (waste)',
-    sensors: 'Sensors'
+    sensors: 'Sensors',
   },
   apply: 'Apply',
   close: 'Close',
+  about: 'About',
   home: 'Home',
   introduction: 'Introduction',
   layers: 'Layers',
@@ -30,6 +31,7 @@ export default {
   scenario_info: 'Select a watershed to apply a scenario.',
   scenario: 'Scenario',
   sensors: 'Sensors',
-  sensors_to_filter_info: 'Click sensors on the map to filter measures. Click again to deselect.',
+  sensors_to_filter_info:
+    'Click sensors on the map to filter measures. Click again to deselect.',
   source_code: 'Source Code',
 };
