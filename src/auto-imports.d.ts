@@ -86,6 +86,7 @@ declare global {
   const useRouter: typeof import('vue-router')['useRouter']
   const useSettingsStore: typeof import('./stores/settings')['useSettingsStore']
   const useSlots: typeof import('vue')['useSlots']
+  const useTimeseriesChartsStore: typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']
@@ -181,6 +182,7 @@ declare module 'vue' {
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useTimeseriesChartsStore: UnwrapRef<typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
@@ -269,6 +271,7 @@ declare module '@vue/runtime-core' {
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useTimeseriesChartsStore: UnwrapRef<typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

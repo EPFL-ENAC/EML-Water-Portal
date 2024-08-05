@@ -95,6 +95,7 @@
     "useHelpStore": true,
     "useFiltersStore": true,
     "useSettingsStore": true,
-    "useMeasuresStore": true
+    "useMeasuresStore": true,
+    "useTimeseriesChartsStore": true
   }
 }
