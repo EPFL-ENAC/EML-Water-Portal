@@ -18,6 +18,7 @@ export type LayerSelection = {
 
 export const useMapStore = defineStore('map', () => {
 
+  const showDrawer = ref(false);
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
   const sensorsFilter = ref<string[]>([]);
@@ -126,6 +127,7 @@ export const useMapStore = defineStore('map', () => {
   }
 
   return {
+    showDrawer,
     map,
     layerSelections,
     bvSelected,
