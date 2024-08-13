@@ -39,7 +39,6 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
-import { debounce } from 'quasar';
 
 use([
   CanvasRenderer,
@@ -55,13 +54,11 @@ interface Props {
   label: string;
   height?: number;
   heightUnit?: string;
-  debounceTime?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
   heightUnit: 'px',
-  debounceTime: 20,
 });
 
 // Keep it in case new feature requires this trick
@@ -89,10 +86,16 @@ const loading = ref(false);
 const sensors = computed(() =>
   measuresStore.datasets
     ? measuresStore.datasets?.sensors.filter((sensor) => {
-        const selected = filtersStore.sensors.length === 0 || filtersStore.sensors.includes(sensor.name);
-        return selected && sensor.columns.find((col) => col.measure === props.measure && col.data);
-      },
-    )
+        const selected =
+          filtersStore.sensors.length === 0 ||
+          filtersStore.sensors.includes(sensor.name);
+        return (
+          selected &&
+          sensor.columns.find(
+            (col) => col.measure === props.measure && col.data,
+          )
+        );
+      })
     : [],
 );
 
@@ -126,14 +129,7 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
-const debouncedRangeChange = debounce(onRangeChange, props.debounceTime);
-
-watch(
-  () => [timeseriesStore.timeRange],
-  () => {
-    debouncedRangeChange();
-  },
-);
+watch(() => [timeseriesStore.timeRange], onRangeChange);
 
 function onRangeChange() {
   if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
@@ -187,12 +183,12 @@ function buildOptions() {
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
         axisLabel: {
-            formatter: function (value) {
-                var date = new Date(value);
-                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-            }
-        }
-      }
+          formatter: function (value) {
+            var date = new Date(value);
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+          },
+        },
+      },
     ],
     yAxis: [
       {
@@ -214,8 +210,12 @@ function buildOptions() {
       )?.data;
       return {
         name: s.name,
-        type: 'line',
+        showSymbol: false,
+        animation: false,
+        large: true,
+        symbol: 'none',
         symbolSize: 0,
+        type: 'line',
         data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
       };
     }),

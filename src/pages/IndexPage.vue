@@ -9,7 +9,7 @@
         <div class="row items-center full-height justify-evenly">
           <maplibre-map
             position
-            :center="[6.570, 46.5225]"
+            :center="[6.57, 46.5225]"
             :zoom="16"
             @map:loaded="onMapLoaded"
           />
@@ -27,14 +27,21 @@
       <template v-slot:after>
         <div v-if="!measuresStore.loading" class="row">
           <div class="col">
-            <div v-if="!measuresStore.loading" style="position: fixed;">
+            <div v-if="!measuresStore.loading" style="position: fixed">
               <div v-for="measure in MeasureOptions" :key="measure.key">
                 <q-checkbox
                   v-model="measuresVisible[measure.key]"
                   :label="measure.label"
                 />
-                <template v-for="col in getSensorColors(measure.key)" :key="col">
-                  <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
+                <template
+                  v-for="col in getSensorColors(measure.key)"
+                  :key="col"
+                >
+                  <q-icon
+                    name="circle"
+                    :style="`color: ${col};`"
+                    class="q-ml-xs"
+                  />
                 </template>
                 <q-btn
                   v-if="measuresVisible[measure.key]"
@@ -44,8 +51,9 @@
                   dense
                   rounded
                   size="sm"
-                  @click="onShowMeasure(measure.key)" 
-                  class="on-right" />
+                  @click="onShowMeasure(measure.key)"
+                  class="on-right"
+                />
               </div>
             </div>
           </div>
@@ -60,7 +68,6 @@
                   :measure="measure.key"
                   :label="measure.label"
                   :height="200"
-                  :debounce-time="measure.key == 'water_temperature' ? 80 : 30"
                   class="q-pa-sm"
                 />
               </div>
@@ -74,24 +81,22 @@
     </q-splitter>
 
     <scenarii-dialog v-model="showScenario" />
-    
-    <q-dialog
-      v-if="measureSelected"
-      v-model="showMeasure"
-      maximized>
+
+    <q-dialog v-if="measureSelected" v-model="showMeasure" maximized>
       <q-card>
         <q-bar class="bg-white q-ma-md">
           <div class="text-h6">
             {{ MeasureOptions.find((m) => m.key === measureSelected)?.label }}
           </div>
           <q-space />
-          <q-btn dense flat icon="close" size="lg" v-close-popup>
-          </q-btn>
+          <q-btn dense flat icon="close" size="lg" v-close-popup> </q-btn>
         </q-bar>
         <q-card-section>
           <timeseries-chart
             :measure="measureSelected"
-            :label="MeasureOptions.find((m) => m.key === measureSelected)?.label || ''"
+            :label="
+              MeasureOptions.find((m) => m.key === measureSelected)?.label || ''
+            "
             :height="80"
             :height-unit="'vh'"
             :debounce-time="30"
@@ -122,7 +127,9 @@ const showScenario = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
 
-const measuresVisible = ref<Record<string, boolean>>(settingsStore.settings?.measuresVisible || {});
+const measuresVisible = ref<Record<string, boolean>>(
+  settingsStore.settings?.measuresVisible || {},
+);
 
 onMounted(() => measuresStore.loadDatasets());
 
@@ -143,11 +150,7 @@ watch(
   { deep: true },
 );
 
-watch(
-  () => measuresVisible.value,
-  onMeasureVisibilityChange,
-  { deep: true },
-);
+watch(() => measuresVisible.value, onMeasureVisibilityChange, { deep: true });
 
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
@@ -167,7 +170,8 @@ function onShowMeasure(measure: string) {
 }
 
 function getSensorColors(measure: string) {
-  return SensorColors.filter((opt) => opt.measures.includes(measure)).map((opt) => opt.color);
+  return SensorColors.filter((opt) => opt.measures.includes(measure)).map(
+    (opt) => opt.color,
+  );
 }
-
 </script>
