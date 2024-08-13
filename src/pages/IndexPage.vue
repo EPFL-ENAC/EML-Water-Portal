@@ -72,7 +72,6 @@
 import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map, MapMouseEvent } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
-
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
 
 const mapStore = useMapStore();

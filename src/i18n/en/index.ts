@@ -34,4 +34,10 @@ export default {
   sensors_to_filter_info:
     'Click sensors on the map to filter measures. Click again to deselect.',
   source_code: 'Source Code',
+  tank_volume: 'Tank volume',
+  soil_infiltration: 'Soil infiltration',
+  paved_area: 'Paved area',
+  water_reuse: 'Water reuse',
+  irrigation: 'Irrigation',
+  toilet_flushing: 'Toilet flushing'
 };
