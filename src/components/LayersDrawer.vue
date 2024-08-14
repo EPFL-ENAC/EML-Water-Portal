@@ -5,7 +5,12 @@
       <span class="q-ml-sm">{{ $t('scenario') }}</span>
     </q-item-label>
     <q-item>
-      <div class="text-help">{{ $t('scenario_info') }}</div>
+      <div v-if="scenariiStore.scenarii.length === 0" class="text-help">{{ $t('scenario_info') }}</div>
+      <div v-else>
+        <q-chip v-for="scenario in scenariiStore.scenarii" :key="`${scenario.watershed}:${scenario.name}`" removable @remove="onRemoveScenario(scenario)" size="sm">
+          {{ `${scenario.watershed}: ${scenario.name}` }}
+        </q-chip>
+      </div>
     </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="layers" class="q-pb-xs"/>
@@ -76,7 +81,7 @@
         class="q-mt-xs q-pl-xs q-pr-xs float-right "/>
     </q-item-label>
     <q-item>
-      <span v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</span>
+      <div v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</div>
       <div v-else>
         <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
           {{ id }}
@@ -105,9 +110,12 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
+import { Scenario } from 'src/stores/scenarii';
+
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();
+const scenariiStore = useScenariiStore();
 
 const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
 
@@ -153,5 +161,10 @@ function onUpdatedFilter() {
 
 function onRemoveSensorFilter(id: string) {
   mapStore.toggleSensorFilter(id);
+}
+
+function onRemoveScenario(scenario: Scenario) {
+  scenariiStore.removeScenario(scenario);
+  mapStore.applyScenarii(scenariiStore.scenarii);
 }
 </script>
