@@ -1,13 +1,12 @@
 import { Map, GeoJSONSource } from 'maplibre-gl';
 import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from 'geojson';
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
-import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
-import { Scenario } from 'src/stores/scenarii';
+import { State } from 'src/layers/models';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
 
-export class BVLayerManager extends LayerManager<FilterParams> {
+export class BVLayerManager extends LayerManager {
 
   data: FeatureCollection | null = null;
 
@@ -94,16 +93,10 @@ export class BVLayerManager extends LayerManager<FilterParams> {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  filter(map: Map, filter: FilterParams): void {
-    // filter by stationName ?
-    return;
-  }
-
-  applyScenarii(map: Map, scenarii: Scenario[]): void {
+  applyState(map: Map, state: State): void {
     if (!this.data) return;
     const updatedFeatures = this.data.features.map((feature: Feature<Geometry, GeoJsonProperties>) => {
-      const bvScenarii = scenarii.filter((s) => s.watershed === feature.properties?.stationName);
+      const bvScenarii = state.scenarii.filter((s) => s.watershed === feature.properties?.stationName);
       const updatedProperties = {
         ...feature.properties,
         scenarii: bvScenarii.length === 0 ? undefined : bvScenarii

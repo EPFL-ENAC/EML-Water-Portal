@@ -1,12 +1,11 @@
 import { Map, Popup } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
-import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/meteo.geojson`;
 
-export class MeteoLayerManager extends LayerManager<FilterParams> {
+export class MeteoLayerManager extends LayerManager {
 
   data: FeatureCollection | null = null;
 
@@ -73,12 +72,6 @@ export class MeteoLayerManager extends LayerManager<FilterParams> {
         visibility
       )
     });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  filter(map: Map, filter: FilterParams): void {
-    // filter by stationName ?
-    return;
   }
 
 }

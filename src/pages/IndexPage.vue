@@ -12,7 +12,6 @@
             :center="[6.573, 46.5218]"
             :zoom="14"
             @map:loaded="onMapLoaded"
-            @map:click="onMapClick"
           />
         </div>
       </template>
@@ -70,7 +69,7 @@
 
 <script setup lang="ts">
 import MaplibreMap from 'src/components/MaplibreMap.vue';
-import { Map, MapMouseEvent } from 'maplibre-gl';
+import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 
@@ -125,25 +124,15 @@ watch(
 watch(
   () => scenariiStore.scenarii,
   () => {
-    mapStore.applyScenarii(scenariiStore.scenarii);
+    mapStore.applyState();
   },
   { deep: true },
 );
 
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
-    mapStore.applyFilters(filtersStore.asParams());
-    mapStore.applyScenarii(scenariiStore.scenarii);
+    mapStore.applyState();
   });
-}
-
-function onMapClick(event: MapMouseEvent) {
-  console.debug('Map clicked at:', event.lngLat);
-  // custom popup
-  // new Popup()
-  //   .setLngLat(event.lngLat)
-  //   .setHTML('<b>Hello World!</b>')
-  //   .addTo(map as Map);
 }
 
 </script>

@@ -53,7 +53,6 @@ export default defineComponent({
 import { Scenario } from 'src/stores/scenarii';
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
 import { VegetationIcons } from 'src/utils/icons';
-import { title } from 'process';
 
 interface Props {
   modelValue: boolean;

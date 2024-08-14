@@ -81,9 +81,9 @@
         class="q-mt-xs q-pl-xs q-pr-xs float-right "/>
     </q-item-label>
     <q-item>
-      <div v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</div>
+      <div v-if="filtersStore.sensors.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</div>
       <div v-else>
-        <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
+        <q-chip v-for="id in filtersStore.sensors" :key="id" removable @remove="onRemoveSensor(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
           {{ id }}
         </q-chip>
       </div>
@@ -146,25 +146,25 @@ function getSensorColor(id: string) {
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);
-  onUpdatedFilter();
+  onUpdatedState();
 }
 
 function onResetFilters() {
   filtersStore.reset();
-  mapStore.resetSensorFilters();
-  onUpdatedFilter();
+  onUpdatedState();
 }
 
-function onUpdatedFilter() {
-  mapStore.applyFilters(filtersStore.asParams());
+function onUpdatedState() {
+  mapStore.applyState();
 }
 
-function onRemoveSensorFilter(id: string) {
-  mapStore.toggleSensorFilter(id);
+function onRemoveSensor(id: string) {
+  filtersStore.toggleSensor(id);
+  onUpdatedState();
 }
 
 function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
-  mapStore.applyScenarii(scenariiStore.scenarii);
+  onUpdatedState();
 }
 </script>

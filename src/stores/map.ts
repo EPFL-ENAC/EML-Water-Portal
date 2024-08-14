@@ -9,20 +9,20 @@ import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
 import { Map, MapGeoJSONFeature } from 'maplibre-gl';
-import { FilterParams } from 'src/stores/filters';
-import { Scenario } from './scenarii';
 
 export type LayerSelection = {
   id: string;
   visible: boolean;
 }
 
+const filtersStore = useFiltersStore();
+const scenariiStore = useScenariiStore();
+
 export const useMapStore = defineStore('map', () => {
 
   const showDrawer = ref(false);
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
-  const sensorsFilter = ref<string[]>([]);
 
   const layerManagers = [
     new RiverLayerManager(),
@@ -63,22 +63,6 @@ export const useMapStore = defineStore('map', () => {
   }
 
   /**
-   * Apply the data filters to the layers.
-   * @param filters the data filters parameters
-   */
-  function applyFilters(filters: FilterParams) {
-    if (!map.value) return;
-    layerSelections.map((layer) => {
-      if (map.value && layer.visible) {
-        const manager = getLayerManager(layer.id);
-        if (manager) {
-          manager.filter(map.value, filters);
-        }
-      }
-    });
-  }
-
-  /**
    * Register the current map and initialize the layers for that map.
    * @param mapInstance the map instance
    * @returns 
@@ -110,30 +94,25 @@ export const useMapStore = defineStore('map', () => {
       bvSelected.value = feature;
     } else if (name === 'sensors') {
       const id = feature.properties.name;
-      toggleSensorFilter(id); 
+      filtersStore.toggleSensor(id);
     }
   }
 
-  function resetSensorFilters() {
-    sensorsFilter.value = [];
-  }
-
-  function toggleSensorFilter(id: string) {
-    if (sensorsFilter.value.includes(id)) {
-      sensorsFilter.value = sensorsFilter.value.filter((val) => val !== id);
-    } else {
-      sensorsFilter.value.push(id);
-      sensorsFilter.value.sort();
-    }
-  }
-
-  function applyScenarii(scenarii: Scenario[]) {
+  /**
+   * Apply the application state to the layers.
+   * 
+   * @returns 
+   */
+  function applyState() {
     if (!map.value) return;
     layerSelections.map((layer) => {
       if (map.value && layer.visible) {
         const manager = getLayerManager(layer.id);
         if (manager) {
-          manager.applyScenarii(map.value, scenarii);
+          manager.applyState(map.value, {
+            sensors: filtersStore.sensors,
+            scenarii: scenariiStore.scenarii,
+          });
         }
       }
     });
@@ -144,13 +123,9 @@ export const useMapStore = defineStore('map', () => {
     map,
     layerSelections,
     bvSelected,
-    sensorsFilter,
-    applyFilters,
     applyLayerVisibility,
     initLayers,
-    resetSensorFilters,
-    toggleSensorFilter,
-    applyScenarii,
+    applyState,
   };
 
 });
