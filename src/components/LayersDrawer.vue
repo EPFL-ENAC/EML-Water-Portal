@@ -2,7 +2,7 @@
   <q-list>
     <q-item-label header class="text-h6">
       <q-icon name="model_training" class="q-pb-xs"/>
-      <span class="q-ml-sm">{{ $t('scenario') }}</span>
+      <span class="q-ml-sm">{{ $t('scenarios') }}</span>
     </q-item-label>
     <q-item>
       <div v-if="scenariiStore.scenarii.length === 0" class="text-help">{{ $t('scenario_info') }}</div>
