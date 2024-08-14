@@ -60,7 +60,6 @@
             <q-spinner-dots color="primary" size="100px" />
           </div>
 
-          <custom-range-slider />
         </div>
       </template>
     </q-splitter>
@@ -75,7 +74,6 @@ import { Map, MapMouseEvent } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
-import CustomRangeSlider from 'src/components/charts/CustomRangeSlider.vue';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();

@@ -1,7 +1,7 @@
 <template>
   <q-toolbar>
     <q-btn
-      v-if="$q.screen.lt.md && !noMenu"
+      v-if="!noMenu"
       flat
       dense
       round
@@ -13,7 +13,7 @@
       <img src="EPFL_logo.png" style="height: 25px" />
     </a>
     <span class="q-ml-md text-h6">{{ $t('app_title') }}</span>
-    <q-tabs v-if="!$q.screen.lt.sm" shrink stretch active-color="primary" class="q-ml-md">
+    <!--q-tabs v-if="!$q.screen.lt.sm" shrink stretch active-color="primary" class="q-ml-md">
       <q-route-tab
         to="/"
         :label="$t('home')"
@@ -24,7 +24,7 @@
         to="/page/about"
         exact
       />
-    </q-tabs>
+    </q-tabs-->
     <q-space />
     <span v-if="!$q.screen.lt.md">
       <q-btn
@@ -74,10 +74,8 @@
         </q-list>
       </q-popup-proxy>
     </q-btn>
-    <a href="https://epfl.ch/" target="_blank" class="q-mt-sm">
-      <q-skeleton
-        style="height: 30px; width: 100px"
-        class="float-right q-mb-sm"/>
+    <a href="https://www.epfl.ch/labs/eml/" target="_blank" class="q-mt-xs">
+      <span class="text-logo q-mb-xs">EML</span>
     </a>
   </q-toolbar>
 

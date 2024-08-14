@@ -5,16 +5,12 @@
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
-      :mini="!leftDrawerOpen || miniState"
-      show-if-above
-      bordered
+      v-model="mapStore.showDrawer"
+      overlay
+      elevated
     >
-      <div v-if="!miniState">
-        <layers-drawer />
-      </div>
+      <layers-drawer />
       <div
-        v-if="!$q.screen.lt.md"
         class="absolute"
         style="top: 10px; right: 10px"
       >
@@ -22,8 +18,8 @@
           dense
           round
           unelevated
-          :icon="miniState ? 'chevron_right' : 'chevron_left'"
-          @click="miniState = !miniState"
+          icon="close"
+          @click="toggleLeftDrawer"
         />
       </div>
     </q-drawer>
@@ -51,6 +47,13 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer bordered class="bg-white text-black">
+      <div>
+        <custom-range-slider />
+      </div>
+    </q-footer>
+
   </q-layout>
 </template>
 
@@ -58,14 +61,13 @@
 import AppToolbar from 'src/components/AppToolbar.vue';
 import LayersDrawer from 'src/components/LayersDrawer.vue';
 import HelpDrawer from 'src/components/HelpDrawer.vue';
+import CustomRangeSlider from 'src/components/charts/CustomRangeSlider.vue';
 
+const mapStore = useMapStore();
 const helpStore = useHelpStore();
 
-const leftDrawerOpen = ref(false);
-const miniState = ref(false);
-
 function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+  mapStore.showDrawer = !mapStore.showDrawer;
 }
 
 function toggleRightDrawer() {

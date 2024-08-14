@@ -9,6 +9,12 @@
   </div>
 </template>
 
+
+<script lang="ts">
+export default defineComponent({
+  name: 'CustomRangeSlider',
+});
+</script>
 <script setup lang="ts">
 import noUiSlider from 'nouislider';
 import { PipsMode, type API as SliderAPI } from 'nouislider';

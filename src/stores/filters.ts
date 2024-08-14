@@ -1,32 +1,20 @@
 import { defineStore } from 'pinia';
 
 export type FilterParams = {
-  magnitudes: [number, number]
-  tsunami: boolean | null
+  item?: boolean | null
 }
-
-const DEFAULT_MAGNITUDES = { min: 1, max: 10 };
 
 export const useFiltersStore = defineStore('filters', () => {
 
-  const magnitudes = ref({...DEFAULT_MAGNITUDES});
-  const tsunami = ref(null);
-
   function reset() {
-    magnitudes.value = {...DEFAULT_MAGNITUDES};
-    tsunami.value = null;
+    // TODO reset filters
   }
 
   function asParams(): FilterParams {
-    return {
-      magnitudes: [magnitudes.value.min, magnitudes.value.max],
-      tsunami: tsunami.value
-    }
+    return {}
   }
 
   return {
-    magnitudes,
-    tsunami,
     reset,
     asParams,
   }
