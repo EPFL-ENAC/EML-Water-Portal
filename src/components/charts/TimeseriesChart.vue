@@ -50,6 +50,7 @@ interface Props {
   isExpanded?: boolean;
   debounceTime?: number;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
   isExpanded: true,
@@ -71,6 +72,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const measuresStore = useMeasuresStore();
 const timeseriesStore = useTimeseriesChartsStore();
+const filtersStore = useFiltersStore();
 
 const chart = shallowRef<typeof ECharts | null>(null);
 
@@ -79,9 +81,11 @@ const loading = ref(false);
 
 const sensors = computed(() =>
   measuresStore.datasets
-    ? measuresStore.datasets?.sensors.filter((sensor) =>
-        sensor.columns.find((col) => col.measure === props.measure && col.data),
-      )
+    ? measuresStore.datasets?.sensors.filter((sensor) => {
+        const selected = filtersStore.sensors.length === 0 || filtersStore.sensors.includes(sensor.name);
+        return selected && sensor.columns.find((col) => col.measure === props.measure && col.data);
+      },
+    )
     : [],
 );
 
