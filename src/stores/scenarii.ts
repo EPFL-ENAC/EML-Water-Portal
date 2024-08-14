@@ -6,6 +6,7 @@ export interface Scenario {
   tank: number; // volume
   soilInfiltration: number; // rate
   pavedArea: number; // percentage
+  vegetation: string,
   waterReuseIrrigation: boolean;
   waterReuseToilet: boolean;
 }
@@ -25,14 +26,16 @@ export const useScenariiStore = defineStore('scenarii', () => {
       tank: 0,
       soilInfiltration: 0,
       pavedArea: 100,
+      vegetation: 'none',
       waterReuseIrrigation: false,
       waterReuseToilet: false,
     } as Scenario;
   }
 
   // add or update scenario
-  function applyScenario(scenario: Scenario) {
-    const idx = scenarii.value.findIndex((s) => s.watershed === scenario.watershed && s.name === scenario.name);
+  function applyScenario(name: string, scenario: Scenario) {
+
+    const idx = scenarii.value.findIndex((s) => s.watershed === scenario.watershed && s.name === name);
     if (idx < 0) {
       scenarii.value.push(scenario);
     } else {

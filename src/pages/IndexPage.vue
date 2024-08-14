@@ -64,7 +64,7 @@
       </template>
     </q-splitter>
 
-    <scenario-dialog v-model="showScenario" @apply="onApplyScenario" @remove="onRemoveScenario"/>
+    <scenarii-dialog v-model="showScenario" />
   </q-page>
 </template>
 
@@ -72,8 +72,7 @@
 import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map, MapMouseEvent } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
-import ScenarioDialog from 'src/components/ScenarioDialog.vue';
-import { Scenario } from 'src/stores/scenarii';
+import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
@@ -123,6 +122,14 @@ watch(
   },
 );
 
+watch(
+  () => scenariiStore.scenarii,
+  () => {
+    mapStore.applyScenarii(scenariiStore.scenarii);
+  },
+  { deep: true },
+);
+
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
     mapStore.applyFilters(filtersStore.asParams());
@@ -139,13 +146,4 @@ function onMapClick(event: MapMouseEvent) {
   //   .addTo(map as Map);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onApplyScenario(scenario: Scenario) {
-  mapStore.applyScenarii(scenariiStore.scenarii);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onRemoveScenario(scenario: Scenario) {
-  mapStore.applyScenarii(scenariiStore.scenarii);
-}
 </script>
