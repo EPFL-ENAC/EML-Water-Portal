@@ -86,7 +86,6 @@ declare global {
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useScenariiStore: typeof import('./stores/scenarii')['useScenariiStore']
-  const useScenarioStore: typeof import('./stores/scenario')['useScenarioStore']
   const useSettingsStore: typeof import('./stores/settings')['useSettingsStore']
   const useSlots: typeof import('vue')['useSlots']
   const useTimeseriesChartsStore: typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']
