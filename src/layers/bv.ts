@@ -1,8 +1,9 @@
-import { Map } from 'maplibre-gl';
-import { FeatureCollection } from 'geojson';
+import { Map, GeoJSONSource } from 'maplibre-gl';
+import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from 'geojson';
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
+import { Scenario } from 'src/stores/scenarii';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
 
@@ -28,8 +29,13 @@ export class BVLayerManager extends LayerManager<FilterParams> {
       type: 'fill',
       source: 'bv',
       paint: {
-        'fill-opacity': 0.5,
-        'fill-color': '#00a79f',
+        'fill-opacity': 0.2,
+        'fill-color': [
+          'case',
+          ['boolean', ['has', 'scenarii'], false],
+          '#ff0000',
+          '#00a79f'
+        ],
       }
     });
     
@@ -41,6 +47,24 @@ export class BVLayerManager extends LayerManager<FilterParams> {
         'line-opacity': 0.8,
         'line-color': '#346EEB',
         'line-width': 1
+      }
+    });
+
+    map.addLayer({
+      id: 'bv-labels',
+      type: 'symbol',
+      source: 'bv',
+      layout: {
+        'text-font': ['Roboto'],
+        'text-field': ['get', 'stationName'], // Get the 'name' property from each feature
+        'text-size': 14, // Text size
+        'text-anchor': 'top', // Anchor text at the top of the point
+        'text-offset': [0, 0.5] // Offset text slightly so it doesn't overlap the point
+      },
+      paint: {
+        'text-color': '#000000', // Text color
+        'text-halo-color': '#FFFFFF', // Halo color around text for better readability
+        'text-halo-width': 2 // Width of the halo around the text
       }
     });
 
@@ -61,7 +85,7 @@ export class BVLayerManager extends LayerManager<FilterParams> {
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['bv', 'bv-outline'].forEach(id => {
+    ['bv', 'bv-outline', 'bv-labels'].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',
@@ -74,6 +98,26 @@ export class BVLayerManager extends LayerManager<FilterParams> {
   filter(map: Map, filter: FilterParams): void {
     // filter by stationName ?
     return;
+  }
+
+  applyScenarii(map: Map, scenarii: Scenario[]): void {
+    if (!this.data) return;
+    const updatedFeatures = this.data.features.map((feature: Feature<Geometry, GeoJsonProperties>) => {
+      const bvScenarii = scenarii.filter((s) => s.watershed === feature.properties?.stationName);
+      const updatedProperties = {
+        ...feature.properties,
+        scenarii: bvScenarii.length === 0 ? undefined : bvScenarii
+      }
+      return {
+        ...feature,
+        properties: updatedProperties
+      };
+    });
+    const updatedData = {
+      ...this.data,
+      features: updatedFeatures
+    } as GeoJSON;
+    (map.getSource(this.getId()) as GeoJSONSource).setData(updatedData);
   }
 
 }

@@ -1,4 +1,5 @@
 import { Map, MapGeoJSONFeature } from 'maplibre-gl';
+import { Scenario } from 'src/stores/scenarii';
 
 export abstract class LayerManager<T> {
   
@@ -21,6 +22,14 @@ export abstract class LayerManager<T> {
    * Filter the layer.
    */
   abstract filter(map: Map, filter: T): void;
+
+  /**
+   * Apply the scenarii to the layer.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  applyScenarii(map: Map, scenarii: Scenario[]): void {
+    return;
+  }
  
 }
 

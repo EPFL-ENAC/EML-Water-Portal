@@ -41,8 +41,8 @@ export const useScenariiStore = defineStore('scenarii', () => {
     // TODO add computed line to charts
   }
 
-  function removeScenario(watershed: string, name: string) {
-    scenarii.value = scenarii.value.filter((s) => !(s.watershed === watershed && s.name === name));
+  function removeScenario(scenario: Scenario) {
+    scenarii.value = scenarii.value.filter((s) => !(s.watershed === scenario.watershed && s.name === scenario.name));
     // TODO remove computed line from charts
   }
 

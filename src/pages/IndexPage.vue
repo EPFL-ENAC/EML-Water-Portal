@@ -64,7 +64,7 @@
       </template>
     </q-splitter>
 
-    <scenario-dialog v-model="showScenario" />
+    <scenario-dialog v-model="showScenario" @apply="onApplyScenario" @remove="onRemoveScenario"/>
   </q-page>
 </template>
 
@@ -73,10 +73,12 @@ import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map, MapMouseEvent } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
+import { Scenario } from 'src/stores/scenarii';
 
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
 const measuresStore = useMeasuresStore();
+const scenariiStore = useScenariiStore();
 
 const splitterModel = ref(30);
 const showScenario = ref(false);
@@ -108,7 +110,6 @@ const isExpanded = reactive<Record<string, boolean>>(
 );
 const updateExpansionState = (measureKey: string, expanded: boolean) => {
   isExpanded[measureKey] = expanded;
-  console.log(isExpanded);
 };
 
 onMounted(() => measuresStore.loadDatasets());
@@ -118,7 +119,6 @@ watch(
   () => {
     if (mapStore.bvSelected) {
       showScenario.value = true;
-      console.log(mapStore.bvSelected);
     }
   },
 );
@@ -126,6 +126,7 @@ watch(
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
     mapStore.applyFilters(filtersStore.asParams());
+    mapStore.applyScenarii(scenariiStore.scenarii);
   });
 }
 
@@ -136,5 +137,15 @@ function onMapClick(event: MapMouseEvent) {
   //   .setLngLat(event.lngLat)
   //   .setHTML('<b>Hello World!</b>')
   //   .addTo(map as Map);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onApplyScenario(scenario: Scenario) {
+  mapStore.applyScenarii(scenariiStore.scenarii);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onRemoveScenario(scenario: Scenario) {
+  mapStore.applyScenarii(scenariiStore.scenarii);
 }
 </script>

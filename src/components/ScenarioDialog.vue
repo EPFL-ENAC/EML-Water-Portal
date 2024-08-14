@@ -34,7 +34,7 @@ interface Props {
   modelValue: boolean;
 }
 const props = defineProps<Props>();
-const emit = defineEmits(['update:modelValue', 'confirm', 'cancel'])
+const emit = defineEmits(['update:modelValue', 'apply', 'remove'])
 
 const mapStore = useMapStore();
 const scenariiStore = useScenariiStore();
@@ -59,13 +59,17 @@ function onHide() {
 }
 
 function onApply() {
-  if (watershedScenario.value)
+  if (watershedScenario.value) {
     scenariiStore.applyScenario(watershedScenario.value);
+    emit('apply', watershedScenario.value);
+  }
 }
 
 function onRemove() {
-  if (watershedScenario.value)
-    scenariiStore.removeScenario(watershedScenario.value.name);
+  if (watershedScenario.value) {
+    scenariiStore.removeScenario(watershedScenario.value);
+    emit('remove', watershedScenario.value);
+  }
 }
 
 </script>

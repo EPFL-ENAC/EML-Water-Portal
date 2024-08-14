@@ -10,6 +10,7 @@ import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
 import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 import { FilterParams } from 'src/stores/filters';
+import { Scenario } from './scenarii';
 
 export type LayerSelection = {
   id: string;
@@ -103,8 +104,8 @@ export const useMapStore = defineStore('map', () => {
   }
 
   function onFeaturesSelected(name: string, feature: MapGeoJSONFeature) {
-    console.log(name);
-    console.log(feature);
+    // console.log(name);
+    // console.log(feature);
     if (name === 'bv') {
       bvSelected.value = feature;
     } else if (name === 'sensors') {
@@ -126,6 +127,18 @@ export const useMapStore = defineStore('map', () => {
     }
   }
 
+  function applyScenarii(scenarii: Scenario[]) {
+    if (!map.value) return;
+    layerSelections.map((layer) => {
+      if (map.value && layer.visible) {
+        const manager = getLayerManager(layer.id);
+        if (manager) {
+          manager.applyScenarii(map.value, scenarii);
+        }
+      }
+    });
+  }
+
   return {
     showDrawer,
     map,
@@ -137,6 +150,7 @@ export const useMapStore = defineStore('map', () => {
     initLayers,
     resetSensorFilters,
     toggleSensorFilter,
+    applyScenarii,
   };
 
 });
