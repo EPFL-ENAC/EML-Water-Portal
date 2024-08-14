@@ -105,6 +105,7 @@ export const useMapStore = defineStore('map', () => {
    */
   function applyState() {
     if (!map.value) return;
+    console.log('Applying state');
     layerSelections.map((layer) => {
       if (map.value && layer.visible) {
         const manager = getLayerManager(layer.id);

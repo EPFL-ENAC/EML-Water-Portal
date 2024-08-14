@@ -122,7 +122,7 @@ watch(
 );
 
 watch(
-  () => scenariiStore.scenarii,
+  [() => scenariiStore.scenarii, () => filtersStore.sensors],
   () => {
     mapStore.applyState();
   },

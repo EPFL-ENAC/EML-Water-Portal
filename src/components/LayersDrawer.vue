@@ -146,25 +146,17 @@ function getSensorColor(id: string) {
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);
-  onUpdatedState();
 }
 
 function onResetFilters() {
   filtersStore.reset();
-  onUpdatedState();
-}
-
-function onUpdatedState() {
-  mapStore.applyState();
 }
 
 function onRemoveSensor(id: string) {
   filtersStore.toggleSensor(id);
-  onUpdatedState();
 }
 
 function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
-  onUpdatedState();
 }
 </script>

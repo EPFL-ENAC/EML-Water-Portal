@@ -1,7 +1,8 @@
-import { Map, Popup } from 'maplibre-gl';
-import { FeatureCollection } from 'geojson';
-import { LayerManager } from 'src/layers/models';
+import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
+import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from 'geojson';
+import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
+import { State } from 'src/layers/models';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
@@ -27,7 +28,11 @@ export class SensorsLayerManager extends LayerManager {
       source: 'sensors',
       type: 'circle',
       paint: {
-        'circle-opacity': 0.8,
+        'circle-opacity': [
+          'case',
+          ['get', 'selected'], 1,
+          0.2
+        ],
         'circle-radius': [
           'step',
           ['zoom'],
@@ -36,11 +41,11 @@ export class SensorsLayerManager extends LayerManager {
           15, 10  // Radius at zoom level 15 and above
         ],
         'circle-color': [
-                'case',
-                ['==', ['index-of', 'A', ['get', 'name']], 0], '#9400D3', // color if name starts with 'A'
-                ['==', ['index-of', 'B', ['get', 'name']], 0], '#3FD400', // color if name starts with 'B'
-                '#51bbd6' // color for all other categories
-            ],
+          'case',
+          ['==', ['index-of', 'A', ['get', 'name']], 0], '#9400D3', // color if name starts with 'A'
+          ['==', ['index-of', 'B', ['get', 'name']], 0], '#3FD400', // color if name starts with 'B'
+          '#51bbd6' // color for all other categories
+        ],
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1
       },
@@ -105,5 +110,26 @@ export class SensorsLayerManager extends LayerManager {
       )
     });
   }
+
+  applyState(map: Map, state: State): void {
+    if (!this.data) return;
+    const updatedFeatures = this.data.features.map((feature: Feature<Geometry, GeoJsonProperties>) => {
+      const selected = state.sensors.length === 0 || state.sensors.includes(feature.properties?.name);
+      const updatedProperties = {
+        ...feature.properties,
+        selected
+      }
+      return {
+        ...feature,
+        properties: updatedProperties
+      };
+    });
+    const updatedData = {
+      ...this.data,
+      features: updatedFeatures
+    } as GeoJSON;
+    (map.getSource(this.getId()) as GeoJSONSource).setData(updatedData);
+  }
+
 
 }
