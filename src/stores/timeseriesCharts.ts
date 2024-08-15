@@ -19,21 +19,11 @@ export const useTimeseriesChartsStore = defineStore('timeseriesCharts', () => {
     axisPointer.value = undefined;
   }
 
-  function asParams(): TimeseriesChartsParams {
-    return {
-      timeRange: [timeRange.value[0], timeRange.value[1]],
-      axisPointer: axisPointer.value,
-      MIN_DATE,
-      MAX_DATE,
-    };
-  }
-
   return {
     timeRange,
     axisPointer,
     MIN_DATE,
     MAX_DATE,
     reset,
-    asParams,
   };
 });
