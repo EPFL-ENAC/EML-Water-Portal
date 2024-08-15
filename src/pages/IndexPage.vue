@@ -33,6 +33,16 @@
                   v-model="measuresVisible[measure.key]"
                   :label="measure.label"
                 />
+                <q-btn
+                  v-if="measuresVisible[measure.key]"
+                  icon="open_in_new"
+                  color="secondary"
+                  flat
+                  dense
+                  rounded
+                  size="sm"
+                  @click="onShowMeasure(measure.key)" 
+                  class="on-right" />
               </div>
             </div>
           </div>
@@ -61,6 +71,32 @@
     </q-splitter>
 
     <scenarii-dialog v-model="showScenario" />
+    
+    <q-dialog
+      v-if="measureSelected"
+      v-model="showMeasure"
+      maximized>
+      <q-card>
+        <q-bar class="bg-white q-ma-md">
+          <div class="text-h6">
+            {{ measureOptions.find((m) => m.key === measureSelected)?.label }}
+          </div>
+          <q-space />
+          <q-btn dense flat icon="close" size="lg" v-close-popup>
+          </q-btn>
+        </q-bar>
+        <q-card-section>
+          <timeseries-chart
+            :measure="measureSelected"
+            :label="measureOptions.find((m) => m.key === measureSelected)?.label || ''"
+            :height="80"
+            :height-unit="'vh'"
+            :debounce-time="30"
+            class="q-pa-sm"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -79,6 +115,8 @@ const scenariiStore = useScenariiStore();
 
 const splitterModel = ref(30);
 const showScenario = ref(false);
+const showMeasure = ref(false);
+const measureSelected = ref<string>();
 
 const measureOptions = computed(() => {
   return [
@@ -133,6 +171,11 @@ function onMeasureVisibilityChange() {
   settingsStore.saveSettings({
     measuresVisible: measuresVisible.value,
   } as Settings);
+}
+
+function onShowMeasure(measure: string) {
+  measureSelected.value = measure;
+  showMeasure.value = true;
 }
 
 </script>

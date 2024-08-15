@@ -6,7 +6,7 @@
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
       {{ $t('no_sensor_data', { measure: props.label }) }}
     </div>
-    <div v-else :style="`height: ${height}px; width: 100%;`">
+    <div v-else :style="`height: ${height}${heightUnit}; width: 100%;`">
       <e-charts
         ref="chart"
         autoresize
@@ -54,11 +54,13 @@ interface Props {
   measure: string;
   label: string;
   height?: number;
+  heightUnit?: string;
   debounceTime?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
+  heightUnit: 'px',
   debounceTime: 20,
 });
 
