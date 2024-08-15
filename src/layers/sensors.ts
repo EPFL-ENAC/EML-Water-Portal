@@ -51,6 +51,24 @@ export class SensorsLayerManager extends LayerManager {
       },
     });
 
+    map.addLayer({
+      id: 'sensors-labels',
+      type: 'symbol',
+      source: 'sensors',
+      layout: {
+        'text-font': ['Roboto'],
+        'text-field': ['get', 'name'], // Get the 'name' property from each feature
+        'text-size': 14, // Text size
+        'text-anchor': 'top', // Anchor text at the top of the point
+        'text-offset': [0, 0.5] // Offset text slightly so it doesn't overlap the point
+      },
+      paint: {
+        'text-color': '#000000', // Text color
+        'text-halo-color': '#FFFFFF', // Halo color around text for better readability
+        'text-halo-width': 2 // Width of the halo around the text
+      }
+    });
+
     // Create a popup, but don't add it to the map yet.
     const popup = new Popup({
         closeButton: false,
@@ -102,7 +120,7 @@ export class SensorsLayerManager extends LayerManager {
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['sensors'].forEach(id => {
+    ['sensors', 'sensors-labels'].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',
