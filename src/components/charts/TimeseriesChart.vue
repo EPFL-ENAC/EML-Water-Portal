@@ -1,10 +1,10 @@
 <template>
   <div>
     <div v-if="sensors.length === 0" class="text-center text-help q-pa-sm">
-      {{ $t('no_sensor_selected') }}
+      {{ $t('no_sensor_selected', { measure: props.label }) }}
     </div>
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
-      {{ $t('no_sensor_data') }}
+      {{ $t('no_sensor_data', { measure: props.label }) }}
     </div>
     <div v-else :style="`height: ${height}px; width: 100%;`">
       <e-charts
@@ -52,14 +52,13 @@ use([
 
 interface Props {
   measure: string;
+  label: string;
   height?: number;
-  isExpanded?: boolean;
   debounceTime?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  isExpanded: true,
   debounceTime: 20,
 });
 
@@ -128,15 +127,15 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
 const debouncedRangeChange = debounce(onRangeChange, props.debounceTime);
 
 watch(
-  () => [timeseriesStore.timeRange, props.isExpanded],
+  () => [timeseriesStore.timeRange],
   () => {
-    if (props.isExpanded) debouncedRangeChange();
+    debouncedRangeChange();
   },
 );
 
 function onRangeChange() {
   if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
-    if (chart.value !== null && props.isExpanded) {
+    if (chart.value !== null) {
       chart.value.dispatchAction({
         type: 'dataZoom',
         dataZoomIndex: 0,
@@ -149,7 +148,6 @@ function onRangeChange() {
 
 function buildOptions() {
   loading.value = true;
-  console.log('Building options', sensors.value);
   const newOption: EChartsOption = {
     renderer: 'canvas',
     animation: false,
@@ -176,21 +174,26 @@ function buildOptions() {
     grid: [
       {
         top: 10,
-        left: 30,
-        right: 20,
-        bottom: 30,
+        left: 60,
+        right: 10,
+        bottom: 20,
       },
     ],
-    xAxis: sensors.value.map((s) => {
-      return {
+    xAxis: [
+      {
         type: 'time',
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
-      };
-    }),
+      }
+    ],
     yAxis: [
       {
-        //name: `${props.measure} <unit>`,
+        name: props.label,
+        nameLocation: 'middle',
+        nameGap: 40,
+        nameTextStyle: {
+          fontWeight: 'bold',
+        },
         type: 'value',
       },
     ],

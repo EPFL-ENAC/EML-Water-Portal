@@ -25,40 +25,37 @@
         />
       </template>
       <template v-slot:after>
-        <div
-          class="flex column justify-between"
-          style="overflow-x: hidden; overflow-y: hidden"
-        >
-          <q-list v-if="!measuresStore.loading">
-            <template v-for="measure in measureOptions" :key="measure.key">
-              <q-expansion-item
-                switch-toggle-side
-                expand-separator
-                dense
-                :default-opened="
-                  measure.key === 'water_temperature' ||
-                  measure.key === 'water_level'
-                "
-                :label="measure.label"
-                header-class="bg-grey-2 text-bold"
-                @update:model-value="
-                  (value) => updateExpansionState(measure.key, value)
-                "
-              >
+        <div v-if="!measuresStore.loading" class="row">
+          <div class="col">
+            <div v-if="!measuresStore.loading" style="position: fixed;">
+              <div v-for="measure in measureOptions" :key="measure.key">
+                <q-checkbox
+                  v-model="measuresVisible[measure.key]"
+                  :label="measure.label"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-10">
+            <div
+              class="flex column justify-between"
+              style="overflow-x: hidden; overflow-y: hidden"
+            >
+              <div v-for="measure in measureOptions" :key="measure.key">
                 <timeseries-chart
+                  v-if="measuresVisible[measure.key]"
                   :measure="measure.key"
+                  :label="measure.label"
                   :height="200"
-                  :is-expanded="isExpanded[measure.key]"
                   :debounce-time="measure.key == 'water_temperature' ? 80 : 30"
                   class="q-pa-sm"
                 />
-              </q-expansion-item>
-            </template>
-          </q-list>
-          <div v-else class="text-center q-pa-xl">
-            <q-spinner-dots color="primary" size="100px" />
+              </div>
+            </div>
           </div>
-
+        </div>
+        <div v-else class="text-center q-pa-xl">
+          <q-spinner-dots color="primary" size="100px" />
         </div>
       </template>
     </q-splitter>
@@ -72,7 +69,9 @@ import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
+import { Settings } from 'src/stores/settings';
 
+const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
 const measuresStore = useMeasuresStore();
@@ -97,18 +96,7 @@ const measureOptions = computed(() => {
   ];
 });
 
-const isExpanded = reactive<Record<string, boolean>>(
-  measureOptions.value.reduce(
-    (acc, m) => {
-      acc[m.key] = false;
-      return acc;
-    },
-    {} as Record<string, boolean>,
-  ),
-);
-const updateExpansionState = (measureKey: string, expanded: boolean) => {
-  isExpanded[measureKey] = expanded;
-};
+const measuresVisible = ref<Record<string, boolean>>(settingsStore.settings?.measuresVisible || {});
 
 onMounted(() => measuresStore.loadDatasets());
 
@@ -129,10 +117,22 @@ watch(
   { deep: true },
 );
 
+watch(
+  () => measuresVisible.value,
+  onMeasureVisibilityChange,
+  { deep: true },
+);
+
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
     mapStore.applyState();
   });
+}
+
+function onMeasureVisibilityChange() {
+  settingsStore.saveSettings({
+    measuresVisible: measuresVisible.value,
+  } as Settings);
 }
 
 </script>
