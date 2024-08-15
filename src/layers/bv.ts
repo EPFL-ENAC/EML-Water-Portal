@@ -28,7 +28,7 @@ export class BVLayerManager extends LayerManager {
       type: 'fill',
       source: 'bv',
       paint: {
-        'fill-opacity': 0.2,
+        'fill-opacity': 0.1,
         'fill-color': [
           'case',
           ['boolean', ['has', 'scenarii'], false],

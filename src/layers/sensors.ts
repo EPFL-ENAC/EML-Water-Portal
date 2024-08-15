@@ -3,6 +3,7 @@ import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
 import { State } from 'src/layers/models';
+import { MeasureOptions } from 'src/utils/options';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
@@ -97,7 +98,7 @@ export class SensorsLayerManager extends LayerManager {
         const feature = e.features ? e.features[0] : null;
         if (!feature) return;
 
-        const measuresHtml = feature.properties.measures.split('|').map((val: string) => `<li>${val}</li>`).join('');
+        const measuresHtml = feature.properties.measures.split('|').map((val: string) => `<li>${MeasureOptions.find((opt) => opt.key === val)?.label || val}</li>`).join('');
 
         popup
           .setLngLat(e.lngLat)

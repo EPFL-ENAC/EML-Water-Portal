@@ -28,7 +28,7 @@
         <div v-if="!measuresStore.loading" class="row">
           <div class="col">
             <div v-if="!measuresStore.loading" style="position: fixed;">
-              <div v-for="measure in measureOptions" :key="measure.key">
+              <div v-for="measure in MeasureOptions" :key="measure.key">
                 <q-checkbox
                   v-model="measuresVisible[measure.key]"
                   :label="measure.label"
@@ -51,7 +51,7 @@
               class="flex column justify-between"
               style="overflow-x: hidden; overflow-y: hidden"
             >
-              <div v-for="measure in measureOptions" :key="measure.key">
+              <div v-for="measure in MeasureOptions" :key="measure.key">
                 <timeseries-chart
                   v-if="measuresVisible[measure.key]"
                   :measure="measure.key"
@@ -79,7 +79,7 @@
       <q-card>
         <q-bar class="bg-white q-ma-md">
           <div class="text-h6">
-            {{ measureOptions.find((m) => m.key === measureSelected)?.label }}
+            {{ MeasureOptions.find((m) => m.key === measureSelected)?.label }}
           </div>
           <q-space />
           <q-btn dense flat icon="close" size="lg" v-close-popup>
@@ -88,7 +88,7 @@
         <q-card-section>
           <timeseries-chart
             :measure="measureSelected"
-            :label="measureOptions.find((m) => m.key === measureSelected)?.label || ''"
+            :label="MeasureOptions.find((m) => m.key === measureSelected)?.label || ''"
             :height="80"
             :height-unit="'vh'"
             :debounce-time="30"
@@ -106,6 +106,7 @@ import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
+import { MeasureOptions } from 'src/utils/options';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
@@ -117,22 +118,6 @@ const splitterModel = ref(30);
 const showScenario = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
-
-const measureOptions = computed(() => {
-  return [
-    { key: 'water_level', label: 'Water level' },
-    { key: 'water_temperature', label: 'Water Temperature' },
-    { key: 'electro_conductivity', label: 'Electrical conductivity' },
-    { key: 'dissolved_oxygen', label: 'Dissolved oxygen' },
-    { key: 'ph', label: 'pH' },
-    { key: 'turbidity', label: 'Turbidity' },
-    {
-      key: 'oxidation_reduction_potential',
-      label: 'Oxidation-reduction potential',
-    },
-    { key: 'air_temperature', label: 'Air Temperature' },
-  ];
-});
 
 const measuresVisible = ref<Record<string, boolean>>(settingsStore.settings?.measuresVisible || {});
 
