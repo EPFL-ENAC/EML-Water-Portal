@@ -99,7 +99,7 @@
       <q-item-section avatar>
         <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{ sensor.label }}</q-avatar>
       </q-item-section>
-      <q-item-section>{{ sensor.device }}</q-item-section>
+      <q-item-section :title="sensor.device">{{ sensor.title }}</q-item-section>
     </q-item>
   </q-list>
 </template>
@@ -126,16 +126,19 @@ const sensorColors = [
   {
     color: '#9400D3',
     label: 'A',
+    title: 'Multiparameter sensor',
     device: 'In-Situ'
   },  
   {
     color: '#3FD400',
     label: 'B',
+    title: 'Temperature sensor',
     device: 'Ruskin'
   },
   {
     color: '#51bbd6',
     label: 'C',
+    title: 'Water level/discharge sensor',
     device: 'Ijinus'
   }
 ]
