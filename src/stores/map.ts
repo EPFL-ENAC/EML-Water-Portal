@@ -26,7 +26,9 @@ export const useMapStore = defineStore('map', () => {
 
   const layerManagers = [
     new RiverLayerManager(),
-    new SensorsLayerManager(),
+    new SensorsLayerManager('A'),
+    new SensorsLayerManager('B'),
+    new SensorsLayerManager('C'),
     new ConduitePrincipaleECLayerManager(),
     new BVLayerManager(),
     new ConduiteECLayerManager(),
@@ -37,7 +39,7 @@ export const useMapStore = defineStore('map', () => {
   ];
 
   const layerSelections: LayerSelection[] = layerManagers.map(
-    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
+    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
   );
 
   /**
@@ -92,7 +94,7 @@ export const useMapStore = defineStore('map', () => {
     // console.log(feature);
     if (name === 'bv') {
       bvSelected.value = feature;
-    } else if (name === 'sensors') {
+    } else if (name.startsWith('sensors')) {
       const id = feature.properties.name;
       filtersStore.toggleSensor(id);
     }

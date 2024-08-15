@@ -8,24 +8,34 @@ const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
 export class SensorsLayerManager extends LayerManager {
 
+  family = ''; // A, B or C
+
   data: FeatureCollection | null = null;
 
+  constructor(family: string) {
+    super();
+    this.family = family;
+  }
+
   getId(): string {
-    return 'sensors';
+    return `sensors-${this.family.toLowerCase()}`;
   }
 
   async append(map: Map, selectionCallback: FeatureSelectionCallback): Promise<void> {
     const response = await fetch(GEOJSON_URL);
     this.data = await response.json() as FeatureCollection;
+    this.data.features = this.data.features.filter((feature: Feature<Geometry, GeoJsonProperties>) => {
+      return feature.properties?.name.startsWith(this.family);
+    });
 
-    map.addSource('sensors', {
+    map.addSource(this.getId(), {
       type: 'geojson',
       data: this.data
     });
 
     map.addLayer({
-      id: 'sensors',
-      source: 'sensors',
+      id: this.getId(),
+      source: this.getId(),
       type: 'circle',
       paint: {
         'circle-opacity': [
@@ -52,9 +62,9 @@ export class SensorsLayerManager extends LayerManager {
     });
 
     map.addLayer({
-      id: 'sensors-labels',
+      id: `${this.getId()}-labels`,
       type: 'symbol',
-      source: 'sensors',
+      source: this.getId(),
       layout: {
         'text-font': ['Roboto'],
         'text-field': ['get', 'name'], // Get the 'name' property from each feature
@@ -75,14 +85,14 @@ export class SensorsLayerManager extends LayerManager {
         closeOnClick: false
     });
 
-    map.on('click', 'sensors', (e) => {
+    map.on('click', this.getId(), (e) => {
       const feature = e.features ? e.features[0] : null;
       if (!feature) return;
       selectionCallback(this.getId(), feature);
       // TODO highlight the feature as being selected
     });
 
-    map.on('mouseenter', 'sensors', (e) => {
+    map.on('mouseenter', this.getId(), (e) => {
         map.getCanvas().style.cursor = 'pointer';
         const feature = e.features ? e.features[0] : null;
         if (!feature) return;
@@ -112,7 +122,7 @@ export class SensorsLayerManager extends LayerManager {
           )
           .addTo(map);
     });
-    map.on('mouseleave', 'sensors', () => {
+    map.on('mouseleave', this.getId(), () => {
         map.getCanvas().style.cursor = '';
         popup.remove();
     });
@@ -120,7 +130,7 @@ export class SensorsLayerManager extends LayerManager {
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['sensors', 'sensors-labels'].forEach(id => {
+    [this.getId(), `${this.getId()}-labels`].forEach(id => {
       map.setLayoutProperty(
         id,
         'visibility',

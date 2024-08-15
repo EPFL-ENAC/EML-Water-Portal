@@ -117,7 +117,7 @@ const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();
 const scenariiStore = useScenariiStore();
 
-const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
+const mainLayersIds = ['river', 'bv', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec'];
 
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
