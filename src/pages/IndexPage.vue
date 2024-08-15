@@ -9,8 +9,8 @@
         <div class="row items-center full-height justify-evenly">
           <maplibre-map
             position
-            :center="[6.573, 46.5218]"
-            :zoom="14"
+            :center="[6.570, 46.5225]"
+            :zoom="16"
             @map:loaded="onMapLoaded"
           />
         </div>
