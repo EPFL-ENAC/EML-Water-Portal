@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div v-if="sensors.length > 0 && option.series" :style="`height: ${height}px; width: 100%;`">
+    <div v-if="sensors.length === 0" class="text-center text-help q-pa-sm">
+      {{ $t('no_sensor_selected') }}
+    </div>
+    <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
+      {{ $t('no_sensor_data') }}
+    </div>
+    <div v-else :style="`height: ${height}px; width: 100%;`">
       <e-charts
         ref="chart"
         autoresize
@@ -10,9 +16,6 @@
         :loading="loading"
         @highlight="onHighlight"
       />
-    </div>
-    <div v-else class="text-center text-help q-pa-sm">
-      {{ $t('no_sensor_data') }}
     </div>
   </div>
 </template>
