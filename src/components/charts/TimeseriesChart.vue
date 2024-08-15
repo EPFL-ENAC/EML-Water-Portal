@@ -186,6 +186,12 @@ function buildOptions() {
         type: 'time',
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
+        axisLabel: {
+            formatter: function (value) {
+                var date = new Date(value);
+                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            }
+        }
       }
     ],
     yAxis: [
