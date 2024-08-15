@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="option.series" :style="`height: ${height}px; width: 100%;`">
+    <div v-if="sensors.length > 0 && option.series" :style="`height: ${height}px; width: 100%;`">
       <e-charts
         ref="chart"
         autoresize
@@ -10,6 +10,9 @@
         :loading="loading"
         @highlight="onHighlight"
       />
+    </div>
+    <div v-else class="text-center text-help q-pa-sm">
+      {{ $t('no_sensor_data') }}
     </div>
   </div>
 </template>
@@ -96,7 +99,7 @@ const timestamps = computed(() =>
 );
 
 function initChartOptions() {
-  if (sensors.value.length === 0 || measuresStore.loading) {
+  if (measuresStore.loading) {
     return;
   }
   option.value = {};
@@ -143,6 +146,7 @@ function onRangeChange() {
 
 function buildOptions() {
   loading.value = true;
+  console.log('Building options', sensors.value);
   const newOption: EChartsOption = {
     renderer: 'canvas',
     animation: false,
