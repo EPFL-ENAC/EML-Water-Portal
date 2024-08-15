@@ -11,3 +11,27 @@ export const MeasureOptions = [
   },
   { key: 'air_temperature', label: 'Air Temperature' },
 ];
+
+export const SensorColors = [
+  {
+    color: '#9400D3',
+    label: 'A',
+    title: 'Multiparameter sensor',
+    device: 'In-Situ',
+    measures: ['air_temperature', 'electro_conductivity', 'turbidity', 'dissolved_oxygen', 'ph', 'oxidation_reduction_potential']
+  },  
+  {
+    color: '#3FD400',
+    label: 'B',
+    title: 'Temperature sensor',
+    device: 'Ruskin',
+    measures: ['water_temperature']
+  },
+  {
+    color: '#51bbd6',
+    label: 'C',
+    title: 'Water level/discharge sensor',
+    device: 'Ijinus',
+    measures: ['water_level']
+  }
+];

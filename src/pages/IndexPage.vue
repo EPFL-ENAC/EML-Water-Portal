@@ -33,6 +33,9 @@
                   v-model="measuresVisible[measure.key]"
                   :label="measure.label"
                 />
+                <template v-for="col in getSensorColors(measure.key)" :key="col">
+                  <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
+                </template>
                 <q-btn
                   v-if="measuresVisible[measure.key]"
                   icon="open_in_new"
@@ -106,7 +109,7 @@ import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
-import { MeasureOptions } from 'src/utils/options';
+import { MeasureOptions, SensorColors } from 'src/utils/options';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
@@ -161,6 +164,10 @@ function onMeasureVisibilityChange() {
 function onShowMeasure(measure: string) {
   measureSelected.value = measure;
   showMeasure.value = true;
+}
+
+function getSensorColors(measure: string) {
+  return SensorColors.filter((opt) => opt.measures.includes(measure)).map((opt) => opt.color);
 }
 
 </script>

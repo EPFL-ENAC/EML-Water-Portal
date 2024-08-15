@@ -3,7 +3,7 @@ import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
 import { State } from 'src/layers/models';
-import { MeasureOptions } from 'src/utils/options';
+import { MeasureOptions, SensorColors } from 'src/utils/options';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
@@ -34,6 +34,7 @@ export class SensorsLayerManager extends LayerManager {
       data: this.data
     });
 
+    const color = SensorColors.find((opt) => opt.label === this.family)?.color || '#FFFFFF'
     map.addLayer({
       id: this.getId(),
       source: this.getId(),
@@ -51,12 +52,7 @@ export class SensorsLayerManager extends LayerManager {
           10, 5,   // Radius at zoom level 10 and above
           15, 10  // Radius at zoom level 15 and above
         ],
-        'circle-color': [
-          'case',
-          ['==', ['index-of', 'A', ['get', 'name']], 0], '#9400D3', // color if name starts with 'A'
-          ['==', ['index-of', 'B', ['get', 'name']], 0], '#3FD400', // color if name starts with 'B'
-          '#51bbd6' // color for all other categories
-        ],
+        'circle-color': color,
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1
       },

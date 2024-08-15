@@ -95,7 +95,7 @@
     <q-item-label>
       <span class="q-ml-md">{{ $t('sensors') }}</span>
     </q-item-label>
-    <q-item v-for="sensor in sensorColors" :key="sensor.color">
+    <q-item v-for="sensor in SensorColors" :key="sensor.color">
       <q-item-section avatar>
         <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{ sensor.label }}</q-avatar>
       </q-item-section>
@@ -111,6 +111,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { Scenario } from 'src/stores/scenarii';
+import { SensorColors } from 'src/utils/options';
 
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
@@ -122,29 +123,10 @@ const mainLayersIds = ['river', 'bv', 'sensors-a', 'sensors-b', 'sensors-c', 'co
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
 
-const sensorColors = [
-  {
-    color: '#9400D3',
-    label: 'A',
-    title: 'Multiparameter sensor',
-    device: 'In-Situ'
-  },  
-  {
-    color: '#3FD400',
-    label: 'B',
-    title: 'Temperature sensor',
-    device: 'Ruskin'
-  },
-  {
-    color: '#51bbd6',
-    label: 'C',
-    title: 'Water level/discharge sensor',
-    device: 'Ijinus'
-  }
-]
+
 
 function getSensorColor(id: string) {
-  return sensorColors.find((opt) => id.startsWith(opt.label))?.color;
+  return SensorColors.find((opt) => id.startsWith(opt.label))?.color;
 }
 
 function onToggleLayer(layerId: string) {
