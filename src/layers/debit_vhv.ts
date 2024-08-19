@@ -6,7 +6,6 @@ import { fileStoreUrl } from 'src/boot/api';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/debit_vhv.geojson`;
 
 export class DebitVHVLayerManager extends LayerManager {
-
   data: FeatureCollection | null = null;
 
   getId(): string {
@@ -15,11 +14,11 @@ export class DebitVHVLayerManager extends LayerManager {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.data = await response.json() as FeatureCollection;
+    this.data = (await response.json()) as FeatureCollection;
 
     map.addSource('debit_vhv', {
       type: 'geojson',
-      data: this.data
+      data: this.data,
     });
 
     map.addLayer({
@@ -31,17 +30,19 @@ export class DebitVHVLayerManager extends LayerManager {
         'circle-radius': [
           'step',
           ['zoom'],
-          2,   // Radius at zoom levels below 10
-          10, 5,   // Radius at zoom level 10 and above
-          15, 10  // Radius at zoom level 15 and above
+          2, // Radius at zoom levels below 10
+          10,
+          5, // Radius at zoom level 10 and above
+          15,
+          10, // Radius at zoom level 15 and above
         ],
         'circle-color': '#66ff00',
         'circle-stroke-color': '#008000',
-        'circle-stroke-width': 1
+        'circle-stroke-width': 1,
       },
       layout: {
-        visibility: 'none'
-      }
+        visibility: 'none',
+      },
     });
 
     map.on('click', 'debit_vhv', (e) => {
@@ -49,29 +50,22 @@ export class DebitVHVLayerManager extends LayerManager {
       if (!feature) return;
       new Popup()
         .setLngLat(e.lngLat)
-        .setHTML(
-          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
+        .setHTML(`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`)
         .addTo(map);
     });
 
     map.on('mouseenter', 'debit_vhv', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.getCanvas().style.cursor = 'pointer';
     });
     map.on('mouseleave', 'debit_vhv', () => {
-        map.getCanvas().style.cursor = '';
+      map.getCanvas().style.cursor = '';
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['debit_vhv'].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
+    ['debit_vhv'].forEach((id) => {
+      map.setLayoutProperty(id, 'visibility', visibility);
     });
   }
-
 }

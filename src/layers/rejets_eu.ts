@@ -6,7 +6,6 @@ import { fileStoreUrl } from 'src/boot/api';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/rejets_eu.geojson`;
 
 export class RejetsEULayerManager extends LayerManager {
-
   data: FeatureCollection | null = null;
 
   getId(): string {
@@ -15,11 +14,11 @@ export class RejetsEULayerManager extends LayerManager {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.data = await response.json() as FeatureCollection;
+    this.data = (await response.json()) as FeatureCollection;
 
     map.addSource('rejets_eu', {
       type: 'geojson',
-      data: this.data
+      data: this.data,
     });
 
     map.addLayer({
@@ -31,17 +30,19 @@ export class RejetsEULayerManager extends LayerManager {
         'circle-radius': [
           'step',
           ['zoom'],
-          2,   // Radius at zoom levels below 10
-          10, 5,   // Radius at zoom level 10 and above
-          15, 10  // Radius at zoom level 15 and above
+          2, // Radius at zoom levels below 10
+          10,
+          5, // Radius at zoom level 10 and above
+          15,
+          10, // Radius at zoom level 15 and above
         ],
         'circle-color': '#a52a2a',
         'circle-stroke-color': 'black',
-        'circle-stroke-width': 1
+        'circle-stroke-width': 1,
       },
       layout: {
-        visibility: 'none'
-      }
+        visibility: 'none',
+      },
     });
 
     map.on('click', 'rejets_eu', (e) => {
@@ -49,29 +50,22 @@ export class RejetsEULayerManager extends LayerManager {
       if (!feature) return;
       new Popup()
         .setLngLat(e.lngLat)
-        .setHTML(
-          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
+        .setHTML(`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`)
         .addTo(map);
     });
 
     map.on('mouseenter', 'rejets_eu', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.getCanvas().style.cursor = 'pointer';
     });
     map.on('mouseleave', 'rejets_eu', () => {
-        map.getCanvas().style.cursor = '';
+      map.getCanvas().style.cursor = '';
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['rejets_eu'].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
+    ['rejets_eu'].forEach((id) => {
+      map.setLayoutProperty(id, 'visibility', visibility);
     });
   }
-
 }

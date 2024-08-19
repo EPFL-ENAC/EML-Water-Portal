@@ -2,12 +2,11 @@ import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 import { Scenario } from 'src/stores/scenarii';
 
 export type State = {
-  sensors:  string[]; // selected sensors
+  sensors: string[]; // selected sensors
   scenarii: Scenario[]; // selected scenarii
-}
+};
 
 export abstract class LayerManager {
-  
   /**
    * Get the identifier of the managed layer.
    */
@@ -16,7 +15,10 @@ export abstract class LayerManager {
   /**
    * Add the layer to the map.
    */
-  abstract append(map: Map, selectionCallback: FeatureSelectionCallback): Promise<void>;
+  abstract append(
+    map: Map,
+    selectionCallback: FeatureSelectionCallback,
+  ): Promise<void>;
 
   /**
    * Set the visibility of the layer.
@@ -30,9 +32,8 @@ export abstract class LayerManager {
   applyState(map: Map, state: State): void {
     return;
   }
- 
 }
 
 export interface FeatureSelectionCallback {
-  (name: string, feature: MapGeoJSONFeature): void
+  (name: string, feature: MapGeoJSONFeature): void;
 }

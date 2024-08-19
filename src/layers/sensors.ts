@@ -1,5 +1,11 @@
 import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
-import { Feature, FeatureCollection, GeoJSON, GeoJsonProperties, Geometry } from 'geojson';
+import {
+  Feature,
+  FeatureCollection,
+  GeoJSON,
+  GeoJsonProperties,
+  Geometry,
+} from 'geojson';
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
 import { State } from 'src/layers/models';
@@ -8,7 +14,6 @@ import { MeasureOptions, SensorColors } from 'src/utils/options';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
 export class SensorsLayerManager extends LayerManager {
-
   family = ''; // A, B or C
 
   data: FeatureCollection | null = null;
@@ -22,39 +27,43 @@ export class SensorsLayerManager extends LayerManager {
     return `sensors-${this.family.toLowerCase()}`;
   }
 
-  async append(map: Map, selectionCallback: FeatureSelectionCallback): Promise<void> {
+  async append(
+    map: Map,
+    selectionCallback: FeatureSelectionCallback,
+  ): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.data = await response.json() as FeatureCollection;
-    this.data.features = this.data.features.filter((feature: Feature<Geometry, GeoJsonProperties>) => {
-      return feature.properties?.name.startsWith(this.family);
-    });
+    this.data = (await response.json()) as FeatureCollection;
+    this.data.features = this.data.features.filter(
+      (feature: Feature<Geometry, GeoJsonProperties>) => {
+        return feature.properties?.name.startsWith(this.family);
+      },
+    );
 
     map.addSource(this.getId(), {
       type: 'geojson',
-      data: this.data
+      data: this.data,
     });
 
-    const color = SensorColors.find((opt) => opt.label === this.family)?.color || '#FFFFFF'
+    const color =
+      SensorColors.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),
       type: 'circle',
       paint: {
-        'circle-opacity': [
-          'case',
-          ['get', 'selected'], 1,
-          0.2
-        ],
+        'circle-opacity': ['case', ['get', 'selected'], 1, 0.2],
         'circle-radius': [
           'step',
           ['zoom'],
-          2,   // Radius at zoom levels below 10
-          10, 5,   // Radius at zoom level 10 and above
-          15, 10  // Radius at zoom level 15 and above
+          2, // Radius at zoom levels below 10
+          10,
+          5, // Radius at zoom level 10 and above
+          15,
+          10, // Radius at zoom level 15 and above
         ],
         'circle-color': color,
         'circle-stroke-color': 'black',
-        'circle-stroke-width': 1
+        'circle-stroke-width': 1,
       },
     });
 
@@ -67,19 +76,19 @@ export class SensorsLayerManager extends LayerManager {
         'text-field': ['get', 'name'], // Get the 'name' property from each feature
         'text-size': 14, // Text size
         'text-anchor': 'top', // Anchor text at the top of the point
-        'text-offset': [0, 0.5] // Offset text slightly so it doesn't overlap the point
+        'text-offset': [0, 0.5], // Offset text slightly so it doesn't overlap the point
       },
       paint: {
         'text-color': '#000000', // Text color
         'text-halo-color': '#FFFFFF', // Halo color around text for better readability
-        'text-halo-width': 2 // Width of the halo around the text
-      }
+        'text-halo-width': 2, // Width of the halo around the text
+      },
     });
 
     // Create a popup, but don't add it to the map yet.
     const popup = new Popup({
-        closeButton: false,
-        closeOnClick: false
+      closeButton: false,
+      closeOnClick: false,
     });
 
     map.on('click', this.getId(), (e) => {
@@ -90,16 +99,22 @@ export class SensorsLayerManager extends LayerManager {
     });
 
     map.on('mouseenter', this.getId(), (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        const feature = e.features ? e.features[0] : null;
-        if (!feature) return;
+      map.getCanvas().style.cursor = 'pointer';
+      const feature = e.features ? e.features[0] : null;
+      if (!feature) return;
 
-        const measuresHtml = feature.properties.measures.split('|').map((val: string) => `<li>${MeasureOptions.find((opt) => opt.key === val)?.label || val}</li>`).join('');
+      const measuresHtml = feature.properties.measures
+        .split('|')
+        .map(
+          (val: string) =>
+            `<li>${MeasureOptions.find((opt) => opt.key === val)?.label || val}</li>`,
+        )
+        .join('');
 
-        popup
-          .setLngLat(e.lngLat)
-          .setHTML(
-            `<table>
+      popup
+        .setLngLat(e.lngLat)
+        .setHTML(
+          `<table>
               <tbody>
               <tr>
                 <td class="text-bold">Name</td>
@@ -114,47 +129,45 @@ export class SensorsLayerManager extends LayerManager {
                 <td class="text-caption"><ul>${measuresHtml}</ul></td>
               </tr>
               </tbody>
-            </table>`
-            //`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-          )
-          .addTo(map);
+            </table>`,
+          //`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
+        )
+        .addTo(map);
     });
     map.on('mouseleave', this.getId(), () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
+      map.getCanvas().style.cursor = '';
+      popup.remove();
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    [this.getId(), `${this.getId()}-labels`].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
+    [this.getId(), `${this.getId()}-labels`].forEach((id) => {
+      map.setLayoutProperty(id, 'visibility', visibility);
     });
   }
 
   applyState(map: Map, state: State): void {
     if (!this.data) return;
-    const updatedFeatures = this.data.features.map((feature: Feature<Geometry, GeoJsonProperties>) => {
-      const selected = state.sensors.length === 0 || state.sensors.includes(feature.properties?.name);
-      const updatedProperties = {
-        ...feature.properties,
-        selected
-      }
-      return {
-        ...feature,
-        properties: updatedProperties
-      };
-    });
+    const updatedFeatures = this.data.features.map(
+      (feature: Feature<Geometry, GeoJsonProperties>) => {
+        const selected =
+          state.sensors.length === 0 ||
+          state.sensors.includes(feature.properties?.name);
+        const updatedProperties = {
+          ...feature.properties,
+          selected,
+        };
+        return {
+          ...feature,
+          properties: updatedProperties,
+        };
+      },
+    );
     const updatedData = {
       ...this.data,
-      features: updatedFeatures
+      features: updatedFeatures,
     } as GeoJSON;
     (map.getSource(this.getId()) as GeoJSONSource).setData(updatedData);
   }
-
-
 }

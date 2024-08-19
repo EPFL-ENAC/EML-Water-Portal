@@ -6,7 +6,6 @@ import { fileStoreUrl } from 'src/boot/api';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/conduite_principale_ec.geojson`;
 
 export class ConduitePrincipaleECLayerManager extends LayerManager {
-
   data: FeatureCollection | null = null;
 
   getId(): string {
@@ -15,11 +14,11 @@ export class ConduitePrincipaleECLayerManager extends LayerManager {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.data = await response.json() as FeatureCollection;
+    this.data = (await response.json()) as FeatureCollection;
 
     map.addSource('conduite_principale_ec', {
       type: 'geojson',
-      data: this.data
+      data: this.data,
     });
 
     map.addLayer({
@@ -29,20 +28,15 @@ export class ConduitePrincipaleECLayerManager extends LayerManager {
       paint: {
         'line-opacity': 0.8,
         'line-color': 'red',
-        'line-width': 5
-      }
+        'line-width': 5,
+      },
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['conduite_principale_ec'].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
+    ['conduite_principale_ec'].forEach((id) => {
+      map.setLayoutProperty(id, 'visibility', visibility);
     });
   }
-
 }

@@ -1,19 +1,27 @@
 <template>
   <q-list>
     <q-item-label header class="text-h6">
-      <q-icon name="model_training" class="q-pb-xs"/>
+      <q-icon name="model_training" class="q-pb-xs" />
       <span class="q-ml-sm">{{ $t('scenarios') }}</span>
     </q-item-label>
     <q-item>
-      <div v-if="scenariiStore.scenarii.length === 0" class="text-help">{{ $t('scenario_info') }}</div>
+      <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
+        {{ $t('scenario_info') }}
+      </div>
       <div v-else>
-        <q-chip v-for="scenario in scenariiStore.scenarii" :key="`${scenario.watershed}:${scenario.name}`" removable @remove="onRemoveScenario(scenario)" size="sm">
+        <q-chip
+          v-for="scenario in scenariiStore.scenarii"
+          :key="`${scenario.watershed}:${scenario.name}`"
+          removable
+          @remove="onRemoveScenario(scenario)"
+          size="sm"
+        >
           {{ `${scenario.watershed}: ${scenario.name}` }}
         </q-chip>
       </div>
     </q-item>
     <q-item-label header class="text-h6">
-      <q-icon name="layers" class="q-pb-xs"/>
+      <q-icon name="layers" class="q-pb-xs" />
       <span class="q-ml-sm">{{ $t('layers') }}</span>
     </q-item-label>
     <q-item
@@ -24,12 +32,12 @@
       <q-item-section>
         <q-checkbox
           v-model="layer.visible"
-          :label="$t(`layer.${layer.id}`)" 
+          :label="$t(`layer.${layer.id}`)"
           @click="onToggleLayer(layer.id)"
         />
       </q-item-section>
       <q-item-section avatar>
-        <q-btn 
+        <q-btn
           flat
           round
           icon="help_outline"
@@ -50,12 +58,12 @@
           <q-item-section>
             <q-checkbox
               v-model="layer.visible"
-              :label="$t(`layer.${layer.id}`)" 
+              :label="$t(`layer.${layer.id}`)"
               @click="onToggleLayer(layer.id)"
             />
           </q-item-section>
           <q-item-section avatar>
-            <q-btn 
+            <q-btn
               flat
               round
               icon="help_outline"
@@ -67,7 +75,7 @@
     </q-list>
     <q-item-label header>
       <span class="text-h6">
-        <q-icon name="filter_alt" class="q-pb-xs"/>
+        <q-icon name="filter_alt" class="q-pb-xs" />
         <span class="q-ml-sm">{{ $t('filters') }}</span>
       </span>
       <q-btn
@@ -77,19 +85,30 @@
         size="12px"
         icon="restart_alt"
         :label="$t('reset_filters')"
-        @click="onResetFilters" 
-        class="q-mt-xs q-pl-xs q-pr-xs float-right "/>
+        @click="onResetFilters"
+        class="q-mt-xs q-pl-xs q-pr-xs float-right"
+      />
     </q-item-label>
     <q-item>
-      <div v-if="filtersStore.sensors.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</div>
+      <div v-if="filtersStore.sensors.length === 0" class="text-help">
+        {{ $t('sensors_to_filter_info') }}
+      </div>
       <div v-else>
-        <q-chip v-for="id in filtersStore.sensors" :key="id" removable @remove="onRemoveSensor(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
+        <q-chip
+          v-for="id in filtersStore.sensors"
+          :key="id"
+          removable
+          @remove="onRemoveSensor(id)"
+          :style="`background: ${getSensorColor(id)}`"
+          text-color="grey-3"
+          size="sm"
+        >
           {{ id }}
         </q-chip>
       </div>
     </q-item>
     <q-item-label header class="text-h6">
-      <q-icon name="info" class="q-pb-xs"/>
+      <q-icon name="info" class="q-pb-xs" />
       <span class="q-ml-sm">{{ $t('legends') }}</span>
     </q-item-label>
     <q-item-label>
@@ -97,7 +116,9 @@
     </q-item-label>
     <q-item v-for="sensor in SensorColors" :key="sensor.color">
       <q-item-section avatar>
-        <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{ sensor.label }}</q-avatar>
+        <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{
+          sensor.label
+        }}</q-avatar>
       </q-item-section>
       <q-item-section :title="sensor.device">{{ sensor.title }}</q-item-section>
     </q-item>
@@ -118,12 +139,21 @@ const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();
 const scenariiStore = useScenariiStore();
 
-const mainLayersIds = ['river', 'bv', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec'];
+const mainLayersIds = [
+  'river',
+  'bv',
+  'sensors-a',
+  'sensors-b',
+  'sensors-c',
+  'conduite_principale_ec',
+];
 
-const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
-const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
-
-
+const mainLayerSelections = computed(() =>
+  mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)),
+);
+const otherLayerSelections = computed(() =>
+  mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)),
+);
 
 function getSensorColor(id: string) {
   return SensorColors.find((opt) => id.startsWith(opt.label))?.color;
