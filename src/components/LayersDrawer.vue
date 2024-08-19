@@ -2,10 +2,15 @@
   <q-list>
     <q-item-label header class="text-h6">
       <q-icon name="model_training" class="q-pb-xs"/>
-      <span class="q-ml-sm">{{ $t('scenario') }}</span>
+      <span class="q-ml-sm">{{ $t('scenarios') }}</span>
     </q-item-label>
     <q-item>
-      <div class="text-help">{{ $t('scenario_info') }}</div>
+      <div v-if="scenariiStore.scenarii.length === 0" class="text-help">{{ $t('scenario_info') }}</div>
+      <div v-else>
+        <q-chip v-for="scenario in scenariiStore.scenarii" :key="`${scenario.watershed}:${scenario.name}`" removable @remove="onRemoveScenario(scenario)" size="sm">
+          {{ `${scenario.watershed}: ${scenario.name}` }}
+        </q-chip>
+      </div>
     </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="layers" class="q-pb-xs"/>
@@ -76,9 +81,9 @@
         class="q-mt-xs q-pl-xs q-pr-xs float-right "/>
     </q-item-label>
     <q-item>
-      <span v-if="mapStore.sensorsFilter.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</span>
+      <div v-if="filtersStore.sensors.length === 0" class="text-help">{{ $t('sensors_to_filter_info') }}</div>
       <div v-else>
-        <q-chip v-for="id in mapStore.sensorsFilter" :key="id" removable @remove="onRemoveSensorFilter(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
+        <q-chip v-for="id in filtersStore.sensors" :key="id" removable @remove="onRemoveSensor(id)" :style="`background: ${getSensorColor(id)}`" text-color="grey-3" size="sm">
           {{ id }}
         </q-chip>
       </div>
@@ -90,11 +95,11 @@
     <q-item-label>
       <span class="q-ml-md">{{ $t('sensors') }}</span>
     </q-item-label>
-    <q-item v-for="sensor in sensorColors" :key="sensor.color">
+    <q-item v-for="sensor in SensorColors" :key="sensor.color">
       <q-item-section avatar>
         <q-avatar :style="`background: ${sensor.color}`" text-color="grey-3">{{ sensor.label }}</q-avatar>
       </q-item-section>
-      <q-item-section>{{ sensor.device }}</q-item-section>
+      <q-item-section :title="sensor.device">{{ sensor.title }}</q-item-section>
     </q-item>
   </q-list>
 </template>
@@ -105,53 +110,38 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
+import { Scenario } from 'src/stores/scenarii';
+import { SensorColors } from 'src/utils/options';
+
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();
+const scenariiStore = useScenariiStore();
 
-const mainLayersIds = ['river', 'bv', 'sensors', 'conduite_principale_ec'];
+const mainLayersIds = ['river', 'bv', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec'];
 
 const mainLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => mainLayersIds.includes(layer.id)))
 const otherLayerSelections = computed(() => mapStore.layerSelections.filter((layer) => !mainLayersIds.includes(layer.id)))
 
-const sensorColors = [
-  {
-    color: '#9400D3',
-    label: 'A',
-    device: 'In-Situ'
-  },  
-  {
-    color: '#3FD400',
-    label: 'B',
-    device: 'Ruskin'
-  },
-  {
-    color: '#51bbd6',
-    label: 'C',
-    device: 'Ijinus'
-  }
-]
+
 
 function getSensorColor(id: string) {
-  return sensorColors.find((opt) => id.startsWith(opt.label))?.color;
+  return SensorColors.find((opt) => id.startsWith(opt.label))?.color;
 }
 
 function onToggleLayer(layerId: string) {
   mapStore.applyLayerVisibility(layerId);
-  onUpdatedFilter();
 }
 
 function onResetFilters() {
   filtersStore.reset();
-  mapStore.resetSensorFilters();
-  onUpdatedFilter();
 }
 
-function onUpdatedFilter() {
-  mapStore.applyFilters(filtersStore.asParams());
+function onRemoveSensor(id: string) {
+  filtersStore.toggleSensor(id);
 }
 
-function onRemoveSensorFilter(id: string) {
-  mapStore.toggleSensorFilter(id);
+function onRemoveScenario(scenario: Scenario) {
+  scenariiStore.removeScenario(scenario);
 }
 </script>

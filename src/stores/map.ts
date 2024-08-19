@@ -9,23 +9,26 @@ import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
 import { Map, MapGeoJSONFeature } from 'maplibre-gl';
-import { FilterParams } from 'src/stores/filters';
 
 export type LayerSelection = {
   id: string;
   visible: boolean;
 }
 
+const filtersStore = useFiltersStore();
+const scenariiStore = useScenariiStore();
+
 export const useMapStore = defineStore('map', () => {
 
   const showDrawer = ref(false);
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
-  const sensorsFilter = ref<string[]>([]);
 
   const layerManagers = [
     new RiverLayerManager(),
-    new SensorsLayerManager(),
+    new SensorsLayerManager('A'),
+    new SensorsLayerManager('B'),
+    new SensorsLayerManager('C'),
     new ConduitePrincipaleECLayerManager(),
     new BVLayerManager(),
     new ConduiteECLayerManager(),
@@ -36,7 +39,7 @@ export const useMapStore = defineStore('map', () => {
   ];
 
   const layerSelections: LayerSelection[] = layerManagers.map(
-    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
+    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
   );
 
   /**
@@ -59,22 +62,6 @@ export const useMapStore = defineStore('map', () => {
     if (manager && layer) {
       manager.setVisible(map.value, layer.visible);
     }
-  }
-
-  /**
-   * Apply the data filters to the layers.
-   * @param filters the data filters parameters
-   */
-  function applyFilters(filters: FilterParams) {
-    if (!map.value) return;
-    layerSelections.map((layer) => {
-      if (map.value && layer.visible) {
-        const manager = getLayerManager(layer.id);
-        if (manager) {
-          manager.filter(map.value, filters);
-        }
-      }
-    });
   }
 
   /**
@@ -103,27 +90,34 @@ export const useMapStore = defineStore('map', () => {
   }
 
   function onFeaturesSelected(name: string, feature: MapGeoJSONFeature) {
-    console.log(name);
-    console.log(feature);
+    // console.log(name);
+    // console.log(feature);
     if (name === 'bv') {
       bvSelected.value = feature;
-    } else if (name === 'sensors') {
+    } else if (name.startsWith('sensors')) {
       const id = feature.properties.name;
-      toggleSensorFilter(id); 
+      filtersStore.toggleSensor(id);
     }
   }
 
-  function resetSensorFilters() {
-    sensorsFilter.value = [];
-  }
-
-  function toggleSensorFilter(id: string) {
-    if (sensorsFilter.value.includes(id)) {
-      sensorsFilter.value = sensorsFilter.value.filter((val) => val !== id);
-    } else {
-      sensorsFilter.value.push(id);
-      sensorsFilter.value.sort();
-    }
+  /**
+   * Apply the application state to the layers.
+   * 
+   * @returns 
+   */
+  function applyState() {
+    if (!map.value) return;
+    layerSelections.map((layer) => {
+      if (map.value && layer.visible) {
+        const manager = getLayerManager(layer.id);
+        if (manager) {
+          manager.applyState(map.value, {
+            sensors: filtersStore.sensors,
+            scenarii: scenariiStore.scenarii,
+          });
+        }
+      }
+    });
   }
 
   return {
@@ -131,12 +125,9 @@ export const useMapStore = defineStore('map', () => {
     map,
     layerSelections,
     bvSelected,
-    sensorsFilter,
-    applyFilters,
     applyLayerVisibility,
     initLayers,
-    resetSensorFilters,
-    toggleSensorFilter,
+    applyState,
   };
 
 });

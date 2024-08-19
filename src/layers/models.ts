@@ -1,6 +1,12 @@
 import { Map, MapGeoJSONFeature } from 'maplibre-gl';
+import { Scenario } from 'src/stores/scenarii';
 
-export abstract class LayerManager<T> {
+export type State = {
+  sensors:  string[]; // selected sensors
+  scenarii: Scenario[]; // selected scenarii
+}
+
+export abstract class LayerManager {
   
   /**
    * Get the identifier of the managed layer.
@@ -18,9 +24,12 @@ export abstract class LayerManager<T> {
   abstract setVisible(map: Map, visible: boolean): void;
 
   /**
-   * Filter the layer.
+   * Apply the application state to the layer.
    */
-  abstract filter(map: Map, filter: T): void;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  applyState(map: Map, state: State): void {
+    return;
+  }
  
 }
 

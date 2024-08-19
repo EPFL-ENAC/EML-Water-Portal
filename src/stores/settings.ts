@@ -6,6 +6,7 @@ const APP_STORAGE_NAME = 'water_portal_settings';
 export type Settings = {
   intro_shown: boolean;
   theme?: string;
+  measuresVisible?: Record<string, boolean>;
 };
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -16,6 +17,16 @@ export const useSettingsStore = defineStore('settings', () => {
     let settingsData: Settings = {
       intro_shown: false,
       theme: 'light',
+      measuresVisible: {
+        water_level: true,
+        water_temperature: true,
+        electro_conductivity: false,
+        dissolved_oxygen: false,
+        ph: false,
+        turbidity: false,
+        oxidation_reduction_potential: false,
+        air_temperature: false,
+      },
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);
     // cookies.get() declares to return a string but apparently it automatically parses the JSON string to an object

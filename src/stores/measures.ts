@@ -33,8 +33,6 @@ export const useMeasuresStore = defineStore('measures', () => {
         //skipFirstNLines: dataset.skip, // FIXME skip does not work
         //header: true,
         complete: function(results: PapaResults) {
-          console.log(`>>>>> ${dataset.file}`)
-          //console.log(results);
           const header = results.data[dataset.skip];
           const rows = results.data.splice(dataset.skip + 1);
           // foreach dataset sensor based on this file, turn rows into columns

@@ -1,12 +1,11 @@
 import { Map } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
-import { FilterParams } from 'src/stores/filters';
 import { fileStoreUrl } from 'src/boot/api';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/conduite_ec.geojson`;
 
-export class ConduiteECLayerManager extends LayerManager<FilterParams> {
+export class ConduiteECLayerManager extends LayerManager {
 
   data: FeatureCollection | null = null;
 
@@ -47,12 +46,6 @@ export class ConduiteECLayerManager extends LayerManager<FilterParams> {
         visibility
       )
     });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  filter(map: Map, filter: FilterParams): void {
-    // filter by stationName ?
-    return;
   }
 
 }

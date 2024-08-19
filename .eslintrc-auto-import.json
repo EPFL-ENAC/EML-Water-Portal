@@ -96,6 +96,8 @@
     "useFiltersStore": true,
     "useSettingsStore": true,
     "useMeasuresStore": true,
-    "useTimeseriesChartsStore": true
+    "useTimeseriesChartsStore": true,
+    "useModelsStore": true,
+    "useScenariiStore": true
   }
 }

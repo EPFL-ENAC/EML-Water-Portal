@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div v-if="option.series" :style="`height: ${height}px; width: 100%;`">
+    <div v-if="sensors.length === 0" class="text-center text-help q-pa-sm">
+      {{ $t('no_sensor_selected', { measure: props.label }) }}
+    </div>
+    <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
+      {{ $t('no_sensor_data', { measure: props.label }) }}
+    </div>
+    <div v-else :style="`height: ${height}${heightUnit}; width: 100%;`">
       <e-charts
         ref="chart"
         autoresize
@@ -46,13 +52,15 @@ use([
 
 interface Props {
   measure: string;
+  label: string;
   height?: number;
-  isExpanded?: boolean;
+  heightUnit?: string;
   debounceTime?: number;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  isExpanded: true,
+  heightUnit: 'px',
   debounceTime: 20,
 });
 
@@ -71,6 +79,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const measuresStore = useMeasuresStore();
 const timeseriesStore = useTimeseriesChartsStore();
+const filtersStore = useFiltersStore();
 
 const chart = shallowRef<typeof ECharts | null>(null);
 
@@ -79,9 +88,11 @@ const loading = ref(false);
 
 const sensors = computed(() =>
   measuresStore.datasets
-    ? measuresStore.datasets?.sensors.filter((sensor) =>
-        sensor.columns.find((col) => col.measure === props.measure && col.data),
-      )
+    ? measuresStore.datasets?.sensors.filter((sensor) => {
+        const selected = filtersStore.sensors.length === 0 || filtersStore.sensors.includes(sensor.name);
+        return selected && sensor.columns.find((col) => col.measure === props.measure && col.data);
+      },
+    )
     : [],
 );
 
@@ -92,7 +103,7 @@ const timestamps = computed(() =>
 );
 
 function initChartOptions() {
-  if (sensors.value.length === 0 || measuresStore.loading) {
+  if (measuresStore.loading) {
     return;
   }
   option.value = {};
@@ -118,15 +129,15 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
 const debouncedRangeChange = debounce(onRangeChange, props.debounceTime);
 
 watch(
-  () => [timeseriesStore.timeRange, props.isExpanded],
+  () => [timeseriesStore.timeRange],
   () => {
-    if (props.isExpanded) debouncedRangeChange();
+    debouncedRangeChange();
   },
 );
 
 function onRangeChange() {
   if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
-    if (chart.value !== null && props.isExpanded) {
+    if (chart.value !== null) {
       chart.value.dispatchAction({
         type: 'dataZoom',
         dataZoomIndex: 0,
@@ -165,21 +176,32 @@ function buildOptions() {
     grid: [
       {
         top: 10,
-        left: 30,
-        right: 20,
-        bottom: 30,
+        left: 60,
+        right: 10,
+        bottom: 20,
       },
     ],
-    xAxis: sensors.value.map((s) => {
-      return {
+    xAxis: [
+      {
         type: 'time',
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
-      };
-    }),
+        axisLabel: {
+            formatter: function (value) {
+                var date = new Date(value);
+                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            }
+        }
+      }
+    ],
     yAxis: [
       {
-        //name: `${props.measure} <unit>`,
+        name: props.label,
+        nameLocation: 'middle',
+        nameGap: 40,
+        nameTextStyle: {
+          fontWeight: 'bold',
+        },
         type: 'value',
       },
     ],

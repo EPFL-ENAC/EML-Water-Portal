@@ -82,8 +82,10 @@ declare global {
   const useLink: typeof import('vue-router')['useLink']
   const useMapStore: typeof import('./stores/map')['useMapStore']
   const useMeasuresStore: typeof import('./stores/measures')['useMeasuresStore']
+  const useModelsStore: typeof import('./stores/models')['useModelsStore']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
+  const useScenariiStore: typeof import('./stores/scenarii')['useScenariiStore']
   const useSettingsStore: typeof import('./stores/settings')['useSettingsStore']
   const useSlots: typeof import('vue')['useSlots']
   const useTimeseriesChartsStore: typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']
@@ -180,6 +182,7 @@ declare module 'vue' {
     readonly useMeasuresStore: UnwrapRef<typeof import('./stores/measures')['useMeasuresStore']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
+    readonly useScenariiStore: UnwrapRef<typeof import('./stores/scenarii')['useScenariiStore']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTimeseriesChartsStore: UnwrapRef<typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']>
@@ -269,6 +272,7 @@ declare module '@vue/runtime-core' {
     readonly useMeasuresStore: UnwrapRef<typeof import('./stores/measures')['useMeasuresStore']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
+    readonly useScenariiStore: UnwrapRef<typeof import('./stores/scenarii')['useScenariiStore']>
     readonly useSettingsStore: UnwrapRef<typeof import('./stores/settings')['useSettingsStore']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTimeseriesChartsStore: UnwrapRef<typeof import('./stores/timeseriesCharts')['useTimeseriesChartsStore']>
