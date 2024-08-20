@@ -138,7 +138,7 @@ const onHighlight = (e: ECElementEvent) => {
   const timestamp = timestamps.value
     ? new Date(timestamps.value[idx])
     : undefined;
-  timeseriesStore.lastUpdatedChartID = props.measure;
+  timeseriesStore.lastUpdatedPointerID = props.measure;
   timeseriesStore.axisPointer = timestamp;
 };
 
@@ -159,7 +159,7 @@ watch(() => timeseriesStore.axisPointer, onPointerMove);
 function onPointerMove() {
   if (
     chart.value !== null &&
-    timeseriesStore.lastUpdatedChartID != props.measure
+    timeseriesStore.lastUpdatedPointerID != props.measure
   ) {
     if (timeseriesStore.axisPointer !== undefined) {
       const timeMs = timeseriesStore.axisPointer.getTime();
@@ -204,6 +204,8 @@ function buildOptions() {
     tooltip: {
       trigger: 'axis',
       appendTo: document.getElementById('tooltip-container') as HTMLElement,
+      className: 'echarts-tooltip',
+      enterable: true,
       axisPointer: {
         animation: false,
       },
@@ -297,3 +299,9 @@ function buildOptions() {
   loading.value = false;
 }
 </script>
+<style>
+.echarts-tooltip {
+  max-height: 200px;
+  overflow-y: auto;
+}
+</style>
