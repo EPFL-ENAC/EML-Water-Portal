@@ -10,12 +10,14 @@
       <e-charts
         ref="chart"
         autoresize
+        group="timeseries"
         :init-options="initOptions"
         :option="option"
         :update-options="updateOptions"
         :loading="loading"
         @highlight="onHighlight"
         @datazoom="onDataZoomChange"
+        @downplay="onDownplay"
       />
     </div>
   </div>
@@ -119,6 +121,10 @@ const timestamps = computed(() =>
     : [],
 );
 
+const timestampsMS = computed(() =>
+  timestamps.value?.map((t) => new Date(t).getTime()),
+);
+
 function initChartOptions() {
   if (measuresStore.loading) {
     return;
@@ -132,7 +138,12 @@ const onHighlight = (e: ECElementEvent) => {
   const timestamp = timestamps.value
     ? new Date(timestamps.value[idx])
     : undefined;
+  timeseriesStore.lastUpdatedChartID = props.measure;
   timeseriesStore.axisPointer = timestamp;
+};
+
+const onDownplay = () => {
+  timeseriesStore.axisPointer = undefined;
 };
 
 onMounted(() => {
@@ -143,18 +154,45 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
+watch(() => timeseriesStore.axisPointer, onPointerMove);
+
+function onPointerMove() {
+  if (
+    chart.value !== null &&
+    timeseriesStore.lastUpdatedChartID != props.measure
+  ) {
+    if (timeseriesStore.axisPointer !== undefined) {
+      const timeMs = timeseriesStore.axisPointer.getTime();
+      const dataIndex = timestampsMS.value?.findIndex(
+        (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
+      );
+      chart.value.dispatchAction({
+        type: 'showTip',
+        seriesIndex: 0,
+        dataIndex,
+        position: 'inside',
+      });
+    } else
+      chart.value.dispatchAction({
+        type: 'hideTip',
+      });
+  }
+}
+
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
 function onRangeChange() {
-  if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
-    if (timeseriesStore.lastUpdatedChartID != props.measure) {
-      chart.value.dispatchAction({
-        type: 'dataZoom',
-        dataZoomIndex: 0,
-        startValue: timeseriesStore.timeRange[0],
-        endValue: timeseriesStore.timeRange[1],
-      });
-    }
+  if (
+    chart.value !== null &&
+    timeseriesStore.timeRange !== undefined &&
+    timeseriesStore.lastUpdatedChartID != props.measure
+  ) {
+    chart.value.dispatchAction({
+      type: 'dataZoom',
+      dataZoomIndex: 0,
+      startValue: timeseriesStore.timeRange[0],
+      endValue: timeseriesStore.timeRange[1],
+    });
   }
 }
 
@@ -165,10 +203,11 @@ function buildOptions() {
     animation: false,
     tooltip: {
       trigger: 'axis',
-      appendTo: document.getElementById('q-page-content') as HTMLElement,
+      appendTo: document.getElementById('tooltip-container') as HTMLElement,
       axisPointer: {
         animation: false,
       },
+      confine: true,
       valueFormatter: (value) =>
         (value as number).toFixed(props.precision) + ' ' + props.unit,
     },
