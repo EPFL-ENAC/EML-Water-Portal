@@ -1,6 +1,7 @@
 export const MeasureOptions = [
   { key: 'water_level', label: 'Water level' },
   { key: 'water_temperature', label: 'Water Temperature' },
+  { key: 'water_samples', label: 'Water Samples' },
   { key: 'electro_conductivity', label: 'Electrical conductivity' },
   { key: 'dissolved_oxygen', label: 'Dissolved oxygen' },
   { key: 'ph', label: 'pH' },
@@ -40,5 +41,12 @@ export const SensorColors = [
     title: 'Water level/discharge sensor',
     device: 'Ijinus',
     measures: ['water_level'],
+  },
+  {
+    color: '#fc8449',
+    label: 'D',
+    title: 'Water samples to analyse in the lab',
+    device: 'Autosampler ISCO',
+    measures: ['water_samples'],
   },
 ];

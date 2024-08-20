@@ -18,6 +18,7 @@ export default {
     'sensors-a': 'Sensors A',
     'sensors-b': 'Sensors B',
     'sensors-c': 'Sensors C',
+    'sensors-d': 'Sensors D',
   },
   about: 'About',
   add_scenario: 'Add scenario',
