@@ -13,13 +13,12 @@ import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 export type LayerSelection = {
   id: string;
   visible: boolean;
-}
+};
 
 const filtersStore = useFiltersStore();
 const scenariiStore = useScenariiStore();
 
 export const useMapStore = defineStore('map', () => {
-
   const showDrawer = ref(false);
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
@@ -38,14 +37,22 @@ export const useMapStore = defineStore('map', () => {
     new MeteoLayerManager(),
   ];
 
-  const layerSelections: LayerSelection[] = layerManagers.map(
-    (lm) => ({ id: lm.getId(), visible: ['river', 'sensors-a', 'sensors-b', 'sensors-c', 'conduite_principale_ec', 'bv'].includes(lm.getId()) })
-  );
+  const layerSelections: LayerSelection[] = layerManagers.map((lm) => ({
+    id: lm.getId(),
+    visible: [
+      'river',
+      'sensors-a',
+      'sensors-b',
+      'sensors-c',
+      'conduite_principale_ec',
+      'bv',
+    ].includes(lm.getId()),
+  }));
 
   /**
    * Find a layer selection state by its identifier.
    * @param id the layer selection state
-   * @returns 
+   * @returns
    */
   function findLayer(id: string) {
     return layerSelections.find((l) => l.id === id);
@@ -67,7 +74,7 @@ export const useMapStore = defineStore('map', () => {
   /**
    * Register the current map and initialize the layers for that map.
    * @param mapInstance the map instance
-   * @returns 
+   * @returns
    */
   async function initLayers(mapInstance: Map) {
     map.value = mapInstance;
@@ -76,14 +83,14 @@ export const useMapStore = defineStore('map', () => {
         const manager = getLayerManager(layer.id);
         if (!manager) return Promise.resolve();
         return manager.append(mapInstance, onFeaturesSelected);
-      })
+      }),
     );
   }
 
   /**
    * Get the layer manager by its identifier.
    * @param id the layer identifier
-   * @returns 
+   * @returns
    */
   function getLayerManager(id: string) {
     return layerManagers.find((lm) => lm.getId() === id);
@@ -102,8 +109,8 @@ export const useMapStore = defineStore('map', () => {
 
   /**
    * Apply the application state to the layers.
-   * 
-   * @returns 
+   *
+   * @returns
    */
   function applyState() {
     if (!map.value) return;
@@ -129,5 +136,4 @@ export const useMapStore = defineStore('map', () => {
     initLayers,
     applyState,
   };
-
 });

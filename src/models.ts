@@ -2,7 +2,7 @@ export interface Column {
   name: string;
   measure: string;
   format?: string;
-  data?: (number | string)[]
+  data?: (number | string)[];
 }
 
 export interface SensorData {
@@ -27,4 +27,3 @@ export interface Dataset {
   header: string[];
   data: string[][];
 }
-

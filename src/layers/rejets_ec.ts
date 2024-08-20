@@ -6,7 +6,6 @@ import { fileStoreUrl } from 'src/boot/api';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/rejets_ec.geojson`;
 
 export class RejetsECLayerManager extends LayerManager {
-
   data: FeatureCollection | null = null;
 
   getId(): string {
@@ -15,11 +14,11 @@ export class RejetsECLayerManager extends LayerManager {
 
   async append(map: Map): Promise<void> {
     const response = await fetch(GEOJSON_URL);
-    this.data = await response.json() as FeatureCollection;
+    this.data = (await response.json()) as FeatureCollection;
 
     map.addSource('rejets_ec', {
       type: 'geojson',
-      data: this.data
+      data: this.data,
     });
 
     map.addLayer({
@@ -31,17 +30,19 @@ export class RejetsECLayerManager extends LayerManager {
         'circle-radius': [
           'step',
           ['zoom'],
-          2,   // Radius at zoom levels below 10
-          10, 5,   // Radius at zoom level 10 and above
-          15, 10  // Radius at zoom level 15 and above
+          2, // Radius at zoom levels below 10
+          10,
+          5, // Radius at zoom level 10 and above
+          15,
+          10, // Radius at zoom level 15 and above
         ],
         'circle-color': '#7fffd4',
         'circle-stroke-color': '#318ce7',
-        'circle-stroke-width': 1
+        'circle-stroke-width': 1,
       },
       layout: {
-        visibility: 'none'
-      }
+        visibility: 'none',
+      },
     });
 
     map.on('click', 'rejets_ec', (e) => {
@@ -49,29 +50,22 @@ export class RejetsECLayerManager extends LayerManager {
       if (!feature) return;
       new Popup()
         .setLngLat(e.lngLat)
-        .setHTML(
-          `<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
+        .setHTML(`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`)
         .addTo(map);
     });
 
     map.on('mouseenter', 'rejets_ec', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.getCanvas().style.cursor = 'pointer';
     });
     map.on('mouseleave', 'rejets_ec', () => {
-        map.getCanvas().style.cursor = '';
+      map.getCanvas().style.cursor = '';
     });
   }
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    ['rejets_ec'].forEach(id => {
-      map.setLayoutProperty(
-        id,
-        'visibility',
-        visibility
-      )
+    ['rejets_ec'].forEach((id) => {
+      map.setLayoutProperty(id, 'visibility', visibility);
     });
   }
-
 }

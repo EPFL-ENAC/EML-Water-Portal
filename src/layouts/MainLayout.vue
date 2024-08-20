@@ -4,23 +4,10 @@
       <app-toolbar @toggle="toggleLeftDrawer" />
     </q-header>
 
-    <q-drawer
-      v-model="mapStore.showDrawer"
-      overlay
-      elevated
-    >
+    <q-drawer v-model="mapStore.showDrawer" overlay elevated>
       <layers-drawer />
-      <div
-        class="absolute"
-        style="top: 10px; right: 10px"
-      >
-        <q-btn
-          dense
-          round
-          unelevated
-          icon="close"
-          @click="toggleLeftDrawer"
-        />
+      <div class="absolute" style="top: 10px; right: 10px">
+        <q-btn dense round unelevated icon="close" @click="toggleLeftDrawer" />
       </div>
     </q-drawer>
 
@@ -28,19 +15,12 @@
       v-model="helpStore.show"
       side="right"
       :width="$q.screen.lt.md ? 300 : 500"
-      overlay elevated>
+      overlay
+      elevated
+    >
       <help-drawer />
-      <div
-        class="absolute"
-        style="top: 10px; right: 10px"
-      >
-        <q-btn
-          dense
-          round
-          unelevated
-          icon="close"
-          @click="toggleRightDrawer"
-        />
+      <div class="absolute" style="top: 10px; right: 10px">
+        <q-btn dense round unelevated icon="close" @click="toggleRightDrawer" />
       </div>
     </q-drawer>
 
@@ -53,7 +33,6 @@
         <custom-range-slider />
       </div>
     </q-footer>
-
   </q-layout>
 </template>
 

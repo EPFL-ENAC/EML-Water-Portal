@@ -9,7 +9,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 export default defineComponent({
   name: 'CustomRangeSlider',
@@ -61,12 +60,28 @@ const updateSlider = () => {
       },
     });
     slider.value.on('update', (values) => {
+      timeseriesStore.lastUpdatedChartID = 'customRangeSlider';
       timeseriesStore.timeRange = values.map(
         (val) => new Date(Number(val)),
       ) as [Date, Date];
     });
   }
 };
+
+watch(
+  () => timeseriesStore.timeRange,
+  () => {
+    if (
+      slider.value &&
+      timeseriesStore.lastUpdatedChartID !== 'customRangeSlider'
+    ) {
+      const [min, max] = timeseriesStore.timeRange.map((date) =>
+        date.getTime(),
+      );
+      slider.value.set([min, max]);
+    }
+  },
+);
 
 const play = () => {
   if (!slider.value || playing.value) return;

@@ -44,7 +44,8 @@ export default {
   scenarios_for_watershed: 'Scenarios for watershed: {name}',
   scenarios: 'Scenarios',
   schrubs: 'Schrubs',
-  sensors_to_filter_info: 'Click sensors on the map to filter measures. Click again to deselect.',
+  sensors_to_filter_info:
+    'Click sensors on the map to filter measures. Click again to deselect.',
   sensors: 'Sensors',
   shallow_rooted_trees: 'Shallow-rooted trees',
   soil_infiltration: 'Soil infiltration',

@@ -15,6 +15,7 @@
         :update-options="updateOptions"
         :loading="loading"
         @highlight="onHighlight"
+        @datazoom="onDataZoomChange"
       />
     </div>
   </div>
@@ -61,18 +62,27 @@ const props = withDefaults(defineProps<Props>(), {
   heightUnit: 'px',
 });
 
-// Keep it in case new feature requires this trick
-// const onDataZoomChange = (e: ECElementEvent) => {
-//   if (!e.batch || !props.range) return;
-//   const { start, end } = e.batch[0];
-//   const rangeMs = props.range.map((r) => r.getTime());
-//   const diff = rangeMs[1] - rangeMs[0];
-//   const startMs = rangeMs[0] + (diff * start) / 100;
-//   const endMs = rangeMs[1] + (diff * end) / 100;
-//   emits('dataZoomChange', [new Date(startMs), new Date(endMs)]);
-// };
+const onDataZoomChange = (e: ECElementEvent) => {
+  if (!e.batch || !timeseriesStore.timeRange) return;
+  const { start, end } = e.batch[0];
 
-// emits('axisPointerChange', e.event.value);
+  const { MIN_DATE_MS, DATE_RANGE_MS } = timeseriesStore;
+
+  const startMs = MIN_DATE_MS + (DATE_RANGE_MS * start) / 100;
+  const endMs = MIN_DATE_MS + (DATE_RANGE_MS * end) / 100;
+
+  // Update only if there is an actual change to avoid unnecessary store updates
+  const newStartDate = new Date(startMs);
+  const newEndDate = new Date(endMs);
+
+  if (
+    timeseriesStore.timeRange[0].getTime() !== newStartDate.getTime() ||
+    timeseriesStore.timeRange[1].getTime() !== newEndDate.getTime()
+  ) {
+    timeseriesStore.lastUpdatedChartID = props.measure;
+    timeseriesStore.timeRange = [newStartDate, newEndDate];
+  }
+};
 
 const measuresStore = useMeasuresStore();
 const timeseriesStore = useTimeseriesChartsStore();
@@ -129,11 +139,11 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
-watch(() => [timeseriesStore.timeRange], onRangeChange);
+watch(() => timeseriesStore.timeRange, onRangeChange);
 
 function onRangeChange() {
   if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
-    if (chart.value !== null) {
+    if (timeseriesStore.lastUpdatedChartID != props.measure) {
       chart.value.dispatchAction({
         type: 'dataZoom',
         dataZoomIndex: 0,

@@ -43,11 +43,7 @@
         class="on-left"
       ></q-btn>
     </span>
-    <q-btn 
-      v-if="$q.screen.lt.md"
-      flat
-      round
-      icon="more_vert">
+    <q-btn v-if="$q.screen.lt.md" flat round icon="more_vert">
       <q-popup-proxy>
         <q-list class="bg-white">
           <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/">
@@ -55,7 +51,12 @@
               <q-item-label>{{ $t('home') }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/page/about">
+          <q-item
+            v-if="$q.screen.lt.sm"
+            clickable
+            v-close-popup
+            to="/page/about"
+          >
             <q-item-section>
               <q-item-label>{{ $t('about') }}</q-item-label>
             </q-item-section>
@@ -82,11 +83,10 @@
   <simple-dialog
     v-model="showIntro"
     :title="$t('app_title')"
-    :content="IntroductionMd"/>
+    :content="IntroductionMd"
+  />
 
-  <simple-dialog
-    v-model="showResources"
-    :title="$t('resources')">
+  <simple-dialog v-model="showResources" :title="$t('resources')">
     <q-list separator>
       <essential-link
         v-for="link in essentialLinks"
@@ -95,7 +95,6 @@
       />
     </q-list>
   </simple-dialog>
-
 </template>
 
 <script lang="ts">
