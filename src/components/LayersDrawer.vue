@@ -145,6 +145,7 @@ const mainLayersIds = [
   'sensors-a',
   'sensors-b',
   'sensors-c',
+  'sensors-d',
   'conduite_principale_ec',
 ];
 

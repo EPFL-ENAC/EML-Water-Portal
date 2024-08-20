@@ -14,7 +14,7 @@ import { MeasureOptions, SensorColors } from 'src/utils/options';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
 export class SensorsLayerManager extends LayerManager {
-  family = ''; // A, B or C
+  family = ''; // A, B, C or D
 
   data: FeatureCollection | null = null;
 
