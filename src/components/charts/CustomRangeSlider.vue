@@ -245,10 +245,13 @@ const filterPips = (value: number) => {
 
 :deep() .noUi-value-large {
   padding-top: 6px;
+  color: var(--q-dark);
+  font-weight: bold;
 }
 
 :deep() .noUi-value-sub {
   padding-top: 2px;
+  color: var(--q-dark);
 }
 
 :deep() .slider-styled {
@@ -287,11 +290,7 @@ const filterPips = (value: number) => {
   transform: translate(0, -25%);
 }
 :deep() .noUi-pips {
-  color: var(--q-dark);
-}
-
-:deep() .noUi-pips .noUi-value-sub {
-  filter: brightness(0.8);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 :deep() .noUi-pips-horizontal {
