@@ -67,7 +67,9 @@
                   v-if="measuresVisible[measure.key]"
                   :measure="measure.key"
                   :label="measure.label"
-                  :height="200"
+                  :unit="measure.unit"
+                  :precision="measure.precision"
+                  :height="180"
                   class="q-pa-sm"
                 />
               </div>

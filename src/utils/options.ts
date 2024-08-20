@@ -1,16 +1,39 @@
 export const MeasureOptions = [
-  { key: 'water_level', label: 'Water level' },
-  { key: 'water_temperature', label: 'Water Temperature' },
-  { key: 'water_samples', label: 'Water Samples' },
-  { key: 'electro_conductivity', label: 'Electrical conductivity' },
-  { key: 'dissolved_oxygen', label: 'Dissolved oxygen' },
-  { key: 'ph', label: 'pH' },
-  { key: 'turbidity', label: 'Turbidity' },
+  { key: 'water_level', label: 'Water level', unit: 'm', precision: 3 },
+  {
+    key: 'water_temperature',
+    label: 'Water Temperature',
+    unit: '°C',
+    precision: 2,
+  },
+  { key: 'water_samples', label: 'Water Samples', unit: '', precision: 2 },
+
+  {
+    key: 'electro_conductivity',
+    label: 'Electrical conductivity',
+    unit: 'µs/cm',
+    precision: 2,
+  },
+  {
+    key: 'dissolved_oxygen',
+    label: 'Dissolved oxygen',
+    unit: 'mg/L',
+    precision: 2,
+  },
+  { key: 'ph', label: 'pH', unit: 'pH', precision: 2 },
+  { key: 'turbidity', label: 'Turbidity', unit: 'NTU', precision: 2 },
   {
     key: 'oxidation_reduction_potential',
     label: 'Oxidation-reduction potential',
+    unit: 'mV',
+    precision: 2,
   },
-  { key: 'air_temperature', label: 'Air Temperature' },
+  {
+    key: 'air_temperature',
+    label: 'Air Temperature',
+    unit: '°C',
+    precision: 2,
+  },
 ];
 
 export const SensorColors = [

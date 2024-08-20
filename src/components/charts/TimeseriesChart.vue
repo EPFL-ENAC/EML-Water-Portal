@@ -53,12 +53,16 @@ use([
 interface Props {
   measure: string;
   label: string;
+  unit?: string;
+  precision?: number;
   height?: number;
   heightUnit?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
+  precision: 2,
+  unit: '',
   heightUnit: 'px',
 });
 
@@ -165,6 +169,8 @@ function buildOptions() {
       axisPointer: {
         animation: false,
       },
+      valueFormatter: (value) =>
+        (value as number).toFixed(props.precision) + ' ' + props.unit,
     },
     axisPointer: {
       link: [
@@ -212,13 +218,20 @@ function buildOptions() {
     ],
     yAxis: [
       {
-        name: props.label,
+        name:
+          props.label !== props.unit
+            ? props.label + ' (' + props.unit + ')'
+            : props.label, // Add unit to label if different e.g pH doesn't need unit
         nameLocation: 'middle',
         nameGap: 40,
         nameTextStyle: {
           fontWeight: 'bold',
         },
         type: 'value',
+        nameTruncate: {
+          maxWidth: 200,
+          ellipsis: '...',
+        },
       },
     ],
     series: sensors.value.map((s) => {
