@@ -2,88 +2,69 @@
   <q-page id="q-page-content">
     <div id="tooltip-container" class="flex"></div>
 
-    <q-splitter
-      v-model="splitterModel"
-      horizontal
-      after-class="measures-container"
-      style="height: 100%; width: 100%; position: absolute; z-index: 10"
-    >
-      <template v-slot:before>
-        <div class="row items-center full-height justify-evenly">
+    <div id="measures-container" class="row">
+      <div class="col-3 bg-grey-2">
+        <q-card bordered class="q-ma-sm q-mb-md" style="height: 40vh">
           <maplibre-map
             position
             :center="[6.57, 46.5225]"
-            :zoom="16"
+            :zoom="15"
             @map:loaded="onMapLoaded"
           />
-        </div>
-      </template>
-      <template v-slot:separator>
-        <q-btn
-          color="accent"
-          text-color="white"
-          size="4px"
-          icon="drag_indicator"
-          style="cursor: grab"
-        />
-      </template>
-      <template v-slot:after>
-        <div v-if="!measuresStore.loading" class="row">
-          <div class="col">
-            <div v-if="!measuresStore.loading" style="position: fixed">
-              <div v-for="measure in MeasureOptions" :key="measure.key">
-                <q-checkbox
-                  v-model="measuresVisible[measure.key]"
-                  :label="measure.label"
-                />
-                <template
-                  v-for="col in getSensorColors(measure.key)"
-                  :key="col"
-                >
-                  <q-icon
-                    name="circle"
-                    :style="`color: ${col};`"
-                    class="q-ml-xs"
-                  />
-                </template>
-                <q-btn
-                  v-if="measuresVisible[measure.key]"
-                  icon="open_in_new"
-                  color="secondary"
-                  flat
-                  dense
-                  rounded
-                  size="sm"
-                  @click="onShowMeasure(measure.key)"
-                  class="on-right"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="col-10">
-            <div
-              class="flex column justify-between"
-              style="overflow-x: hidden; overflow-y: hidden"
-            >
-              <div v-for="measure in MeasureOptions" :key="measure.key">
-                <timeseries-chart
-                  v-if="measuresVisible[measure.key]"
-                  :measure="measure.key"
-                  :label="measure.label"
-                  :unit="measure.unit"
-                  :precision="measure.precision"
-                  :height="180"
-                  class="q-pa-sm"
-                />
-              </div>
-            </div>
+        </q-card>
+        <div v-if="!measuresStore.loading">
+          <q-btn-group flat spread class="q-ma-sm">
+            <template v-for="sensor in SensorColors" :key="sensor.color">
+              <q-btn
+                size="10px"
+                :label="sensor.label"
+                :title="sensor.title"
+                class="text-bold text-grey-3"
+                :style="`background-color: ${sensor.color}; opacity: ${
+                  mapStore.layerSelections.find((l) => l.id === sensor.layer)?.visible ?  1 : 0.3
+                };`"
+                @click="onToggleSensorLayer(sensor.layer)"
+              />
+            </template>
+          </q-btn-group>
+          <div v-for="measure in MeasureOptions" :key="measure.key">
+            <q-checkbox
+              v-model="measuresVisible[measure.key]"
+              :label="measure.label"
+            />
+            <template v-for="col in getSensorColors(measure.key)" :key="col">
+              <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
+            </template>
+            <q-btn
+              v-if="measuresVisible[measure.key]"
+              icon="fullscreen"
+              color="secondary"
+              flat
+              dense
+              rounded
+              size="sm"
+              @click="onShowMeasure(measure.key)"
+              class="on-right"
+            />
           </div>
         </div>
-        <div v-else class="text-center q-pa-xl">
-          <q-spinner-dots color="primary" size="100px" />
+      </div>
+      <div class="col-9">
+        <div>
+          <div v-for="measure in MeasureOptions" :key="measure.key">
+            <timeseries-chart
+              v-if="measuresVisible[measure.key]"
+              :measure="measure.key"
+              :label="measure.label"
+              :unit="measure.unit"
+              :precision="measure.precision"
+              :height="180"
+              class="q-pa-sm"
+            />
+          </div>
         </div>
-      </template>
-    </q-splitter>
+      </div>
+    </div>
 
     <scenarii-dialog v-model="showScenario" />
 
@@ -127,7 +108,6 @@ const filtersStore = useFiltersStore();
 const measuresStore = useMeasuresStore();
 const scenariiStore = useScenariiStore();
 
-const splitterModel = ref(30);
 const showScenario = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
@@ -180,5 +160,9 @@ function getSensorColors(measure: string) {
   return SensorColors.filter((opt) => opt.measures.includes(measure)).map(
     (opt) => opt.color,
   );
+}
+
+function onToggleSensorLayer(id: string) {
+  mapStore.toggleLayerVisibility(id);
 }
 </script>
