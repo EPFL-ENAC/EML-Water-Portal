@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-if="sensors.length === 0" class="text-center text-help q-pa-sm">
+    <div v-if="props.measure === 'water_samples'" class="text-center text-negative q-pa-sm">
+      {{ $t('water_samples_data_on_demand') }}
+    </div>
+    <div v-else-if="sensors.length === 0" class="text-center text-help q-pa-sm">
       {{ $t('no_sensor_selected', { measure: props.label }) }}
     </div>
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">

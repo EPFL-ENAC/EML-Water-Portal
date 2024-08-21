@@ -33,6 +33,7 @@ export default {
   legends: 'Legends',
   name: 'Name',
   none: 'None',
+  water_samples_data_on_demand: 'Water samples data are available on demand',
   no_sensor_data: '{measure}: no sensor data',
   no_sensor_selected: '{measure}: no sensor selected',
   other_layers: 'Other layers',
