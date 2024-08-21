@@ -5,6 +5,7 @@
     <q-splitter
       v-model="splitterModel"
       horizontal
+      after-class="measures-container"
       style="height: 100%; width: 100%; position: absolute; z-index: 10"
     >
       <template v-slot:before>
@@ -119,7 +120,6 @@ import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
 import { MeasureOptions, SensorColors } from 'src/utils/options';
-import { connect } from 'echarts';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();

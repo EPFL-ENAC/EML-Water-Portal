@@ -98,6 +98,7 @@ const chart = shallowRef<typeof ECharts | null>(null);
 
 const option = ref<EChartsOption>({});
 const loading = ref(false);
+const intersecting = ref(false);
 
 const sensors = computed(() =>
   measuresStore.datasets
@@ -154,6 +155,23 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
+watch(() => chart.value, (newChart) => {
+  if (newChart) {
+    const container = document.getElementsByClassName('measures-container')[0];
+    if (container && chart.value) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          intersecting.value = entry.isIntersecting;
+        });
+      }, {
+        root: container,
+        threshold: 1 // Trigger when 100% of the child is visible
+      });
+      observer.observe(chart.value.$el);
+    }
+  }
+});
+
 watch(() => timeseriesStore.axisPointer, onPointerMove);
 
 function onPointerMove() {
@@ -161,7 +179,8 @@ function onPointerMove() {
     chart.value !== null &&
     timeseriesStore.lastUpdatedPointerID != props.measure
   ) {
-    if (timeseriesStore.axisPointer !== undefined) {
+    // Show tooltip only if the chart is intersecting with the viewport
+    if (timeseriesStore.axisPointer !== undefined && intersecting.value) {
       const timeMs = timeseriesStore.axisPointer.getTime();
       const dataIndex = timestampsMS.value?.findIndex(
         (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
@@ -172,10 +191,11 @@ function onPointerMove() {
         dataIndex,
         position: 'inside',
       });
-    } else
+    } else if (!intersecting.value) {
       chart.value.dispatchAction({
         type: 'hideTip',
       });
+    }
   }
 }
 
