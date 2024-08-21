@@ -10,12 +10,14 @@
       <e-charts
         ref="chart"
         autoresize
+        group="timeseries"
         :init-options="initOptions"
         :option="option"
         :update-options="updateOptions"
         :loading="loading"
         @highlight="onHighlight"
         @datazoom="onDataZoomChange"
+        @downplay="onDownplay"
       />
     </div>
   </div>
@@ -53,12 +55,16 @@ use([
 interface Props {
   measure: string;
   label: string;
+  unit?: string;
+  precision?: number;
   height?: number;
   heightUnit?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
+  precision: 2,
+  unit: '',
   heightUnit: 'px',
 });
 
@@ -115,6 +121,10 @@ const timestamps = computed(() =>
     : [],
 );
 
+const timestampsMS = computed(() =>
+  timestamps.value?.map((t) => new Date(t).getTime()),
+);
+
 function initChartOptions() {
   if (measuresStore.loading) {
     return;
@@ -128,7 +138,12 @@ const onHighlight = (e: ECElementEvent) => {
   const timestamp = timestamps.value
     ? new Date(timestamps.value[idx])
     : undefined;
+  timeseriesStore.lastUpdatedPointerID = props.measure;
   timeseriesStore.axisPointer = timestamp;
+};
+
+const onDownplay = () => {
+  timeseriesStore.axisPointer = undefined;
 };
 
 onMounted(() => {
@@ -139,18 +154,45 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
+watch(() => timeseriesStore.axisPointer, onPointerMove);
+
+function onPointerMove() {
+  if (
+    chart.value !== null &&
+    timeseriesStore.lastUpdatedPointerID != props.measure
+  ) {
+    if (timeseriesStore.axisPointer !== undefined) {
+      const timeMs = timeseriesStore.axisPointer.getTime();
+      const dataIndex = timestampsMS.value?.findIndex(
+        (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
+      );
+      chart.value.dispatchAction({
+        type: 'showTip',
+        seriesIndex: 0,
+        dataIndex,
+        position: 'inside',
+      });
+    } else
+      chart.value.dispatchAction({
+        type: 'hideTip',
+      });
+  }
+}
+
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
 function onRangeChange() {
-  if (chart.value !== null && timeseriesStore.timeRange !== undefined) {
-    if (timeseriesStore.lastUpdatedChartID != props.measure) {
-      chart.value.dispatchAction({
-        type: 'dataZoom',
-        dataZoomIndex: 0,
-        startValue: timeseriesStore.timeRange[0],
-        endValue: timeseriesStore.timeRange[1],
-      });
-    }
+  if (
+    chart.value !== null &&
+    timeseriesStore.timeRange !== undefined &&
+    timeseriesStore.lastUpdatedChartID != props.measure
+  ) {
+    chart.value.dispatchAction({
+      type: 'dataZoom',
+      dataZoomIndex: 0,
+      startValue: timeseriesStore.timeRange[0],
+      endValue: timeseriesStore.timeRange[1],
+    });
   }
 }
 
@@ -161,10 +203,15 @@ function buildOptions() {
     animation: false,
     tooltip: {
       trigger: 'axis',
-      appendTo: document.getElementById('q-page-content') as HTMLElement,
+      appendTo: document.getElementById('tooltip-container') as HTMLElement,
+      className: 'echarts-tooltip',
+      enterable: true,
       axisPointer: {
         animation: false,
       },
+      confine: true,
+      valueFormatter: (value) =>
+        (value as number).toFixed(props.precision) + ' ' + props.unit,
     },
     axisPointer: {
       link: [
@@ -193,22 +240,39 @@ function buildOptions() {
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
         axisLabel: {
-          formatter: function (value) {
-            var date = new Date(value);
-            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+          formatter: {
+            month: '{monthStyle|{dd}/{MM}}',
+            day: '{dd}/{MM}',
+            hour: '{hourStyle|{HH}:{mm}}',
+            minute: '{mm}',
+          },
+          rich: {
+            monthStyle: {
+              fontWeight: 'bolder',
+            },
+            hourStyle: {
+              color: 'silver',
+            },
           },
         },
       },
     ],
     yAxis: [
       {
-        name: props.label,
+        name:
+          props.label !== props.unit
+            ? props.label + ' (' + props.unit + ')'
+            : props.label, // Add unit to label if different e.g pH doesn't need unit
         nameLocation: 'middle',
         nameGap: 40,
         nameTextStyle: {
           fontWeight: 'bold',
         },
         type: 'value',
+        nameTruncate: {
+          maxWidth: 200,
+          ellipsis: '...',
+        },
       },
     ],
     series: sensors.value.map((s) => {
@@ -235,3 +299,9 @@ function buildOptions() {
   loading.value = false;
 }
 </script>
+<style>
+.echarts-tooltip {
+  max-height: 200px;
+  overflow-y: auto;
+}
+</style>

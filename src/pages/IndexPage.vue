@@ -1,5 +1,7 @@
 <template>
   <q-page id="q-page-content">
+    <div id="tooltip-container" class="flex"></div>
+
     <q-splitter
       v-model="splitterModel"
       horizontal
@@ -67,7 +69,9 @@
                   v-if="measuresVisible[measure.key]"
                   :measure="measure.key"
                   :label="measure.label"
-                  :height="200"
+                  :unit="measure.unit"
+                  :precision="measure.precision"
+                  :height="180"
                   class="q-pa-sm"
                 />
               </div>
@@ -115,6 +119,7 @@ import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
 import { MeasureOptions, SensorColors } from 'src/utils/options';
+import { connect } from 'echarts';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
@@ -131,7 +136,9 @@ const measuresVisible = ref<Record<string, boolean>>(
   settingsStore.settings?.measuresVisible || {},
 );
 
-onMounted(() => measuresStore.loadDatasets());
+onMounted(() => {
+  measuresStore.loadDatasets();
+});
 
 watch(
   () => mapStore.bvSelected,

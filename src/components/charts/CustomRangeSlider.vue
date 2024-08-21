@@ -1,9 +1,23 @@
 <template>
-  <div class="q-pa-xl">
+  <div class="q-pa-xl q-mb-lg">
     <div class="slider-container">
-      <q-btn class="play-button" @click="togglePlay" flat>{{
-        playing ? 'Pause' : 'Play'
-      }}</q-btn>
+      <div class="button-container">
+        <q-btn
+          :class="isDefault ? 'hidden' : ''"
+          round
+          icon="close"
+          @click="resetSlider"
+          hidden
+          flat
+        ></q-btn>
+        <q-btn
+          round
+          :icon="playing ? 'pause' : 'play_arrow'"
+          @click="togglePlay"
+          :disable="isDefault"
+          flat
+        />
+      </div>
     </div>
     <div id="slider-round" ref="sliderHTML" class="slider-styled" />
   </div>
@@ -119,6 +133,24 @@ const togglePlay = () => {
   else play();
 };
 
+const isDefault = computed(() => {
+  return (
+    timeseriesStore.timeRange[0].getTime() ===
+      timeseriesStore.MIN_DATE.getTime() &&
+    timeseriesStore.timeRange[1].getTime() ===
+      timeseriesStore.MAX_DATE.getTime()
+  );
+});
+
+const resetSlider = () => {
+  if (slider.value) {
+    slider.value.set([
+      timeseriesStore.MIN_DATE.getTime(),
+      timeseriesStore.MAX_DATE.getTime(),
+    ]);
+  }
+};
+
 onUnmounted(() => {
   if (playInterval) clearInterval(playInterval);
 });
@@ -139,7 +171,10 @@ const formatter = {
     const date = new Date(value);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-    return `${day}/${month}`;
+    const closeToFirstOfMonth =
+      Number(day) !== 1 && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability
+
+    return closeToFirstOfMonth ? '' : `${day}/${month}`;
   },
   from: (value: string) => {
     const [day, month] = value.split('/').map(Number);
@@ -190,9 +225,9 @@ const filterPips = (value: number) => {
   position: relative;
 }
 
-.play-button {
+.button-container {
   position: absolute;
-  top: -35px;
+  top: -45px;
   right: 0; /* Aligns the button to the top-right corner */
   margin: 0; /* Adjust margin as needed */
 }
@@ -208,15 +243,15 @@ const filterPips = (value: number) => {
   position: relative;
 }
 
-:deep() .noUi-value {
-  padding-top: 3px;
-}
 :deep() .noUi-value-large {
-  padding-top: 8px;
+  padding-top: 6px;
+  color: var(--q-dark);
+  font-weight: bold;
 }
 
 :deep() .noUi-value-sub {
   padding-top: 2px;
+  color: var(--q-dark);
 }
 
 :deep() .slider-styled {
@@ -255,8 +290,13 @@ const filterPips = (value: number) => {
   transform: translate(0, -25%);
 }
 :deep() .noUi-pips {
-  color: var(--q-dark);
+  font-family: Arial, Helvetica, sans-serif;
 }
+
+:deep() .noUi-pips-horizontal {
+  padding: 4px 0;
+}
+
 :deep() .noUi-tooltip {
   display: none;
 }
