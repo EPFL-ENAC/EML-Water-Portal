@@ -38,18 +38,20 @@ export const useMapStore = defineStore('map', () => {
     new MeteoLayerManager(),
   ];
 
-  const layerSelections: LayerSelection[] = layerManagers.map((lm) => ({
-    id: lm.getId(),
-    visible: [
-      'river',
-      'sensors-a',
-      'sensors-b',
-      'sensors-c',
-      'sensors-d',
-      'conduite_principale_ec',
-      'bv',
-    ].includes(lm.getId()),
-  }));
+  const layerSelections = ref<LayerSelection[]>(
+    layerManagers.map((lm) => ({
+      id: lm.getId(),
+      visible: [
+        'river',
+        'sensors-a',
+        'sensors-b',
+        'sensors-c',
+        'sensors-d',
+        'conduite_principale_ec',
+        'bv',
+      ].includes(lm.getId()),
+    })),
+  );
 
   /**
    * Find a layer selection state by its identifier.
@@ -57,11 +59,25 @@ export const useMapStore = defineStore('map', () => {
    * @returns
    */
   function findLayer(id: string) {
-    return layerSelections.find((l) => l.id === id);
+    return layerSelections.value.find((l) => l.id === id);
   }
 
   /**
-   * Toggle the visibility of a layer.
+   * Toggle and apply the visibility of a layer.
+   * @param id the layer identifier
+   */
+  function toggleLayerVisibility(id: string) {
+    if (!map.value) return;
+    const manager = getLayerManager(id);
+    const layer = findLayer(id);
+    if (manager && layer) {
+      layer.visible = !layer.visible;
+      manager.setVisible(map.value, layer.visible);
+    }
+  }
+
+  /**
+   * Apply the visibility of a layer.
    * @param id the layer identifier
    */
   function applyLayerVisibility(id: string) {
@@ -81,7 +97,7 @@ export const useMapStore = defineStore('map', () => {
   async function initLayers(mapInstance: Map) {
     map.value = mapInstance;
     return Promise.all(
-      layerSelections.map((layer) => {
+      layerSelections.value.map((layer) => {
         const manager = getLayerManager(layer.id);
         if (!manager) return Promise.resolve();
         return manager.append(mapInstance, onFeaturesSelected);
@@ -116,7 +132,7 @@ export const useMapStore = defineStore('map', () => {
    */
   function applyState() {
     if (!map.value) return;
-    layerSelections.map((layer) => {
+    layerSelections.value.map((layer) => {
       if (map.value && layer.visible) {
         const manager = getLayerManager(layer.id);
         if (manager) {
@@ -134,6 +150,7 @@ export const useMapStore = defineStore('map', () => {
     map,
     layerSelections,
     bvSelected,
+    toggleLayerVisibility,
     applyLayerVisibility,
     initLayers,
     applyState,

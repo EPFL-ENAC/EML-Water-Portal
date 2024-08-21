@@ -1,21 +1,15 @@
 <template>
   <div
     v-if="loading"
-    class="absolute inset-0 flex items-center full-height justify-center"
+    class="inset-0 flex items-center full-height justify-center"
     style="z-index: 1"
   >
     <q-spinner-dots color="primary" size="100px" />
   </div>
   <div
+    v-show="!loading"
     id="maplibre-map"
-    style="
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 0;
-    "
+    style="height: 100%; width: 100%; z-index: 100"
   ></div>
 </template>
 

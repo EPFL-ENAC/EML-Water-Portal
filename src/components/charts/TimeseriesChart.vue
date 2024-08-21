@@ -155,22 +155,28 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
-watch(() => chart.value, (newChart) => {
-  if (newChart) {
-    const container = document.getElementsByClassName('measures-container')[0];
-    if (container && chart.value) {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          intersecting.value = entry.isIntersecting;
-        });
-      }, {
-        root: container,
-        threshold: 1 // Trigger when 100% of the child is visible
-      });
-      observer.observe(chart.value.$el);
+watch(
+  () => chart.value,
+  (newChart) => {
+    if (newChart) {
+      const container = document.getElementById('measures-container');
+      if (container && chart.value) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              intersecting.value = entry.isIntersecting;
+            });
+          },
+          {
+            root: container,
+            threshold: 1, // Trigger when 100% of the child is visible
+          },
+        );
+        observer.observe(chart.value.$el);
+      }
     }
-  }
-});
+  },
+);
 
 watch(() => timeseriesStore.axisPointer, onPointerMove);
 

@@ -4,9 +4,9 @@
       <app-toolbar @toggle="toggleLeftDrawer" />
     </q-header>
 
-    <q-drawer v-model="mapStore.showDrawer" overlay elevated>
+    <q-drawer v-model="mapStore.showDrawer" overlay elevated width="400">
       <layers-drawer />
-      <div class="absolute" style="top: 10px; right: 10px">
+      <div class="absolute" style="top: 10px; right: 15px">
         <q-btn dense round unelevated icon="close" @click="toggleLeftDrawer" />
       </div>
     </q-drawer>
