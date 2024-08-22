@@ -305,6 +305,8 @@ function buildOptions() {
           maxWidth: 200,
           ellipsis: '...',
         },
+        min: 'dataMin',  // Automatically set the minimum value based on the data
+        max: 'dataMax',  // Automatically set the maximum value based on the data
       },
     ],
     series: sensors.value.map((s) => {
