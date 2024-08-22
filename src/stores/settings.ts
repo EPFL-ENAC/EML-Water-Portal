@@ -20,6 +20,7 @@ export const useSettingsStore = defineStore('settings', () => {
       measuresVisible: {
         water_level: true,
         water_temperature: true,
+        depth: false,
         water_samples: false,
         electro_conductivity: false,
         dissolved_oxygen: false,

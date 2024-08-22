@@ -1,13 +1,28 @@
 export const MeasureOptions = [
-  { key: 'water_level', label: 'Water level', unit: 'm', precision: 3 },
+  {
+    key: 'water_level',
+    label: 'Water level',
+    unit: 'm',
+    precision: 3,
+  },
+  {
+    key: 'depth',
+    label: 'Depth',
+    unit: 'm',
+    precision: 3,
+  },
   {
     key: 'water_temperature',
     label: 'Water Temperature',
     unit: '°C',
     precision: 2,
   },
-  { key: 'water_samples', label: 'Water Samples', unit: '', precision: 2 },
-
+  {
+    key: 'water_samples',
+    label: 'Water Samples',
+    unit: '',
+    precision: 2,
+  },
   {
     key: 'electro_conductivity',
     label: 'Electrical conductivity',
@@ -44,6 +59,8 @@ export const SensorColors = [
     title: 'Multiparameter sensor',
     device: 'In-Situ',
     measures: [
+      'water_temperature',
+      'depth',
       'air_temperature',
       'electro_conductivity',
       'turbidity',

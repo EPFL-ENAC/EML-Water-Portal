@@ -3,30 +3,37 @@
     <div id="tooltip-container" class="flex"></div>
 
     <div id="measures-container" class="row">
-      <div class="col-3 bg-grey-2">
-        <q-card bordered class="q-ma-sm q-mb-md" style="height: 40vh">
-          <maplibre-map
-            position
-            :center="[6.57, 46.5225]"
-            :zoom="15"
-            @map:loaded="onMapLoaded"
-          />
+      <div class="col-12 col-md-3 bg-grey-2">
+        <q-card bordered class="q-ma-sm q-mb-md">
+          <div style="height: 40vh">
+            <maplibre-map
+              position
+              :center="[6.57, 46.5225]"
+              :zoom="15"
+              @map:loaded="onMapLoaded"
+            />
+          </div>
+          <div>
+            <q-btn-group flat spread class="q-ma-none">
+              <template v-for="sensor in SensorColors" :key="sensor.color">
+                <q-btn
+                  size="10px"
+                  :label="sensor.label"
+                  :title="sensor.title"
+                  class="text-bold text-grey-3"
+                  :style="`background-color: ${sensor.color}; opacity: ${
+                    mapStore.layerSelections.find((l) => l.id === sensor.layer)
+                      ?.visible
+                      ? 1
+                      : 0.3
+                  };`"
+                  @click="onToggleSensorLayer(sensor.layer)"
+                />
+              </template>
+            </q-btn-group>
+          </div>
         </q-card>
         <div v-if="!measuresStore.loading">
-          <q-btn-group flat spread class="q-ma-sm">
-            <template v-for="sensor in SensorColors" :key="sensor.color">
-              <q-btn
-                size="10px"
-                :label="sensor.label"
-                :title="sensor.title"
-                class="text-bold text-grey-3"
-                :style="`background-color: ${sensor.color}; opacity: ${
-                  mapStore.layerSelections.find((l) => l.id === sensor.layer)?.visible ?  1 : 0.3
-                };`"
-                @click="onToggleSensorLayer(sensor.layer)"
-              />
-            </template>
-          </q-btn-group>
           <div v-for="measure in MeasureOptions" :key="measure.key">
             <q-checkbox
               v-model="measuresVisible[measure.key]"
@@ -49,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="col-9">
+      <div class="col-12 col-md-9">
         <div>
           <div v-for="measure in MeasureOptions" :key="measure.key">
             <timeseries-chart

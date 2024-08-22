@@ -4,7 +4,7 @@
     class="inset-0 flex items-center full-height justify-center"
     style="z-index: 1"
   >
-    <q-spinner-dots color="primary" size="100px" />
+    <q-spinner-dots color="primary" size="50px" />
   </div>
   <div
     v-show="!loading"
@@ -28,7 +28,6 @@ import {
 import {
   AttributionControl,
   FullscreenControl,
-  GeolocateControl,
   Map,
   MapMouseEvent,
   NavigationControl,
@@ -89,7 +88,6 @@ onMounted(() => {
   });
 
   map.addControl(new NavigationControl());
-  map.addControl(new GeolocateControl({}));
   map.addControl(new ScaleControl());
   map.addControl(new FullscreenControl());
 
