@@ -98,7 +98,6 @@ export const useMapStore = defineStore('map', () => {
     map.value = mapInstance;
     for (const manager of layerSelections.value.map((l) => getLayerManager(l.id))) {
       if (manager) {
-        console.log('append', manager.getId());
         await manager.append(mapInstance, onFeaturesSelected);
       }
     }

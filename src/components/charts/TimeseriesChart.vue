@@ -48,6 +48,7 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
+import { debounce } from 'quasar'
 
 use([
   CanvasRenderer,
@@ -128,9 +129,9 @@ const timestamps = computed(() =>
     : [],
 );
 
-const timestampsMS = computed(() =>
-  timestamps.value?.map((t) => new Date(t).getTime()),
-);
+const timestampsMS = computed(() => {
+  return timestamps.value?.map((t) => new Date(t).getTime());
+});
 
 function initChartOptions() {
   if (measuresStore.loading) {
@@ -165,7 +166,7 @@ watch(
   () => chart.value,
   (newChart) => {
     if (newChart) {
-      const container = document.getElementById('measures-container');
+      const container = document.getElementById('q-page-content');
       if (container && chart.value) {
         const observer = new IntersectionObserver(
           (entries) => {
@@ -192,18 +193,18 @@ function onPointerMove() {
     timeseriesStore.lastUpdatedPointerID != props.measure
   ) {
     // Show tooltip only if the chart is intersecting with the viewport
-    if (timeseriesStore.axisPointer !== undefined && intersecting.value) {
+    if (timeseriesStore.axisPointer && intersecting.value) {
       const timeMs = timeseriesStore.axisPointer.getTime();
       const dataIndex = timestampsMS.value?.findIndex(
         (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
       );
-      chart.value.dispatchAction({
+      chart.value?.dispatchAction({
         type: 'showTip',
         seriesIndex: 0,
         dataIndex,
         position: 'inside',
       });
-    } else if (!intersecting.value) {
+    } else {
       chart.value.dispatchAction({
         type: 'hideTip',
       });

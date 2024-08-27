@@ -2,7 +2,7 @@
   <q-page id="q-page-content">
     <div id="tooltip-container" class="flex"></div>
 
-    <div id="measures-container" class="row">
+    <div class="row">
       <div class="col-12 col-md-3 bg-grey-2">
         <q-card bordered class="q-ma-sm q-mb-md">
           <div style="height: 40vh">
