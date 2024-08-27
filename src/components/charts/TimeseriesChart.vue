@@ -242,8 +242,7 @@ function buildOptions() {
         animation: false,
       },
       confine: true,
-      valueFormatter: (value) =>
-        (value as number).toFixed(props.precision) + ' ' + props.unit,
+      valueFormatter: (value) => `${value} ${props.unit}`,
     },
     axisPointer: {
       link: [
@@ -313,9 +312,12 @@ function buildOptions() {
       const timestamps = s.columns.find(
         (col) => col.measure === 'timestamp',
       )?.data;
-      const colData = s.columns.find(
+      let colData = s.columns.find(
         (col) => col.measure === props.measure,
       )?.data;
+      if (colData && props.precision) {
+        colData = colData.map((d) => typeof d === 'number' ? d.toFixed(props.precision) : d);
+      }
       return {
         name: s.name,
         showSymbol: false,
