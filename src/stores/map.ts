@@ -24,10 +24,6 @@ export const useMapStore = defineStore('map', () => {
   const bvSelected = ref<MapGeoJSONFeature>();
 
   const layerManagers = [
-    new SensorsLayerManager('A'),
-    new SensorsLayerManager('B'),
-    new SensorsLayerManager('C'),
-    new SensorsLayerManager('D'),
     new RiverLayerManager(),
     new ConduitePrincipaleECLayerManager(),
     new BVLayerManager(),
@@ -36,6 +32,10 @@ export const useMapStore = defineStore('map', () => {
     new RejetsECLayerManager(),
     new RejetsEULayerManager(),
     new MeteoLayerManager(),
+    new SensorsLayerManager('A'),
+    new SensorsLayerManager('B'),
+    new SensorsLayerManager('C'),
+    new SensorsLayerManager('D'),
   ];
 
   const layerSelections = ref<LayerSelection[]>(
@@ -96,13 +96,13 @@ export const useMapStore = defineStore('map', () => {
    */
   async function initLayers(mapInstance: Map) {
     map.value = mapInstance;
-    return Promise.all(
-      layerSelections.value.map((layer) => {
-        const manager = getLayerManager(layer.id);
-        if (!manager) return Promise.resolve();
-        return manager.append(mapInstance, onFeaturesSelected);
-      }),
-    );
+    for (const manager of layerSelections.value.map((l) => getLayerManager(l.id))) {
+      if (manager) {
+        console.log('append', manager.getId());
+        await manager.append(mapInstance, onFeaturesSelected);
+      }
+    }
+    return;
   }
 
   /**
