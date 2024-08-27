@@ -1,16 +1,24 @@
 <template>
-  <div class="q-pa-xl q-mb-lg">
+  <div>
     <div class="slider-container">
-      <div class="button-container">
+      <div class="row">
+        <q-btn
+          round
+          icon="date_range"
+          @click="onShowDateSelector"
+          flat
+        />
         <q-btn
           :class="isDefault ? 'hidden' : ''"
           round
-          icon="close"
+          icon="restore"
           @click="resetSlider"
           hidden
           flat
         ></q-btn>
+        <q-space />
         <q-btn
+          v-if="player"
           round
           :icon="playing ? 'pause' : 'play_arrow'"
           @click="togglePlay"
@@ -20,24 +28,27 @@
       </div>
     </div>
     <div id="slider-round" ref="sliderHTML" class="slider-styled" />
+    <time-range-dialog v-model="showDateSelector" />
   </div>
 </template>
 
 <script lang="ts">
 export default defineComponent({
-  name: 'CustomRangeSlider',
+  name: 'TimeRangeSlider',
 });
 </script>
 <script setup lang="ts">
+import TimeRangeDialog from 'src/components/charts/TimeRangeDialog.vue';
 import noUiSlider from 'nouislider';
 import { PipsMode, type API as SliderAPI } from 'nouislider';
 import 'nouislider/dist/nouislider.css';
-import { onUnmounted, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
   step?: number;
+  player?: boolean;
 }>();
 
+const showDateSelector = ref(false);
 const slider = ref<SliderAPI | null>(null);
 const sliderHTML = ref<HTMLDivElement | null>(null);
 const playing = ref(false);
@@ -74,7 +85,7 @@ const updateSlider = () => {
       },
     });
     slider.value.on('update', (values) => {
-      timeseriesStore.lastUpdatedChartID = 'customRangeSlider';
+      timeseriesStore.lastUpdatedChartID = 'timeRangeSlider';
       timeseriesStore.timeRange = values.map(
         (val) => new Date(Number(val)),
       ) as [Date, Date];
@@ -87,7 +98,7 @@ watch(
   () => {
     if (
       slider.value &&
-      timeseriesStore.lastUpdatedChartID !== 'customRangeSlider'
+      timeseriesStore.lastUpdatedChartID !== 'timeRangeSlider'
     ) {
       const [min, max] = timeseriesStore.timeRange.map((date) =>
         date.getTime(),
@@ -166,19 +177,27 @@ watch(
 onMounted(() => {
   updateSlider();
 });
+
 const formatter = {
   to: (value: number) => {
     const date = new Date(value);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    // const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
+
+    // Start/end of the range
+    if (timeseriesStore.MIN_DATE.getTime() === value || timeseriesStore.MAX_DATE.getTime() === value) {
+      return `${day}/${month}`;
+    }
+
     const closeToFirstOfMonth =
-      Number(day) !== 1 && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability
+      Number(day) !== 1; // && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability
 
     return closeToFirstOfMonth ? '' : `${day}/${month}`;
   },
   from: (value: string) => {
-    const [day, month] = value.split('/').map(Number);
-    const year = new Date().getFullYear(); // Use the current year
+    const [day, month, year2] = value.split('/').map(Number);
+    const year = year2 ? 2000 + year2 : new Date().getFullYear(); // Use the current year if not in string
     return new Date(year, month - 1, day).getTime();
   },
 };
@@ -188,20 +207,24 @@ const formatterTooltip = {
     const date = new Date(value);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear().toString();
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${day}/${month} ${hours}:${minutes}`;
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
   },
   from: (value: string) => {
     const [datePart, timePart] = value.split(' ');
-    const [day, month] = datePart.split('/').map(Number);
+    const [day, month, year] = datePart.split('/').map(Number);
     const [hours, minutes] = timePart.split(':').map(Number);
-    const year = new Date().getFullYear(); // Use the current year
     return new Date(year, month - 1, day, hours, minutes).getTime();
   },
 };
 
 const filterPips = (value: number) => {
+  if (timeseriesStore.MIN_DATE.getTime() === value || timeseriesStore.MAX_DATE.getTime() === value) {
+    return 1; // Start/end of the range
+  }
+
   const date = new Date(value);
   const day = date.getUTCDate();
   const weekDay = date.getUTCDay();
@@ -218,6 +241,10 @@ const filterPips = (value: number) => {
   } else {
     return -1; // Hide pip
   }
+};
+
+const onShowDateSelector = () => {
+  showDateSelector.value = true;
 };
 </script>
 <style scoped>
@@ -247,6 +274,7 @@ const filterPips = (value: number) => {
   padding-top: 6px;
   color: var(--q-dark);
   font-weight: bold;
+  font-size: smaller;
 }
 
 :deep() .noUi-value-sub {

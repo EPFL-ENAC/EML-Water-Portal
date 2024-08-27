@@ -33,28 +33,39 @@
             </q-btn-group>
           </div>
         </q-card>
-        <div v-if="!measuresStore.loading">
-          <div v-for="measure in MeasureOptions" :key="measure.key">
-            <q-checkbox
-              v-model="measuresVisible[measure.key]"
-              :label="measure.label"
-            />
-            <template v-for="col in getSensorColors(measure.key)" :key="col">
-              <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
-            </template>
-            <q-btn
-              v-if="measuresVisible[measure.key]"
-              icon="fullscreen"
-              color="secondary"
-              flat
-              dense
-              rounded
-              size="sm"
-              @click="onShowMeasure(measure.key)"
-              class="on-right"
-            />
+        <q-list v-if="!measuresStore.loading">
+          <q-item-label header class="text-h6">{{ $t('measures') }}</q-item-label>
+          <q-item>
+            <div>
+            <div v-for="measure in MeasureOptions" :key="measure.key">
+              <q-checkbox
+                v-model="measuresVisible[measure.key]"
+                :label="measure.label"
+              />
+              <template v-for="col in getSensorColors(measure.key)" :key="col">
+                <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
+              </template>
+              <q-btn
+                v-if="measuresVisible[measure.key]"
+                icon="fullscreen"
+                color="secondary"
+                flat
+                dense
+                rounded
+                size="sm"
+                @click="onShowMeasure(measure.key)"
+                class="on-right"
+              />
+            </div>
           </div>
-        </div>
+          </q-item>
+          <q-item-label header class="text-h6">{{ $t('time_range') }}</q-item-label>
+          <q-item>
+            <div class="full-width q-mb-xl">
+              <time-range-slider player class="q-ml-md q-mr-md"/>
+            </div>
+          </q-item>
+        </q-list>
       </div>
       <div class="col-12 col-md-9">
         <div>
@@ -105,6 +116,7 @@
 import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
+import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
 import { MeasureOptions, SensorColors } from 'src/utils/options';

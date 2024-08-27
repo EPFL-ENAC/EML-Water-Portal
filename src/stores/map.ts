@@ -24,11 +24,11 @@ export const useMapStore = defineStore('map', () => {
   const bvSelected = ref<MapGeoJSONFeature>();
 
   const layerManagers = [
-    new RiverLayerManager(),
     new SensorsLayerManager('A'),
     new SensorsLayerManager('B'),
     new SensorsLayerManager('C'),
     new SensorsLayerManager('D'),
+    new RiverLayerManager(),
     new ConduitePrincipaleECLayerManager(),
     new BVLayerManager(),
     new ConduiteECLayerManager(),

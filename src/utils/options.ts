@@ -2,7 +2,7 @@ export const MeasureOptions = [
   {
     key: 'water_level',
     label: 'Water level',
-    unit: 'm',
+    unit: 'mm',
     precision: 3,
   },
   {

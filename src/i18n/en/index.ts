@@ -56,4 +56,8 @@ export default {
   toilet_flushing: 'Toilet flushing',
   vegetation: 'Vegetation',
   water_reuse: 'Water reuse',
+  measures: 'Measures',
+  time_range: 'Time range',
+  from_date: 'From date',
+  to_date: 'To date',
 };

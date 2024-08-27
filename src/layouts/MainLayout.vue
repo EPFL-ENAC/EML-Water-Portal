@@ -28,11 +28,6 @@
       <router-view />
     </q-page-container>
 
-    <q-footer bordered class="bg-white text-black">
-      <div>
-        <custom-range-slider />
-      </div>
-    </q-footer>
   </q-layout>
 </template>
 
@@ -40,7 +35,6 @@
 import AppToolbar from 'src/components/AppToolbar.vue';
 import LayersDrawer from 'src/components/LayersDrawer.vue';
 import HelpDrawer from 'src/components/HelpDrawer.vue';
-import CustomRangeSlider from 'src/components/charts/CustomRangeSlider.vue';
 
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
