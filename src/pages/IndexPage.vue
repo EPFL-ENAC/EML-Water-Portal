@@ -77,6 +77,7 @@
               :unit="measure.unit"
               :precision="measure.precision"
               :height="180"
+              dispatch
               class="q-pa-sm"
             />
           </div>

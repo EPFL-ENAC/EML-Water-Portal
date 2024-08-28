@@ -65,6 +65,7 @@ interface Props {
   precision?: number;
   height?: number;
   heightUnit?: string;
+  dispatch?: boolean; // propagate axis pointer selection to other charts (via store)
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -104,7 +105,6 @@ const chart = shallowRef<typeof ECharts | null>(null);
 
 const option = ref<EChartsOption>({});
 const loading = ref(false);
-const intersecting = ref(false);
 
 const sensors = computed(() =>
   measuresStore.datasets
@@ -142,6 +142,9 @@ function initChartOptions() {
 }
 
 const onHighlight = (e: ECElementEvent) => {
+  if (!props.dispatch) {
+    return;
+  }
   let seriesIndex = -1;
   let dataIndex = -1;
   for (let i = 0; i < e.batch.length; i++) {
@@ -180,32 +183,9 @@ watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
 });
 
-watch(
-  () => chart.value,
-  (newChart) => {
-    if (newChart) {
-      const container = document.getElementById('q-page-content');
-      if (container && chart.value) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              intersecting.value = entry.isIntersecting;
-            });
-          },
-          {
-            root: container,
-            threshold: 1, // Trigger when 100% of the child is visible
-          },
-        );
-        observer.observe(chart.value.$el);
-      }
-    }
-  },
-);
+watch(() => timeseriesStore.axisPointer, onPointerSelection);
 
-watch(() => timeseriesStore.axisPointer, onPointerMove);
-
-function onPointerMove() {
+function onPointerSelection() {
   if (
     chart.value !== null &&
     timeseriesStore.lastUpdatedPointerID != props.measure
