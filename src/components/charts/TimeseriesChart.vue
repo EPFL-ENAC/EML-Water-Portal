@@ -48,7 +48,6 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
-import { debounce } from 'quasar'
 
 use([
   CanvasRenderer,
@@ -123,14 +122,15 @@ const sensors = computed(() =>
     : [],
 );
 
-const timestamps = computed(() =>
-  sensors.value.length > 0
-    ? sensors.value[0].columns.find((col) => col.measure === 'timestamp')?.data
-    : [],
-);
+// Get the timestamps for all sensors
+const timestamps = computed(() => {
+  const rval = sensors.value.map((sensor) => sensor.columns.find((col) => col.measure === 'timestamp')?.data);
+  return rval;
+});
 
 const timestampsMS = computed(() => {
-  return timestamps.value?.map((t) => new Date(t).getTime());
+  const rval = timestamps.value?.map((tdata) => tdata?.map((t) => new Date(t).getTime()));
+  return rval;
 });
 
 function initChartOptions() {
@@ -142,12 +142,30 @@ function initChartOptions() {
 }
 
 const onHighlight = (e: ECElementEvent) => {
-  const idx = e.batch[0].dataIndex;
-  const timestamp = timestamps.value
-    ? new Date(timestamps.value[idx])
-    : undefined;
-  timeseriesStore.lastUpdatedPointerID = props.measure;
-  timeseriesStore.axisPointer = timestamp;
+  let seriesIndex = -1;
+  let dataIndex = -1;
+  for (let i = 0; i < e.batch.length; i++) {
+    if (e.batch[i].dataIndex >= 0) {
+      seriesIndex = e.batch[i].seriesIndex;
+      dataIndex = e.batch[i].dataIndex;
+      break;
+    }
+  }
+  let timestamp = undefined;
+  if (timestamps.value && seriesIndex > -1 && dataIndex > -1) {
+    const col = timestamps.value[seriesIndex];
+    if (col && col[dataIndex]) {
+      timestamp = new Date(col[dataIndex]);
+    }
+  }
+
+  if (timestamp) {
+    if (timeseriesStore.axisPointer && timeseriesStore.axisPointer.getTime() === timestamp.getTime()) {
+      return;
+    }
+    timeseriesStore.lastUpdatedPointerID = props.measure;
+    timeseriesStore.axisPointer = timestamp;
+  }
 };
 
 const onDownplay = () => {
@@ -193,17 +211,36 @@ function onPointerMove() {
     timeseriesStore.lastUpdatedPointerID != props.measure
   ) {
     // Show tooltip only if the chart is intersecting with the viewport
-    if (timeseriesStore.axisPointer && intersecting.value) {
+    if (timeseriesStore.axisPointer) {
       const timeMs = timeseriesStore.axisPointer.getTime();
-      const dataIndex = timestampsMS.value?.findIndex(
-        (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
-      );
-      chart.value?.dispatchAction({
-        type: 'showTip',
-        seriesIndex: 0,
-        dataIndex,
-        position: 'inside',
-      });
+      let seriesIndex = -1;
+      let dataIndex = -1;
+      for (let i = 0; i < timestampsMS.value.length; i++) {
+        const timestampsMSData = timestampsMS.value[i];
+        if (!timestampsMSData) {
+          continue;
+        }
+        dataIndex = timestampsMSData.findIndex(
+          (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
+        );
+        if (dataIndex > -1) {
+          seriesIndex = i;
+          break;
+        }
+      }
+      if (dataIndex !== undefined && dataIndex > -1) {
+        chart.value?.dispatchAction({
+          type: 'showTip',
+          seriesIndex: seriesIndex,
+          dataIndex,
+          position: 'inside',
+        });
+      } else {
+        // does not apply to this chart
+        chart.value?.dispatchAction({
+          type: 'hideTip',
+        });
+      }
     } else {
       chart.value.dispatchAction({
         type: 'hideTip',
@@ -236,6 +273,7 @@ function buildOptions() {
     animation: false,
     tooltip: {
       trigger: 'axis',
+      triggerOn: 'click',
       appendTo: document.getElementById('tooltip-container') as HTMLElement,
       className: 'echarts-tooltip',
       enterable: true,
