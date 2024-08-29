@@ -302,10 +302,10 @@ function buildOptions() {
     ],
     grid: [
       {
-        top: 10,
+        top: 5,
         left: 60,
         right: 10,
-        bottom: 20,
+        bottom: 5,
       },
     ],
     xAxis: [
