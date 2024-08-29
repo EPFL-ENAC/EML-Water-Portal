@@ -48,6 +48,7 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
+import Gradient from 'javascript-color-gradient';
 
 use([
   CanvasRenderer,
@@ -248,6 +249,7 @@ function onRangeChange() {
 
 function buildOptions() {
   loading.value = true;
+  const gradient = getColorGradient();
   const newOption: EChartsOption = {
     renderer: 'canvas',
     animation: false,
@@ -327,7 +329,7 @@ function buildOptions() {
         max: 'dataMax',  // Automatically set the maximum value based on the data
       },
     ],
-    series: sensors.value.map((s) => {
+    series: sensors.value.map((s, index) => {
       const timestamps = s.columns.find(
         (col) => col.measure === 'timestamp',
       )?.data;
@@ -344,7 +346,9 @@ function buildOptions() {
         large: true,
         symbol: 'none',
         symbolSize: 0,
+        colorBy: 'series',
         type: 'line',
+        color: gradient[index],
         data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
       };
     }),
@@ -352,6 +356,42 @@ function buildOptions() {
 
   option.value = newOption;
   loading.value = false;
+}
+
+function getColorGradient() {
+  let colors = [];
+  switch (props.measure) {
+    case 'depth':
+      colors = ['#A67B5B', '#000000'];
+      break;
+    case 'water_temperature':
+    case 'air_temperature':
+      colors = ['#0095ff', '#ff0000'];
+      break;
+    case 'electro_conductivity':
+      colors = ['#f7ef07', '#de4313'];
+      break;
+    case 'ph':
+      colors = ['#92ffc0', '#002661'];
+      break;
+    case 'turbidity':
+      colors = ['#A6A15B', '#A65B60'];
+      break;
+    case 'oxidation_reduction_potential':
+      colors = ['#2e4fc6', '#1bffff', '#3be06d', '#fff720', '#ffad5c', '#ff0000'];
+      break;
+    default:
+      colors = ['#62cff4', '#2c67f2'];
+  }
+  const gradient = new Gradient();
+
+  if (colors.length === 2)
+    gradient.setColorGradient(colors[0], colors[1]);
+  else
+    gradient.setColorGradient(colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]);
+
+  gradient.setMidpoint(Math.max(colors.length, sensors.value.length));
+  return gradient.getColors();
 }
 </script>
 <style>
