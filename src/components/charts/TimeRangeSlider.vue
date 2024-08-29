@@ -2,12 +2,7 @@
   <div>
     <div class="slider-container">
       <div class="row">
-        <q-btn
-          round
-          icon="date_range"
-          @click="onShowDateSelector"
-          flat
-        />
+        <q-btn round icon="date_range" @click="onShowDateSelector" flat />
         <q-btn
           :class="isDefault ? 'hidden' : ''"
           round
@@ -186,12 +181,14 @@ const formatter = {
     // const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
 
     // Start/end of the range
-    if (timeseriesStore.MIN_DATE.getTime() === value || timeseriesStore.MAX_DATE.getTime() === value) {
+    if (
+      timeseriesStore.MIN_DATE.getTime() === value ||
+      timeseriesStore.MAX_DATE.getTime() === value
+    ) {
       return `${day}/${month}`;
     }
 
-    const closeToFirstOfMonth =
-      Number(day) !== 1; // && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability
+    const closeToFirstOfMonth = Number(day) !== 1; // && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability
 
     return closeToFirstOfMonth ? '' : `${day}/${month}`;
   },
@@ -221,7 +218,10 @@ const formatterTooltip = {
 };
 
 const filterPips = (value: number) => {
-  if (timeseriesStore.MIN_DATE.getTime() === value || timeseriesStore.MAX_DATE.getTime() === value) {
+  if (
+    timeseriesStore.MIN_DATE.getTime() === value ||
+    timeseriesStore.MAX_DATE.getTime() === value
+  ) {
     return 1; // Start/end of the range
   }
 

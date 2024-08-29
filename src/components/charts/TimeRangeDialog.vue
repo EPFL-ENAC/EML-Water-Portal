@@ -8,7 +8,11 @@
         <q-input v-model="fromDate" :label="$t('from_date')" class="q-mb-md">
           <template v-slot:prepend>
             <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
                 <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
@@ -19,7 +23,11 @@
           </template>
           <template v-slot:append>
             <q-icon name="access_time" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
                 <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
@@ -30,11 +38,14 @@
           </template>
         </q-input>
 
-
         <q-input v-model="toDate" :label="$t('to_date')">
           <template v-slot:prepend>
             <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
                 <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
@@ -46,7 +57,11 @@
 
           <template v-slot:append>
             <q-icon name="access_time" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
                 <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
@@ -58,8 +73,14 @@
         </q-input>
       </q-card-section>
       <q-card-actions align="right">
-          <q-btn flat :label="$t('cancel')" color="grey-6" v-close-popup />
-          <q-btn flat :label="$t('apply')" color="primary"  @click="onApply" v-close-popup />
+        <q-btn flat :label="$t('cancel')" color="grey-6" v-close-popup />
+        <q-btn
+          flat
+          :label="$t('apply')"
+          color="primary"
+          @click="onApply"
+          v-close-popup
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -105,12 +126,14 @@ function onHide() {
 function onApply() {
   if (!fromDate.value || !toDate.value) return;
   timeseriesStore.lastUpdatedChartID = 'timeRangeDialog';
-  const newFromDate = parse(fromDate.value, DATE_FORMAT, new Date);
-  const newToDate = parse(toDate.value, DATE_FORMAT, new Date);
+  const newFromDate = parse(fromDate.value, DATE_FORMAT, new Date());
+  const newToDate = parse(toDate.value, DATE_FORMAT, new Date());
   if (newFromDate > newToDate) return;
 
   timeseriesStore.timeRange = [
-    newFromDate < timeseriesStore.MIN_DATE ? timeseriesStore.MIN_DATE : newFromDate,
+    newFromDate < timeseriesStore.MIN_DATE
+      ? timeseriesStore.MIN_DATE
+      : newFromDate,
     newToDate > timeseriesStore.MAX_DATE ? timeseriesStore.MAX_DATE : newToDate,
   ];
 }

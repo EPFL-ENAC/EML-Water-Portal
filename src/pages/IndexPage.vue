@@ -34,35 +34,67 @@
           </div>
         </q-card>
         <q-list v-if="!measuresStore.loading">
-          <q-item-label header class="text-h6">{{ $t('measures') }}</q-item-label>
-          <q-item>
-            <div>
-            <div v-for="measure in MeasureOptions" :key="measure.key">
-              <q-checkbox
-                v-model="measuresVisible[measure.key]"
-                :label="measure.label"
-              />
-              <template v-for="col in getSensorColors(measure.key)" :key="col">
-                <q-icon name="circle" :style="`color: ${col};`" class="q-ml-xs" />
-              </template>
-              <q-btn
-                v-if="measuresVisible[measure.key]"
-                icon="fullscreen"
-                color="secondary"
-                flat
-                dense
-                rounded
-                size="sm"
-                @click="onShowMeasure(measure.key)"
-                class="on-right"
-              />
-            </div>
-          </div>
-          </q-item>
-          <q-item-label header class="text-h6">{{ $t('time_range') }}</q-item-label>
+          <q-item-label header class="text-h6">{{
+            $t('measures')
+          }}</q-item-label>
+          <q-list separator dense>
+            <q-item
+              v-ripple
+              v-for="measure in MeasureOptions"
+              :key="measure.key"
+            >
+              <q-item-section>
+                <div class="row">
+                  <q-checkbox
+                    v-model="measuresVisible[measure.key]"
+                    :label="measure.label"
+                  />
+                  <template
+                    v-for="col in getSensorColors(measure.key)"
+                    :key="col"
+                  >
+                    <q-icon
+                      name="circle"
+                      :style="`color: ${col};`"
+                      class="on-right"
+                      style="margin-top: 14px"
+                    />
+                  </template>
+                  <q-btn
+                    v-if="measuresVisible[measure.key]"
+                    icon="fullscreen"
+                    color="secondary"
+                    flat
+                    dense
+                    rounded
+                    size="sm"
+                    @click="onShowMeasure(measure.key)"
+                    class="on-right"
+                  />
+                </div>
+              </q-item-section>
+              <q-item-section side>
+                <div class="color-boxes q-ml-sm" style="width: 100px">
+                  <template
+                    v-for="color in getColorGradient(measure.key, 20).reverse()"
+                    :key="color"
+                  >
+                    <span
+                      v-if="measure.key !== 'water_samples'"
+                      class="color-box"
+                      :style="`background-color: ${color}`"
+                    ></span>
+                  </template>
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <q-item-label header class="text-h6">{{
+            $t('time_range')
+          }}</q-item-label>
           <q-item>
             <div class="full-width q-mb-xl">
-              <time-range-slider player class="q-ml-md q-mr-md"/>
+              <time-range-slider player class="q-ml-md q-mr-md" />
             </div>
           </q-item>
         </q-list>
@@ -120,7 +152,11 @@ import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
-import { MeasureOptions, SensorColors } from 'src/utils/options';
+import {
+  MeasureOptions,
+  SensorColors,
+  getColorGradient,
+} from 'src/utils/options';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();

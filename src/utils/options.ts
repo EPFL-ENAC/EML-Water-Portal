@@ -117,17 +117,30 @@ export function getColorGradient(measure: string, midpoints: number) {
       colors = ['#FFE4C4', '#A65B60'];
       break;
     case 'oxidation_reduction_potential':
-      colors = ['#2e4fc6', '#1bffff', '#3be06d', '#fff720', '#ffad5c', '#ff0000'];
+      colors = [
+        '#ff0000',
+        '#ffad5c',
+        '#fff720',
+        '#3be06d',
+        '#1bffff',
+        '#2e4fc6',
+      ];
       break;
     default:
       colors = ['#62cff4', '#2c67f2'];
   }
   const gradient = new Gradient();
 
-  if (colors.length === 2)
-    gradient.setColorGradient(colors[0], colors[1]);
+  if (colors.length === 2) gradient.setColorGradient(colors[0], colors[1]);
   else
-    gradient.setColorGradient(colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]);
+    gradient.setColorGradient(
+      colors[0],
+      colors[1],
+      colors[2],
+      colors[3],
+      colors[4],
+      colors[5],
+    );
 
   gradient.setMidpoint(Math.max(colors.length, midpoints));
   return gradient.getColors();

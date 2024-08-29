@@ -107,7 +107,7 @@ const chart = shallowRef<typeof ECharts | null>(null);
 const option = ref<EChartsOption>({});
 const loading = ref(false);
 
-const sensors = computed(() =>{
+const sensors = computed(() => {
   const rval = measuresStore.datasets
     ? measuresStore.datasets?.sensors.filter((sensor) => {
         const selected =
@@ -133,19 +133,23 @@ const sensors = computed(() =>{
     if (bMean === undefined) {
       return -1;
     }
-    return bMean - aMean; 
+    return bMean - aMean;
   });
   return rval;
 });
 
 // Get the timestamps for all sensors
 const timestamps = computed(() => {
-  const rval = sensors.value.map((sensor) => sensor.columns.find((col) => col.measure === 'timestamp')?.data);
+  const rval = sensors.value.map(
+    (sensor) => sensor.columns.find((col) => col.measure === 'timestamp')?.data,
+  );
   return rval;
 });
 
 const timestampsMS = computed(() => {
-  const rval = timestamps.value?.map((tdata) => tdata?.map((t) => new Date(t).getTime()));
+  const rval = timestamps.value?.map((tdata) =>
+    tdata?.map((t) => new Date(t).getTime()),
+  );
   return rval;
 });
 
@@ -179,7 +183,10 @@ const onHighlight = (e: ECElementEvent) => {
   }
 
   if (timestamp) {
-    if (timeseriesStore.axisPointer && timeseriesStore.axisPointer.getTime() === timestamp.getTime()) {
+    if (
+      timeseriesStore.axisPointer &&
+      timeseriesStore.axisPointer.getTime() === timestamp.getTime()
+    ) {
       return;
     }
     timeseriesStore.lastUpdatedPointerID = props.measure;
@@ -340,20 +347,20 @@ function buildOptions() {
           maxWidth: 200,
           ellipsis: '...',
         },
-        min: 'dataMin',  // Automatically set the minimum value based on the data
-        max: 'dataMax',  // Automatically set the maximum value based on the data
+        min: 'dataMin', // Automatically set the minimum value based on the data
+        max: 'dataMax', // Automatically set the maximum value based on the data
       },
     ],
     series: sensors.value.map((s, index) => {
       const timestamps = s.columns.find(
         (col) => col.measure === 'timestamp',
       )?.data;
-      const column = s.columns.find(
-        (col) => col.measure === props.measure,
-      ); 
+      const column = s.columns.find((col) => col.measure === props.measure);
       let colData = column?.data;
       if (colData && props.precision) {
-        colData = colData.map((d) => typeof d === 'number' ? d.toFixed(props.precision) : d);
+        colData = colData.map((d) =>
+          typeof d === 'number' ? d.toFixed(props.precision) : d,
+        );
       }
       return {
         name: s.name,
@@ -373,9 +380,6 @@ function buildOptions() {
   option.value = newOption;
   loading.value = false;
 }
-
-
-
 </script>
 <style>
 .echarts-tooltip {
