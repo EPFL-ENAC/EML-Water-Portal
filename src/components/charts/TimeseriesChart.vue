@@ -36,6 +36,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { getColorGradient } from 'src/utils/options';
 import ECharts from 'vue-echarts';
 import type { EChartsOption, ECElementEvent } from 'echarts';
 import { use } from 'echarts/core';
@@ -48,7 +49,6 @@ import {
   GridComponent,
   DataZoomComponent,
 } from 'echarts/components';
-import Gradient from 'javascript-color-gradient';
 
 use([
   CanvasRenderer,
@@ -107,8 +107,8 @@ const chart = shallowRef<typeof ECharts | null>(null);
 const option = ref<EChartsOption>({});
 const loading = ref(false);
 
-const sensors = computed(() =>
-  measuresStore.datasets
+const sensors = computed(() =>{
+  const rval = measuresStore.datasets
     ? measuresStore.datasets?.sensors.filter((sensor) => {
         const selected =
           filtersStore.sensors.length === 0 ||
@@ -120,8 +120,23 @@ const sensors = computed(() =>
           )
         );
       })
-    : [],
-);
+    : [];
+  rval.sort((a, b) => {
+    const aMean = a.columns.find((col) => col.measure === props.measure)?.mean;
+    const bMean = b.columns.find((col) => col.measure === props.measure)?.mean;
+    if (aMean === undefined || bMean === undefined) {
+      return 0;
+    }
+    if (aMean === undefined) {
+      return 1;
+    }
+    if (bMean === undefined) {
+      return -1;
+    }
+    return bMean - aMean; 
+  });
+  return rval;
+});
 
 // Get the timestamps for all sensors
 const timestamps = computed(() => {
@@ -249,7 +264,7 @@ function onRangeChange() {
 
 function buildOptions() {
   loading.value = true;
-  const gradient = getColorGradient();
+  const gradient = getColorGradient(props.measure, sensors.value.length);
   const newOption: EChartsOption = {
     renderer: 'canvas',
     animation: false,
@@ -333,9 +348,10 @@ function buildOptions() {
       const timestamps = s.columns.find(
         (col) => col.measure === 'timestamp',
       )?.data;
-      let colData = s.columns.find(
+      const column = s.columns.find(
         (col) => col.measure === props.measure,
-      )?.data;
+      ); 
+      let colData = column?.data;
       if (colData && props.precision) {
         colData = colData.map((d) => typeof d === 'number' ? d.toFixed(props.precision) : d);
       }
@@ -358,41 +374,8 @@ function buildOptions() {
   loading.value = false;
 }
 
-function getColorGradient() {
-  let colors = [];
-  switch (props.measure) {
-    case 'depth':
-      colors = ['#A67B5B', '#000000'];
-      break;
-    case 'water_temperature':
-    case 'air_temperature':
-      colors = ['#0095ff', '#ff0000'];
-      break;
-    case 'electro_conductivity':
-      colors = ['#f7ef07', '#de4313'];
-      break;
-    case 'ph':
-      colors = ['#92ffc0', '#002661'];
-      break;
-    case 'turbidity':
-      colors = ['#A6A15B', '#A65B60'];
-      break;
-    case 'oxidation_reduction_potential':
-      colors = ['#2e4fc6', '#1bffff', '#3be06d', '#fff720', '#ffad5c', '#ff0000'];
-      break;
-    default:
-      colors = ['#62cff4', '#2c67f2'];
-  }
-  const gradient = new Gradient();
 
-  if (colors.length === 2)
-    gradient.setColorGradient(colors[0], colors[1]);
-  else
-    gradient.setColorGradient(colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]);
 
-  gradient.setMidpoint(Math.max(colors.length, sensors.value.length));
-  return gradient.getColors();
-}
 </script>
 <style>
 .echarts-tooltip {
