@@ -109,7 +109,7 @@
               :unit="measure.unit"
               :precision="measure.precision"
               :height="180"
-              dispatch
+              stacked
               class="q-pa-sm"
             />
           </div>

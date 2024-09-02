@@ -66,7 +66,7 @@ interface Props {
   precision?: number;
   height?: number;
   heightUnit?: string;
-  dispatch?: boolean; // propagate axis pointer selection to other charts (via store)
+  stacked?: boolean; // if stacked, hide x-axis labels and propagate axis pointer selection to other charts (via store)
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -162,7 +162,7 @@ function initChartOptions() {
 }
 
 const onHighlight = (e: ECElementEvent) => {
-  if (!props.dispatch) {
+  if (!props.stacked) {
     return;
   }
   let seriesIndex = -1;
@@ -305,7 +305,7 @@ function buildOptions() {
         top: 5,
         left: 60,
         right: 10,
-        bottom: 5,
+        bottom: props.stacked ? 5 : 20,
       },
     ],
     xAxis: [
