@@ -305,7 +305,7 @@ function buildOptions() {
         top: 5,
         left: 60,
         right: 10,
-        bottom: props.stacked ? 5 : 20,
+        bottom: props.stacked ? 20 : 20,
       },
     ],
     xAxis: [

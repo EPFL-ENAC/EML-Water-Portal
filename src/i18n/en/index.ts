@@ -60,4 +60,5 @@ export default {
   time_range: 'Time range',
   from_date: 'From date',
   to_date: 'To date',
+  parameters: 'Parameters',
 };
