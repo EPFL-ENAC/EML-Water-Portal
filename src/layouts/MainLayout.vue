@@ -27,15 +27,6 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
-    <q-footer>
-      <div class="row text-grey-8">
-        <div class="col-12 col-md-3 bg-grey-2"></div>
-        <div class="col-12 col-md-9 bg-white">
-          <time-axis class="q-pl-sm q-pr-sm" />
-        </div>
-      </div>
-    </q-footer>
   </q-layout>
 </template>
 
@@ -43,7 +34,6 @@
 import AppToolbar from 'src/components/AppToolbar.vue';
 import LayersDrawer from 'src/components/LayersDrawer.vue';
 import HelpDrawer from 'src/components/HelpDrawer.vue';
-import TimeAxis from 'src/components/charts/TimeAxis.vue';
 
 const mapStore = useMapStore();
 const helpStore = useHelpStore();

@@ -113,6 +113,9 @@
               class="q-pa-sm"
             />
           </div>
+          <div class="bg-white" style="position: sticky; bottom: 0px;">
+            <time-axis class="q-pl-sm q-pr-sm" />
+          </div>
         </div>
       </div>
     </div>
@@ -150,6 +153,7 @@ import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
+import TimeAxis from 'src/components/charts/TimeAxis.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
