@@ -1,8 +1,8 @@
 <template>
-  <q-page id="q-page-content">
+  <q-page id="q-page-content" style="display: flex;">
     <div id="tooltip-container" class="flex"></div>
 
-    <div class="row">
+    <div class="row" style="flex: 1;">
       <div class="col-12 col-md-3 bg-grey-2">
         <q-card bordered class="q-ma-sm q-mb-md">
           <div style="height: 250px">
@@ -89,7 +89,7 @@
               </q-item-section>
             </q-item>
           </q-list>
-          <q-item-label header class="text-h6">{{
+          <q-item-label header class="text-h6 q-pb-none">{{
             $t('time_range')
           }}</q-item-label>
           <q-item>
@@ -100,6 +100,30 @@
         </q-list>
       </div>
       <div class="col-12 col-md-9">
+        <q-toolbar >
+          <q-space />
+          <q-btn-toggle
+            v-model="colsSpan"
+            toggle-color="primary"
+            :options="[
+              {value: '12', slot: 'one'},
+              {value: '6', slot: 'two'},
+            ]"
+            size="xs"
+          >
+            <template v-slot:one>
+              <div class="row items-center no-wrap">
+                <q-icon name="splitscreen" />
+              </div>
+            </template>
+
+            <template v-slot:two>
+              <div class="row items-center no-wrap">
+                <q-icon name="grid_view" />
+              </div>
+            </template>
+          </q-btn-toggle>
+        </q-toolbar>
         <div class="row">
           <template v-for="measure in MeasureOptions" :key="measure.key">
             <div v-if="measuresVisible[measure.key]" :class="colsClass">
@@ -168,7 +192,8 @@ const scenariiStore = useScenariiStore();
 const showScenario = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
-const colsClass = ref('col-12 col-md-6');
+const colsSpan = ref('6');
+const colsClass = computed(() => `col-12 col-md-${colsSpan.value}`);
 
 const measuresVisible = ref<Record<string, boolean>>(
   settingsStore.settings?.measuresVisible || {},
