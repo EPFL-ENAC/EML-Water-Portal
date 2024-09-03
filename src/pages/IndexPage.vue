@@ -1,11 +1,11 @@
 <template>
-  <q-page id="q-page-content">
+  <q-page id="q-page-content" style="display: flex;">
     <div id="tooltip-container" class="flex"></div>
 
-    <div class="row">
+    <div class="row" style="flex: 1;">
       <div class="col-12 col-md-3 bg-grey-2">
         <q-card bordered class="q-ma-sm q-mb-md">
-          <div style="height: 40vh">
+          <div style="height: 250px">
             <maplibre-map
               position
               :center="[6.57, 46.5225]"
@@ -35,7 +35,7 @@
         </q-card>
         <q-list v-if="!measuresStore.loading">
           <q-item-label header class="text-h6">{{
-            $t('measures')
+            $t('parameters')
           }}</q-item-label>
           <q-list separator dense>
             <q-item
@@ -89,7 +89,7 @@
               </q-item-section>
             </q-item>
           </q-list>
-          <q-item-label header class="text-h6">{{
+          <q-item-label header class="text-h6 q-pb-none">{{
             $t('time_range')
           }}</q-item-label>
           <q-item>
@@ -100,22 +100,44 @@
         </q-list>
       </div>
       <div class="col-12 col-md-9">
-        <div>
-          <div v-for="measure in MeasureOptions" :key="measure.key">
-            <timeseries-chart
-              v-if="measuresVisible[measure.key]"
-              :measure="measure.key"
-              :label="measure.label"
-              :unit="measure.unit"
-              :precision="measure.precision"
-              :height="180"
-              stacked
-              class="q-pa-sm"
-            />
-          </div>
-          <div class="bg-white" style="position: sticky; bottom: 0px;">
-            <time-axis class="q-pl-sm q-pr-sm" />
-          </div>
+        <q-toolbar >
+          <q-space />
+          <q-btn-toggle
+            v-model="colsSpan"
+            toggle-color="primary"
+            :options="[
+              {value: '12', slot: 'one'},
+              {value: '6', slot: 'two'},
+            ]"
+            size="xs"
+          >
+            <template v-slot:one>
+              <div class="row items-center no-wrap">
+                <q-icon name="splitscreen" />
+              </div>
+            </template>
+
+            <template v-slot:two>
+              <div class="row items-center no-wrap">
+                <q-icon name="grid_view" />
+              </div>
+            </template>
+          </q-btn-toggle>
+        </q-toolbar>
+        <div class="row">
+          <template v-for="measure in MeasureOptions" :key="measure.key">
+            <div v-if="measuresVisible[measure.key]" :class="colsClass">
+              <timeseries-chart
+                :measure="measure.key"
+                :label="measure.label"
+                :unit="measure.unit"
+                :precision="measure.precision"
+                :height="200"
+                stacked
+                class="q-pa-sm"
+              />
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -153,7 +175,6 @@ import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
-import TimeAxis from 'src/components/charts/TimeAxis.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
@@ -171,6 +192,8 @@ const scenariiStore = useScenariiStore();
 const showScenario = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
+const colsSpan = ref('6');
+const colsClass = computed(() => `col-12 col-md-${colsSpan.value}`);
 
 const measuresVisible = ref<Record<string, boolean>>(
   settingsStore.settings?.measuresVisible || {},

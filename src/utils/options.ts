@@ -19,12 +19,12 @@ export const MeasureOptions = [
     unit: '°C',
     precision: 2,
   },
-  {
-    key: 'water_samples',
-    label: 'Water Samples',
-    unit: '',
-    precision: 2,
-  },
+  // {
+  //   key: 'water_samples',
+  //   label: 'Water Samples',
+  //   unit: '',
+  //   precision: 2,
+  // },
   {
     key: 'electro_conductivity',
     label: 'Electrical conductivity',
@@ -45,12 +45,12 @@ export const MeasureOptions = [
     unit: 'mV',
     precision: 2,
   },
-  {
-    key: 'air_temperature',
-    label: 'Air Temperature',
-    unit: '°C',
-    precision: 2,
-  },
+  // {
+  //   key: 'air_temperature',
+  //   label: 'Air Temperature',
+  //   unit: '°C',
+  //   precision: 2,
+  // },
 ];
 
 export const SensorColors = [
