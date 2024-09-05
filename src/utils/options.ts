@@ -60,6 +60,7 @@ export const SensorColors = [
     layer: 'sensors-a',
     title: 'Multiparameter sensor',
     device: 'In-Situ',
+    locations: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
     measures: [
       'water_temperature',
       'depth',
@@ -77,6 +78,7 @@ export const SensorColors = [
     layer: 'sensors-b',
     title: 'Temperature sensor',
     device: 'Ruskin',
+    locations: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15'],
     measures: ['water_temperature'],
   },
   {
@@ -85,6 +87,7 @@ export const SensorColors = [
     layer: 'sensors-c',
     title: 'Water level/discharge sensor',
     device: 'Ijinus',
+    locations: ['C1', 'C2'],
     measures: ['water_level'],
   },
   {
@@ -93,6 +96,7 @@ export const SensorColors = [
     layer: 'sensors-d',
     title: 'Water samples to analyse in the lab',
     device: 'Autosampler ISCO',
+    locations: ['D1', 'D2', 'D3', 'D4'],
     measures: ['water_samples'],
   },
 ];

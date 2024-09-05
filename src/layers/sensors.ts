@@ -51,7 +51,6 @@ export class SensorsLayerManager extends LayerManager {
       source: this.getId(),
       type: 'circle',
       paint: {
-        'circle-opacity': ['case', ['get', 'selected'], 1, 0.2],
         'circle-radius': [
           'step',
           ['zoom'],
@@ -85,12 +84,6 @@ export class SensorsLayerManager extends LayerManager {
       },
     });
 
-    // Create a popup, but don't add it to the map yet.
-    const popup = new Popup({
-      closeButton: false,
-      closeOnClick: false,
-    });
-
     map.on('click', this.getId(), (e) => {
       const feature = e.features ? e.features[0] : null;
       if (!feature) return;
@@ -98,46 +91,6 @@ export class SensorsLayerManager extends LayerManager {
       // TODO highlight the feature as being selected
     });
 
-    map.on('mouseenter', this.getId(), (e) => {
-      map.getCanvas().style.cursor = 'pointer';
-      const feature = e.features ? e.features[0] : null;
-      if (!feature) return;
-
-      const measuresHtml = feature.properties.measures
-        .split('|')
-        .map(
-          (val: string) =>
-            `<li>${MeasureOptions.find((opt) => opt.key === val)?.label || val}</li>`,
-        )
-        .join('');
-
-      popup
-        .setLngLat(e.lngLat)
-        .setHTML(
-          `<table>
-              <tbody>
-              <tr>
-                <td class="text-bold">Name</td>
-                <td class="text-caption">${feature.properties.name}</td>
-              </tr>
-              <tr>
-                <td class="text-bold">Sensor</td>
-                <td class="text-caption">${feature.properties.sensor}</td>
-              </tr>
-              <tr>
-                <td class="text-bold">Measures</td>
-                <td class="text-caption"><ul>${measuresHtml}</ul></td>
-              </tr>
-              </tbody>
-            </table>`,
-          //`<pre>${JSON.stringify(feature.properties, null, 2)}</pre>`
-        )
-        .addTo(map);
-    });
-    map.on('mouseleave', this.getId(), () => {
-      map.getCanvas().style.cursor = '';
-      popup.remove();
-    });
   }
 
   setVisible(map: Map, visible: boolean): void {

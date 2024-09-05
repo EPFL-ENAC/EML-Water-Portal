@@ -16,19 +16,36 @@
           <div>
             <q-btn-group flat spread class="q-ma-none">
               <template v-for="sensor in SensorColors" :key="sensor.color">
-                <q-btn
+                <q-btn-dropdown
+                  v-if="sensor.label !== 'D'"
                   size="10px"
                   :label="sensor.label"
                   :title="sensor.title"
                   class="text-bold text-grey-3"
-                  :style="`background-color: ${sensor.color}; opacity: ${
-                    mapStore.layerSelections.find((l) => l.id === sensor.layer)
-                      ?.visible
-                      ? 1
-                      : 0.3
-                  };`"
-                  @click="onToggleSensorLayer(sensor.layer)"
-                />
+                  :style="`background-color: ${sensor.color};`"
+                >
+                  <q-list>
+                    <q-item dense class="q-pa-none">
+                      <q-item-section class="q-pa-none">
+                        <q-btn-group flat spread>
+                          <q-btn flat size="sm" :label="$t('all')" @click="onApplySensors(sensor.label)" />
+                          <q-btn flat size="sm" :label="$t('clear')" @click="onRemoveSensors(sensor.label)" />
+                        </q-btn-group>
+                      </q-item-section>
+                    </q-item>
+                    <q-separator />
+                    <template v-for="location in sensor.locations" :key="location">
+                      <q-item dense clickable @click="onToggleSensorLocation(location)">
+                        <q-item-section avatar>
+                          <q-icon color="secondary" :name="filtersStore.sensors.includes(location) ? 'check_box' : 'check_box_outline_blank'" />
+                        </q-item-section>
+                        <q-item-section no-wrap>
+                          <span>{{ location }}</span>
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                  </q-list>
+                </q-btn-dropdown>
               </template>
             </q-btn-group>
           </div>
@@ -143,6 +160,7 @@
     </div>
 
     <scenarii-dialog v-model="showScenario" />
+    <sensor-dialog v-model="showSensor" />
 
     <q-dialog v-if="measureSelected" v-model="showMeasure" maximized>
       <q-card>
@@ -176,6 +194,7 @@ import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
+import SensorDialog from 'src/components/SensorDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
   MeasureOptions,
@@ -190,6 +209,7 @@ const measuresStore = useMeasuresStore();
 const scenariiStore = useScenariiStore();
 
 const showScenario = ref(false);
+const showSensor = ref(false);
 const showMeasure = ref(false);
 const measureSelected = ref<string>();
 const colsSpan = ref('6');
@@ -208,6 +228,15 @@ watch(
   () => {
     if (mapStore.bvSelected) {
       showScenario.value = true;
+    }
+  },
+);
+
+watch(
+  () => mapStore.sensorSelected,
+  () => {
+    if (mapStore.sensorSelected) {
+      showSensor.value = true;
     }
   },
 );
@@ -245,7 +274,15 @@ function getSensorColors(measure: string) {
   );
 }
 
-function onToggleSensorLayer(id: string) {
-  mapStore.toggleLayerVisibility(id);
+function onApplySensors(family: string) {
+  filtersStore.applySensors(SensorColors.find((ss) => ss.label === family)?.locations);
+}
+
+function onRemoveSensors(family: string) {
+  filtersStore.removeSensors(SensorColors.find((ss) => ss.label === family)?.locations);
+}
+
+function onToggleSensorLocation(location: string) {
+  filtersStore.toggleSensor(location);
 }
 </script>
