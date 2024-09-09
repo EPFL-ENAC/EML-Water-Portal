@@ -1,4 +1,3 @@
-import { get } from 'http';
 import Gradient from 'javascript-color-gradient';
 
 export const MeasureOptions = [
@@ -61,6 +60,7 @@ export const SensorSpecs = [
     layer: 'sensors-a',
     title: 'Multiparameter sensor',
     device: 'In-Situ',
+    icon: 'opacity',
     locations: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
     colors: getSensorFamilyColor('A', 6),
     measures: [
@@ -80,6 +80,7 @@ export const SensorSpecs = [
     layer: 'sensors-b',
     title: 'Temperature sensor',
     device: 'Ruskin',
+    icon: 'thermostat',
     locations: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15'],
     colors: getSensorFamilyColor('B', 15),
     measures: ['water_temperature'],
@@ -90,6 +91,7 @@ export const SensorSpecs = [
     layer: 'sensors-c',
     title: 'Water level/discharge sensor',
     device: 'Ijinus',
+    icon: 'podcasts',
     locations: ['C1', 'C2'],
     colors: getSensorFamilyColor('C', 2),
     measures: ['water_level'],
@@ -100,6 +102,7 @@ export const SensorSpecs = [
     layer: 'sensors-d',
     title: 'Water samples to analyse in the lab',
     device: 'Autosampler ISCO',
+    icon: 'invert_colors',
     locations: ['D1', 'D2', 'D3', 'D4'],
     colors: getSensorFamilyColor('D', 4),
     measures: ['water_samples'],

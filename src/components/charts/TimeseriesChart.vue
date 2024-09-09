@@ -121,20 +121,6 @@ const sensors = computed(() => {
         );
       })
     : [];
-  rval.sort((a, b) => {
-    const aMean = a.columns.find((col) => col.measure === props.measure)?.mean;
-    const bMean = b.columns.find((col) => col.measure === props.measure)?.mean;
-    if (aMean === undefined || bMean === undefined) {
-      return 0;
-    }
-    if (aMean === undefined) {
-      return 1;
-    }
-    if (bMean === undefined) {
-      return -1;
-    }
-    return bMean - aMean;
-  });
   return rval;
 });
 
@@ -382,7 +368,6 @@ function buildOptions() {
 
 function getSensorColor(name: string) {
   const sensor = SensorSpecs.find((ss) => ss.locations.includes(name));
-  console.log(name, sensor);
   if (!sensor) {
     return '#000000';
   }

@@ -92,25 +92,9 @@ export const useMeasuresStore = defineStore('measures', () => {
                 }
               });
             col.data = vector;
-            col.mean = getMean(vector);
           }
         });
       });
-  }
-
-  function getMean(array: (string | number | undefined)[] | undefined) {
-    if (!array || array.length === 0) {
-      return 0;
-    }
-    const noMissings = array
-      .filter((v) => v !== undefined && v !== null && v !== '')
-      .map((v) => Number(v))
-      .filter((v) => !isNaN(v));
-    if (noMissings.length === 0) {
-      return 0;
-    }
-    const sum = noMissings.reduce((acc, curr) => acc + curr, 0);
-    return sum / noMissings.length;
   }
 
   return {

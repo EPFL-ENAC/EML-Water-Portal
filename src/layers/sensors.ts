@@ -27,6 +27,10 @@ export class SensorsLayerManager extends LayerManager {
     return `sensors-${this.family.toLowerCase()}`;
   }
 
+  getIcon() {
+    return SensorSpecs.find((opt) => opt.label === this.family)?.icon || '';
+  }
+
   async append(
     map: Map,
     selectionCallback: FeatureSelectionCallback,
@@ -54,16 +58,48 @@ export class SensorsLayerManager extends LayerManager {
         'circle-radius': [
           'step',
           ['zoom'],
-          2, // Radius at zoom levels below 10
+          0, // Radius at zoom levels below 10
           10,
-          5, // Radius at zoom level 10 and above
+          0, // Radius at zoom level 10 and above
           15,
           10, // Radius at zoom level 15 and above
+          17,
+          15, // Radius at zoom level 17 and above
+          19,
+          20, // Radius at zoom level 19 and above
         ],
-        'circle-color': color,
+        'circle-color': '#FFFFFF',
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1,
+        'circle-opacity': 0.8,
       },
+    });
+
+    // Add the Icon image
+    const image = await map.loadImage(`public/icons/${this.getIcon()}.png`);
+    map.addImage(this.getIcon(), image.data);
+
+    map.addLayer({
+      id: `${this.getId()}-points`,
+      type: 'symbol',
+      source: this.getId(),
+      layout: {
+          'icon-image': this.getIcon(),
+          'icon-size': [
+            'step',
+            ['zoom'],
+            0.15, // Radius at zoom levels below 10
+            10,
+            0.25, // Radius at zoom level 10 and above
+            15,
+            0.3, // Radius at zoom level 15 and above
+            17,
+            0.4, // Radius at zoom level 15 and above
+            19,
+            0.45, // Radius at zoom level 15 and above
+          ],
+          'icon-allow-overlap': true
+      }
     });
 
     map.addLayer({
@@ -95,7 +131,7 @@ export class SensorsLayerManager extends LayerManager {
 
   setVisible(map: Map, visible: boolean): void {
     const visibility = visible ? 'visible' : 'none';
-    [this.getId(), `${this.getId()}-labels`].forEach((id) => {
+    [this.getId(), `${this.getId()}-labels`, `${this.getId()}-points`].forEach((id) => {
       map.setLayoutProperty(id, 'visibility', visibility);
     });
   }

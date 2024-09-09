@@ -3,7 +3,6 @@ export interface Column {
   measure: string;
   format?: string;
   data?: (number | string)[];
-  mean?: number;
 }
 
 export interface SensorData {

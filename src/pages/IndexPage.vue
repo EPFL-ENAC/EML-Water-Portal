@@ -21,8 +21,7 @@
                   size="10px"
                   :label="sensor.label"
                   :title="sensor.title"
-                  class="text-bold text-grey-3"
-                  :style="`background-color: ${sensor.color};`"
+                  :icon="sensor.icon"
                 >
                   <q-list>
                     <q-item dense class="q-pa-none">
