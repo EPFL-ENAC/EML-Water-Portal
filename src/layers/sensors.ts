@@ -1,4 +1,4 @@
-import { Map, Popup, GeoJSONSource } from 'maplibre-gl';
+import { Map, GeoJSONSource } from 'maplibre-gl';
 import {
   Feature,
   FeatureCollection,
@@ -9,7 +9,7 @@ import {
 import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
 import { State } from 'src/layers/models';
-import { MeasureOptions, SensorColors } from 'src/utils/options';
+import { SensorSpecs } from 'src/utils/options';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
@@ -45,7 +45,7 @@ export class SensorsLayerManager extends LayerManager {
     });
 
     const color =
-      SensorColors.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
+      SensorSpecs.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),

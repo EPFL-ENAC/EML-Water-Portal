@@ -15,7 +15,7 @@
           </div>
           <div>
             <q-btn-group flat spread class="q-ma-none">
-              <template v-for="sensor in SensorColors" :key="sensor.color">
+              <template v-for="sensor in SensorSpecs" :key="sensor.color">
                 <q-btn-dropdown
                   v-if="sensor.label !== 'D'"
                   size="10px"
@@ -34,13 +34,16 @@
                       </q-item-section>
                     </q-item>
                     <q-separator />
-                    <template v-for="location in sensor.locations" :key="location">
+                    <template v-for="(location, idx) in sensor.locations" :key="location">
                       <q-item dense clickable @click="onToggleSensorLocation(location)">
                         <q-item-section avatar>
                           <q-icon color="secondary" :name="filtersStore.sensors.includes(location) ? 'check_box' : 'check_box_outline_blank'" />
                         </q-item-section>
                         <q-item-section no-wrap>
                           <span>{{ location }}</span>
+                        </q-item-section>
+                        <q-item-section side>
+                          <q-icon name="circle" size="xs" :style="`color: ${sensor.colors[idx]}`" />
                         </q-item-section>
                       </q-item>
                     </template>
@@ -67,7 +70,7 @@
                     :label="measure.label"
                   />
                   <template
-                    v-for="col in getSensorColors(measure.key)"
+                    v-for="col in getSensorSpecs(measure.key)"
                     :key="col"
                   >
                     <q-icon
@@ -88,20 +91,6 @@
                     @click="onShowMeasure(measure.key)"
                     class="on-right"
                   />
-                </div>
-              </q-item-section>
-              <q-item-section side>
-                <div class="color-boxes q-ml-sm" style="width: 100px">
-                  <template
-                    v-for="color in getColorGradient(measure.key, 20).reverse()"
-                    :key="color"
-                  >
-                    <span
-                      v-if="measure.key !== 'water_samples'"
-                      class="color-box"
-                      :style="`background-color: ${color}`"
-                    ></span>
-                  </template>
                 </div>
               </q-item-section>
             </q-item>
@@ -198,8 +187,7 @@ import SensorDialog from 'src/components/SensorDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
   MeasureOptions,
-  SensorColors,
-  getColorGradient,
+  SensorSpecs,
 } from 'src/utils/options';
 
 const settingsStore = useSettingsStore();
@@ -268,18 +256,18 @@ function onShowMeasure(measure: string) {
   showMeasure.value = true;
 }
 
-function getSensorColors(measure: string) {
-  return SensorColors.filter((opt) => opt.measures.includes(measure)).map(
+function getSensorSpecs(measure: string) {
+  return SensorSpecs.filter((opt) => opt.measures.includes(measure)).map(
     (opt) => opt.color,
   );
 }
 
 function onApplySensors(family: string) {
-  filtersStore.applySensors(SensorColors.find((ss) => ss.label === family)?.locations);
+  filtersStore.applySensors(SensorSpecs.find((ss) => ss.label === family)?.locations);
 }
 
 function onRemoveSensors(family: string) {
-  filtersStore.removeSensors(SensorColors.find((ss) => ss.label === family)?.locations);
+  filtersStore.removeSensors(SensorSpecs.find((ss) => ss.label === family)?.locations);
 }
 
 function onToggleSensorLocation(location: string) {

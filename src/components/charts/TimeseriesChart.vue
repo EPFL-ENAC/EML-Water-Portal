@@ -36,7 +36,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { getColorGradient } from 'src/utils/options';
+import { SensorSpecs } from 'src/utils/options';
 import ECharts from 'vue-echarts';
 import type { EChartsOption, ECElementEvent } from 'echarts';
 import { use } from 'echarts/core';
@@ -271,7 +271,6 @@ function onRangeChange() {
 
 function buildOptions() {
   loading.value = true;
-  const gradient = getColorGradient(props.measure, sensors.value.length);
   const newOption: EChartsOption = {
     renderer: 'canvas',
     animation: false,
@@ -371,7 +370,7 @@ function buildOptions() {
         symbolSize: 0,
         colorBy: 'series',
         type: 'line',
-        color: gradient[index],
+        color: getSensorColor(s.name),
         data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
       };
     }),
@@ -379,6 +378,20 @@ function buildOptions() {
 
   option.value = newOption;
   loading.value = false;
+}
+
+function getSensorColor(name: string) {
+  const sensor = SensorSpecs.find((ss) => ss.locations.includes(name));
+  console.log(name, sensor);
+  if (!sensor) {
+    return '#000000';
+  }
+  for (let i = 0; i < sensor?.locations.length; i++) {
+    if (sensor?.locations[i] === name) {
+      return sensor?.colors[i];
+    }
+  }
+  return '#000000';
 }
 </script>
 <style>
