@@ -1,3 +1,4 @@
+import { get } from 'http';
 import Gradient from 'javascript-color-gradient';
 
 export const MeasureOptions = [
@@ -53,13 +54,15 @@ export const MeasureOptions = [
   // },
 ];
 
-export const SensorColors = [
+export const SensorSpecs = [
   {
     color: '#9400D3',
     label: 'A',
     layer: 'sensors-a',
     title: 'Multiparameter sensor',
     device: 'In-Situ',
+    locations: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
+    colors: getSensorFamilyColor('A', 6),
     measures: [
       'water_temperature',
       'depth',
@@ -77,6 +80,8 @@ export const SensorColors = [
     layer: 'sensors-b',
     title: 'Temperature sensor',
     device: 'Ruskin',
+    locations: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15'],
+    colors: getSensorFamilyColor('B', 15),
     measures: ['water_temperature'],
   },
   {
@@ -85,6 +90,8 @@ export const SensorColors = [
     layer: 'sensors-c',
     title: 'Water level/discharge sensor',
     device: 'Ijinus',
+    locations: ['C1', 'C2'],
+    colors: getSensorFamilyColor('C', 2),
     measures: ['water_level'],
   },
   {
@@ -93,30 +100,16 @@ export const SensorColors = [
     layer: 'sensors-d',
     title: 'Water samples to analyse in the lab',
     device: 'Autosampler ISCO',
+    locations: ['D1', 'D2', 'D3', 'D4'],
+    colors: getSensorFamilyColor('D', 4),
     measures: ['water_samples'],
   },
 ];
 
-export function getColorGradient(measure: string, midpoints: number) {
+export function getSensorFamilyColor(name: string, midpoints: number) {
   let colors = [];
-  switch (measure) {
-    case 'depth':
-      colors = ['#A67B5B', '#000000'];
-      break;
-    case 'water_temperature':
-    case 'air_temperature':
-      colors = ['#ff0000', '#0095ff'];
-      break;
-    case 'electro_conductivity':
-      colors = ['#f7ef07', '#de4313'];
-      break;
-    case 'ph':
-      colors = ['#92ffc0', '#002661'];
-      break;
-    case 'turbidity':
-      colors = ['#FFE4C4', '#A65B60'];
-      break;
-    case 'oxidation_reduction_potential':
+  switch (name) {
+    case 'A':
       colors = [
         '#ff0000',
         '#ffad5c',
@@ -125,6 +118,9 @@ export function getColorGradient(measure: string, midpoints: number) {
         '#1bffff',
         '#2e4fc6',
       ];
+      break;
+    case 'B':
+      colors = ['#92ffc0', '#002661'];
       break;
     default:
       colors = ['#62cff4', '#2c67f2'];
@@ -143,5 +139,5 @@ export function getColorGradient(measure: string, midpoints: number) {
     );
 
   gradient.setMidpoint(Math.max(colors.length, midpoints));
-  return gradient.getColors();
+  return gradient.getColors().reverse();
 }

@@ -114,7 +114,7 @@
     <q-item-label>
       <span class="q-ml-md">{{ $t('sensors') }}</span>
     </q-item-label>
-    <q-item v-for="sensor in SensorColors" :key="sensor.color">
+    <q-item v-for="sensor in SensorSpecs" :key="sensor.color">
       <q-item-section avatar>
         <q-avatar
           size="md"
@@ -135,7 +135,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { Scenario } from 'src/stores/scenarii';
-import { SensorColors } from 'src/utils/options';
+import { SensorSpecs } from 'src/utils/options';
 
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
@@ -160,7 +160,7 @@ const otherLayerSelections = computed(() =>
 );
 
 function getSensorColor(id: string) {
-  return SensorColors.find((opt) => id.startsWith(opt.label))?.color;
+  return SensorSpecs.find((opt) => id.startsWith(opt.label))?.color;
 }
 
 function onToggleLayer(layerId: string) {

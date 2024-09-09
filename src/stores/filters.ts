@@ -18,10 +18,25 @@ export const useFiltersStore = defineStore(
       }
     }
 
+    function applySensors(ids: string[] | undefined) {
+      if (!ids) return;
+      // merge ids into on array
+      const merged = [ ...sensors.value, ...ids]
+      // unique values
+      sensors.value = merged.filter((value, index, array) => array.indexOf(value) === index);
+    }
+
+    function removeSensors(ids: string[] | undefined) {
+      if (!ids) return;
+      sensors.value = sensors.value.filter((value) => !ids.includes(value));
+    }
+
     return {
       sensors,
       reset,
       toggleSensor,
+      applySensors,
+      removeSensors,
     };
   },
   { persist: true },

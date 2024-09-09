@@ -22,6 +22,7 @@ export const useMapStore = defineStore('map', () => {
   const showDrawer = ref(false);
   const map = ref<Map>();
   const bvSelected = ref<MapGeoJSONFeature>();
+  const sensorSelected = ref<MapGeoJSONFeature>();
 
   const layerManagers = [
     new RiverLayerManager(),
@@ -121,8 +122,7 @@ export const useMapStore = defineStore('map', () => {
     if (name === 'bv') {
       bvSelected.value = feature;
     } else if (name.startsWith('sensors')) {
-      const id = feature.properties.name;
-      filtersStore.toggleSensor(id);
+      sensorSelected.value = feature;
     }
   }
 
@@ -151,6 +151,7 @@ export const useMapStore = defineStore('map', () => {
     map,
     layerSelections,
     bvSelected,
+    sensorSelected,
     toggleLayerVisibility,
     applyLayerVisibility,
     initLayers,
