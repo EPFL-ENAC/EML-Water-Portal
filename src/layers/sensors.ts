@@ -87,7 +87,7 @@ export class SensorsLayerManager extends LayerManager {
     });
 
     // Add the Icon image
-    const image = await map.loadImage(`public/icons/${this.getIcon()}.png`);
+    const image = await map.loadImage(`icons/${this.getIcon()}.png`);
     map.addImage(this.getIcon(), image.data);
 
     map.addLayer({
