@@ -69,12 +69,12 @@
                     :label="measure.label"
                   />
                   <template
-                    v-for="col in getSensorSpecs(measure.key)"
-                    :key="col"
+                    v-for="spec in getSensorSpec(measure.key)"
+                    :key="spec.label"
                   >
                     <q-icon
-                      name="circle"
-                      :style="`color: ${col};`"
+                      :name="spec.icon"
+                      :title="`${spec.label}: ${spec.title}`"
                       class="on-right"
                       style="margin-top: 14px"
                     />
@@ -255,10 +255,8 @@ function onShowMeasure(measure: string) {
   showMeasure.value = true;
 }
 
-function getSensorSpecs(measure: string) {
-  return SensorSpecs.filter((opt) => opt.measures.includes(measure)).map(
-    (opt) => opt.color,
-  );
+function getSensorSpec(measure: string) {
+  return SensorSpecs.filter((opt) => opt.measures.includes(measure));
 }
 
 function onApplySensors(family: string) {
