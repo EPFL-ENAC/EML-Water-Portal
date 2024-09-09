@@ -41,15 +41,26 @@ export class SensorsLayerManager extends LayerManager {
       (feature: Feature<Geometry, GeoJsonProperties>) => {
         return feature.properties?.name.startsWith(this.family);
       },
-    );
+    ).map((feature: Feature<Geometry, GeoJsonProperties>) => {
+      // include sensor specific color
+      const sensorSpec = SensorSpecs.find((opt) => opt.label === this.family);
+      const name = feature.properties?.name || '';
+      const idx = sensorSpec?.locations.indexOf(name);
+      const color = idx !== undefined && idx > -1 ? sensorSpec?.colors[idx] || '#FFFFFF' : '#FFFFFF';
+      return {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          color: color,
+        },
+      };
+    });
 
     map.addSource(this.getId(), {
       type: 'geojson',
       data: this.data,
     });
 
-    const color =
-      SensorSpecs.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),

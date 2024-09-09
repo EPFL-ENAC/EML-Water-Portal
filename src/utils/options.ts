@@ -113,14 +113,9 @@ export function getSensorFamilyColor(name: string, midpoints: number) {
   let colors = [];
   switch (name) {
     case 'A':
-      colors = [
-        '#ff0000',
-        '#ffad5c',
-        '#fff720',
-        '#3be06d',
-        '#1bffff',
-        '#2e4fc6',
-      ];
+      // colors = ['#440154','#414487','#2a788e','#22a884','#7ad151','#fde725']; // viridis
+      // colors = ['#000004','#420a68','#932667','#dd513a','#fca50a','#fcffa4']; // inferno
+      colors = ['#0d0887','#6a00a8','#b12a90','#e16462','#fca636','#f0f921'].reverse(); // plasma
       break;
     case 'B':
       colors = ['#92ffc0', '#002661'];
