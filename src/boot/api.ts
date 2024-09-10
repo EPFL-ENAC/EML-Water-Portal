@@ -10,7 +10,7 @@ declare module '@vue/runtime-core' {
 
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch/';
 
-const fileStoreUrl = `${cdnUrl}water-portal/2024-08-22T10:41`;
+const fileStoreUrl = `${cdnUrl}water-portal/2024-09-10T09:14`;
 
 const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
 
