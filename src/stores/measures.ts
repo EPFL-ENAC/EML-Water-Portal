@@ -79,10 +79,10 @@ export const useMeasuresStore = defineStore('measures', () => {
                   // only numbers
                   try {
                     // Replace comma with dot
-                    const sanitized = val
+                    const sanitized = val ? val
                       .replaceAll(',', '.')
                       .replaceAll('\n', '')
-                      .replaceAll(' ', '');
+                      .replaceAll(' ', '') : '0';
                     // Parse the float
                     return parseFloat(sanitized);
                   } catch (err) {

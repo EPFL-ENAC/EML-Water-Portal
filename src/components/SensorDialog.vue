@@ -46,6 +46,14 @@
                 <q-icon name="circle" :style="{ color: sensorProperties.color }" size="sm"/>
               </q-item-section>
             </q-item>
+            <q-item>
+              <q-item-section>
+                <q-item-label header class="text-overline">Filter data</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-checkbox v-model="selected" dense @update:model-value="onSelectionUpdate" />
+              </q-item-section>
+            </q-item>
           </q-list>
         </div>
       </q-card-section>
@@ -72,13 +80,17 @@ const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
 const mapStore = useMapStore();
+const filtersStore = useFiltersStore();
 
 const showDialog = ref(props.modelValue);
+
+const selected = ref<boolean>(false);
 
 watch(
   () => props.modelValue,
   (value) => {
     showDialog.value = value;
+    selected.value = filtersStore.sensors.includes(mapStore.sensorSelected?.properties.name) || false;
   },
 );
 
@@ -90,5 +102,10 @@ const sensorMeasures = computed(() => sensorProperties.value?.measures
 
 function onHide() {
   emit('update:modelValue', false);
+}
+
+function onSelectionUpdate(value: boolean) {
+  if (!sensorProperties.value) return;
+  filtersStore.toggleSensor(sensorProperties.value.name);
 }
 </script>
