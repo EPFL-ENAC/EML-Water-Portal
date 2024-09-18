@@ -45,6 +45,14 @@ li + li {
   }
 }
 
+.maplibregl-map {
+  font: inherit !important;
+}
+
+#maplibre-map:fullscreen {
+  z-index: 100;
+}
+
 .text-logo {
   color: red;
   font-family: Helvetica;
