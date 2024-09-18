@@ -130,6 +130,17 @@
       <div class="col-12 col-md-9">
         <q-toolbar >
           <q-space />
+          <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
+          <q-slider
+            v-model="chartHeight"
+            :min="100"
+            :max="500"
+            :step="50"
+            :label-value="chartHeight + ' px'"
+            switch-label-side
+            debounce="300"
+            class="q-mr-lg"
+            style="max-width: 200px;" />
           <q-btn-toggle
             v-model="colsSpan"
             toggle-color="primary"
@@ -160,7 +171,7 @@
                 :label="measure.label"
                 :unit="measure.unit"
                 :precision="measure.precision"
-                :height="200"
+                :height="chartHeight"
                 stacked
                 class="q-pa-sm"
               />
@@ -225,6 +236,7 @@ const showMeasure = ref(false);
 const measureSelected = ref<string>();
 const colsSpan = ref('6');
 const colsClass = computed(() => `col-12 col-md-${colsSpan.value}`);
+const chartHeight = ref(200);
 
 const measuresVisible = ref<Record<string, boolean>>(
   settingsStore.settings?.measuresVisible || {},

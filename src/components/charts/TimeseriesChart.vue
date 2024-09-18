@@ -124,6 +124,13 @@ const sensors = computed(() => {
   return rval;
 });
 
+// watch height and heightUnit
+watch([() => props.height, () => props.heightUnit], () => {
+  if (chart.value) {
+    chart.value.resize();
+  }
+});
+
 // Get the timestamps for all sensors
 const timestamps = computed(() => {
   const rval = sensors.value.map(
