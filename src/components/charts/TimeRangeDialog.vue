@@ -6,7 +6,7 @@
       </q-card-actions>
       <q-card-section>
         <q-input v-model="fromDate" :label="$t('from_date')" class="q-mb-md">
-          <template v-slot:prepend>
+          <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy
                 cover
@@ -20,8 +20,6 @@
                 </q-date>
               </q-popup-proxy>
             </q-icon>
-          </template>
-          <template v-slot:append>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy
                 cover
@@ -39,7 +37,7 @@
         </q-input>
 
         <q-input v-model="toDate" :label="$t('to_date')">
-          <template v-slot:prepend>
+          <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy
                 cover
@@ -53,9 +51,6 @@
                 </q-date>
               </q-popup-proxy>
             </q-icon>
-          </template>
-
-          <template v-slot:append>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy
                 cover
