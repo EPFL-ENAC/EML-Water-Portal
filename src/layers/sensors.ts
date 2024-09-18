@@ -75,14 +75,14 @@ export class SensorsLayerManager extends LayerManager {
           10,
           5, // Radius at zoom level 10 and above
           15,
-          10, // Radius at zoom level 15 and above
+          8, // Radius at zoom level 15 and above
           17,
-          15, // Radius at zoom level 17 and above
+          10, // Radius at zoom level 17 and above
         ],
         'circle-color': color,
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1,
-        'circle-opacity': 0.8,
+        'circle-opacity': ['case', ['get', 'selected'], 1, 0.1],
       },
     });
 
