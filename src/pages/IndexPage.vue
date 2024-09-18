@@ -105,6 +105,26 @@
               <time-range-slider player class="q-ml-md q-mr-md" />
             </div>
           </q-item>
+          <q-item-label header class="text-h6 q-pb-none">
+            <span>{{ $t('scenarios') }}</span>
+          </q-item-label>
+          <q-item>
+            <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
+              {{ $t('scenario_info') }}
+            </div>
+            <div v-else>
+              <q-chip
+                v-for="scenario in scenariiStore.scenarii"
+                :key="`${scenario.watershed}:${scenario.name}`"
+                removable
+                @remove="onRemoveScenario(scenario)"
+                size="sm"
+              >
+                {{ `${scenario.watershed}: ${scenario.name}` }}
+              </q-chip>
+            </div>
+          </q-item>
+    
         </q-list>
       </div>
       <div class="col-12 col-md-9">
@@ -191,6 +211,7 @@ import {
   MeasureOptions,
   SensorSpecs,
 } from 'src/utils/options';
+import { Scenario } from 'src/stores/scenarii';
 
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
@@ -272,5 +293,9 @@ function onRemoveSensors(family: string) {
 
 function onToggleSensorLocation(location: string) {
   filtersStore.toggleSensor(location);
+}
+
+function onRemoveScenario(scenario: Scenario) {
+  scenariiStore.removeScenario(scenario);
 }
 </script>

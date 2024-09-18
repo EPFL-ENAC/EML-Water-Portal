@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-white text-grey-10">
-      <app-toolbar @toggle="toggleLeftDrawer" />
+      <app-toolbar no-menu @toggle="toggleLeftDrawer" />
     </q-header>
 
     <q-drawer v-model="mapStore.showDrawer" overlay elevated width="400">
