@@ -61,6 +61,8 @@ export class SensorsLayerManager extends LayerManager {
       data: this.data,
     });
 
+    const color =
+      SensorSpecs.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),
@@ -71,46 +73,17 @@ export class SensorsLayerManager extends LayerManager {
           ['zoom'],
           0, // Radius at zoom levels below 10
           10,
-          0, // Radius at zoom level 10 and above
+          5, // Radius at zoom level 10 and above
           15,
           10, // Radius at zoom level 15 and above
           17,
           15, // Radius at zoom level 17 and above
-          19,
-          20, // Radius at zoom level 19 and above
         ],
-        'circle-color': '#FFFFFF',
+        'circle-color': color,
         'circle-stroke-color': 'black',
         'circle-stroke-width': 1,
         'circle-opacity': 0.8,
       },
-    });
-
-    // Add the Icon image
-    const image = await map.loadImage(`icons/${this.getIcon()}.png`);
-    map.addImage(this.getIcon(), image.data);
-
-    map.addLayer({
-      id: `${this.getId()}-points`,
-      type: 'symbol',
-      source: this.getId(),
-      layout: {
-          'icon-image': this.getIcon(),
-          'icon-size': [
-            'step',
-            ['zoom'],
-            0.15, // Radius at zoom levels below 10
-            10,
-            0.25, // Radius at zoom level 10 and above
-            15,
-            0.3, // Radius at zoom level 15 and above
-            17,
-            0.4, // Radius at zoom level 15 and above
-            19,
-            0.45, // Radius at zoom level 15 and above
-          ],
-          'icon-allow-overlap': true
-      }
     });
 
     map.addLayer({

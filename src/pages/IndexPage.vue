@@ -18,10 +18,12 @@
               <template v-for="sensor in SensorSpecs" :key="sensor.color">
                 <q-btn-dropdown
                   v-if="sensor.label !== 'D'"
-                  size="10px"
-                  :label="sensor.label"
+                  size="14px"
+                  :label="`Sensors ${sensor.label}`"
                   :title="sensor.title"
-                  :icon="sensor.icon"
+                  no-caps
+                  class="text-grey-3"
+                  :style="`background-color: ${sensor.color};`"
                 >
                   <q-list>
                     <q-item dense class="q-pa-none">
@@ -73,7 +75,8 @@
                     :key="spec.label"
                   >
                     <q-icon
-                      :name="spec.icon"
+                      name="circle"
+                      :style="`color: ${spec.color};`"
                       :title="`${spec.label}: ${spec.title}`"
                       class="on-right"
                       style="margin-top: 14px"

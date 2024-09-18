@@ -36,7 +36,6 @@ export const useMapStore = defineStore('map', () => {
     new SensorsLayerManager('A'),
     new SensorsLayerManager('B'),
     new SensorsLayerManager('C'),
-    new SensorsLayerManager('D'),
   ];
 
   const layerSelections = ref<LayerSelection[]>(
@@ -47,7 +46,6 @@ export const useMapStore = defineStore('map', () => {
         'sensors-a',
         'sensors-b',
         'sensors-c',
-        'sensors-d',
         'conduite_principale_ec',
         'bv',
       ].includes(lm.getId()),
