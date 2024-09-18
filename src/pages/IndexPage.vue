@@ -154,7 +154,7 @@
         </q-toolbar>
         <div class="row">
           <template v-for="measure in MeasureOptions" :key="measure.key">
-            <div v-if="measuresVisible[measure.key]" :class="colsClass">
+            <div v-show="measuresVisible[measure.key]" :class="colsClass">
               <timeseries-chart
                 :measure="measure.key"
                 :label="measure.label"
