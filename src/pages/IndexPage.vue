@@ -128,7 +128,7 @@
         </q-list>
       </div>
       <div class="col-12 col-md-9">
-        <q-toolbar >
+        <q-toolbar>
           <q-space />
           <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
           <q-slider
