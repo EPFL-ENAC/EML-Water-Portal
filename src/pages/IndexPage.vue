@@ -166,15 +166,19 @@
         <div class="row">
           <template v-for="measure in MeasureOptions" :key="measure.key">
             <div v-show="measuresVisible[measure.key]" :class="colsClass">
-              <timeseries-chart
-                :measure="measure.key"
-                :label="measure.label"
-                :unit="measure.unit"
-                :precision="measure.precision"
-                :height="chartHeight"
-                stacked
-                class="q-pa-sm"
-              />
+              <q-card square bordered flat>
+                <q-card-section>
+                  <timeseries-chart
+                    :measure="measure.key"
+                    :label="measure.label"
+                    :unit="measure.unit"
+                    :precision="measure.precision"
+                    :height="chartHeight"
+                    stacked
+                  />
+                </q-card-section>
+              </q-card>
+              
             </div>
           </template>
         </div>

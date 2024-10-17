@@ -1,5 +1,5 @@
 <template>
-  <div style="border: solid 1px lightgrey;">
+  <div>
     <div
       v-if="props.measure === 'water_samples'"
       class="text-center text-negative q-pa-sm"
