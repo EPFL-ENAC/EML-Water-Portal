@@ -181,11 +181,11 @@ const formatter = {
     // const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
 
     // Start/end of the range
-    if (
-      timeseriesStore.MIN_DATE.getTime() === value ||
-      timeseriesStore.MAX_DATE.getTime() === value
-    ) {
+    if (timeseriesStore.MIN_DATE.getTime() === value) {
       return `${day}/${month}`;
+    }
+    if (timeseriesStore.MAX_DATE.getTime() === value) {
+      return ''; // Hide the last to avoid overlap
     }
 
     const closeToFirstOfMonth = Number(day) !== 1; // && (Number(day) < 3 || Number(day) > 28); // When pips are close to beginning of month it can reduce readability

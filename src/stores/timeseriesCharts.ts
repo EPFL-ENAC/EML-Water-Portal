@@ -10,7 +10,7 @@ export type TimeseriesChartsParams = {
 };
 
 const MIN_DATE = new Date('2024-04-08T12:00:00.000Z');
-const MAX_DATE = new Date('2024-09-09T04:00:00.000Z');
+const MAX_DATE = new Date();
 const MIN_DATE_MS = MIN_DATE.getTime();
 const MAX_DATE_MS = MAX_DATE.getTime();
 const DATE_RANGE_MS = MAX_DATE_MS - MIN_DATE_MS;
