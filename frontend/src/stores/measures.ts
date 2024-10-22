@@ -1,10 +1,9 @@
 import { Datasets } from 'src/models';
-import { fileStoreUrl } from 'src/boot/api';
+import { api, fileStoreUrl } from 'src/boot/api';
 import Papa from 'papaparse';
 import { parse, format } from 'date-fns';
 
 const TIMESERIES_URL = `${fileStoreUrl}/timeseries`;
-const DATASETS_URL = `${TIMESERIES_URL}/datasets.json`;
 const DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 
 interface PapaResults {
@@ -19,8 +18,8 @@ export const useMeasuresStore = defineStore('measures', () => {
     if (datasets.value) return Promise.resolve();
 
     loading.value = true;
-    const response = await fetch(DATASETS_URL);
-    datasets.value = await response.json();
+    const response = await api.get('measures/datasets');
+    datasets.value = response.data;
 
     let loaded = 0;
     datasets.value?.files.forEach((dataset) => {

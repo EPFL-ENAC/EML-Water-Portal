@@ -196,6 +196,7 @@ onMounted(() => {
 });
 
 watch([() => measuresStore.loading, () => sensors.value], () => {
+  console.log('watch initChartOptions');
   initChartOptions();
 });
 

@@ -9,6 +9,8 @@ ARG API_URL
 ENV API_URL $API_URL
 ARG API_PATH
 ENV API_PATH $API_PATH
+ARG CDN_FOLDER
+ENV CDN_FOLDER $CDN_FOLDER
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
