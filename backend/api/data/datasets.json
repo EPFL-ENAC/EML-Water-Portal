@@ -1,0 +1,564 @@
+{
+  "files": [
+    {
+      "file": "A1.csv",
+      "skip": 8,
+      "separator": ";"  
+    },
+    {
+      "file": "A2.csv",
+      "skip": 8,
+      "separator": ";"  
+    },
+    {
+      "file": "A3.csv",
+      "skip": 8,
+      "separator": ";"
+    },
+    {
+      "file": "A4.csv",
+      "skip": 8,
+      "separator": ";"
+    },
+    {
+      "file": "A5.csv",
+      "skip": 8,
+      "separator": ";"
+    },
+    {
+      "file": "A6.csv",
+      "skip": 8,
+      "separator": ";"
+    },
+    {
+      "file": "C1.csv",
+      "skip": 0,
+      "separator": ";"
+    },
+    {
+      "file": "C2.csv",
+      "skip": 0,
+      "separator": ";"
+    },
+    {
+      "file": "B.csv",
+      "skip": 0,
+      "separator": ","
+    }
+  ],
+  "sensors": [
+    {
+      "name": "A1",
+      "file": "A1.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "A2",
+      "file": "A2.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "A3",
+      "file": "A3.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "A4",
+      "file": "A4.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "A5",
+      "file": "A5.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "A6",
+      "file": "A6.csv",
+      "columns": [
+        {
+          "name": "Date Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "Temperature (C)",
+          "measure": "water_temperature"
+        },
+        {
+          "name": "Air Temperature (C)",
+          "measure": "air_temperature"
+        },
+        {
+          "name": "Depth (m)",
+          "measure": "depth"
+        },
+        {
+          "name": "Specific Conductivity (µS/cm)",
+          "measure": "electro_conductivity"
+        },
+        {
+          "name": "Turbidity (NTU)",
+          "measure": "turbidity"
+        },
+        {
+          "name": "DO (mg/L)",
+          "measure": "dissolved_oxygen"
+        },
+        {
+          "name": "pH (pH)",
+          "measure": "ph"
+        },
+        {
+          "name": "ORP (mV)",
+          "measure": "oxidation_reduction_potential"
+        }
+      ]
+    },
+    {
+      "name": "C1",
+      "file": "C1.csv",
+      "columns": [
+        {
+          "name": "Date",
+          "measure": "timestamp",
+          "format": "%d.%m.%y %H:%M"
+        },
+        {
+          "name": "Hauteur d'eau[0] (mm)",
+          "measure": "water_level"
+        }
+      ]
+    },
+    {
+      "name": "C2",
+      "file": "C2.csv",
+      "columns": [
+        {
+          "name": "Date",
+          "measure": "timestamp",
+          "format": "%d.%m.%y %H:%M"
+        },
+        {
+          "name": "Hauteur d'eau[0] (mm)",
+          "measure": "water_level"
+        }
+      ]
+    },
+    {
+      "name": "B1",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B1",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B2",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B2",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B3",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B3",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B4",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B4",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B5",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B5",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B6",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B6",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B7",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B7",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B8",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B8",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B9",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B9",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B10",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B10",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B11",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B11",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B12",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B12",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B13",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B13",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B14",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B14",
+          "measure": "water_temperature"
+        }
+      ]
+    },
+    {
+      "name": "B15",
+      "file": "B.csv",
+      "columns": [
+        {
+          "name": "Time",
+          "measure": "timestamp",
+          "format": "%Y-%m-%d %H:%M:%S.%f"
+        },
+        {
+          "name": "B15",
+          "measure": "water_temperature"
+        }
+      ]
+    }
+  ]
+}

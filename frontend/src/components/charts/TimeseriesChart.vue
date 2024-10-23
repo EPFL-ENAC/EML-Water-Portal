@@ -109,14 +109,14 @@ const loading = ref(false);
 
 const sensors = computed(() => {
   const rval = measuresStore.datasets
-    ? measuresStore.datasets?.sensors.filter((sensor) => {
+    ? measuresStore.sensors.filter((sensor) => {
         const selected =
           filtersStore.sensors.length === 0 ||
           filtersStore.sensors.includes(sensor.name);
         return (
           selected &&
-          sensor.columns.find(
-            (col) => col.measure === props.measure && col.data,
+          sensor.vectors.find(
+            (col) => col.measure === props.measure && col.values,
           )
         );
       })
@@ -134,7 +134,7 @@ watch([() => props.height, () => props.heightUnit], () => {
 // Get the timestamps for all sensors
 const timestamps = computed(() => {
   const rval = sensors.value.map(
-    (sensor) => sensor.columns.find((col) => col.measure === 'timestamp')?.data,
+    (sensor) => sensor.vectors.find((col) => col.measure === 'timestamp')?.values,
   );
   return rval;
 });
@@ -196,7 +196,6 @@ onMounted(() => {
 });
 
 watch([() => measuresStore.loading, () => sensors.value], () => {
-  console.log('watch initChartOptions');
   initChartOptions();
 });
 
@@ -345,11 +344,11 @@ function buildOptions() {
       },
     ],
     series: sensors.value.map((s, index) => {
-      const timestamps = s.columns.find(
+      const timestamps = s.vectors.find(
         (col) => col.measure === 'timestamp',
-      )?.data;
-      const column = s.columns.find((col) => col.measure === props.measure);
-      let colData = column?.data;
+      )?.values;
+      const column = s.vectors.find((col) => col.measure === props.measure);
+      let colData = column?.values;
       if (colData && props.precision) {
         colData = colData.map((d) =>
           typeof d === 'number' ? d.toFixed(props.precision) : d,

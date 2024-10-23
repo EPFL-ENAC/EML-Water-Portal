@@ -5,7 +5,7 @@ export interface Column {
   data?: (number | string)[];
 }
 
-export interface SensorData {
+export interface SensorDataSpec {
   name: string;
   file: string;
   columns: Column[];
@@ -19,11 +19,21 @@ export interface DatasetFile {
 
 export interface Datasets {
   files: DatasetFile[];
-  sensors: SensorData[];
+  sensors: SensorDataSpec[];
 }
 
 export interface Dataset {
   file: string;
   header: string[];
   data: string[][];
+}
+
+export interface Vector {
+  measure: string;
+  values: string[] | number[];
+}
+
+export interface SensorData {
+  name: string;
+  vectors: Vector[];
 }

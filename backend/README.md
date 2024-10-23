@@ -1,19 +1,20 @@
-# FastAPI
-Based loosely on https://github.com/gauravgola96/FastAPI-Example
+# EPFL Campus Water Portal (frontend)
 
-## Requirements
-- python 3.10.9
-- poetry
-- Make
-- Docker with docker compose
-- OS:
-  - Windows: docker desktop with wsl
-  - Apple: with docker desktop dependencies installed via brew
-  - Linux: libwebp-dev
+## Redis
+
+The backend uses Redis to cache the results of the S3 bucket queries. The Redis server is started in a Docker container.
+
+Run Redis
+```
+make redis-up
+```
+
+Stop Redis
+```
+make redis-stop
+```
 
 ## How to run
-API for uploading object(.png|.jpg) to S3 bucket asynchronously
--> convert png or jpg to webp files
 
 Create a file .env and put all s3 credential here
 ```
@@ -45,6 +46,3 @@ To provide .env use Dockerfile.
 ```
 Path : ./Dockerfile
 ```
-
-## Install
-Don't forget to install libwebp-dev on the machine (cf Dockerfile)

@@ -1,7 +1,13 @@
 import os
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from api.config import config
+
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+
+from api.config import config, redis
 from logging import basicConfig, INFO
 from pydantic import BaseModel
 from api.views.files import router as files_router
@@ -9,7 +15,13 @@ from api.views.measures import router as measures_router
 
 basicConfig(level=INFO)
 
-app = FastAPI(root_path=config.PATH_PREFIX)
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    FastAPICache.init(RedisBackend(redis), prefix="wp-cache")
+    yield
+
+app = FastAPI(root_path=config.PATH_PREFIX, lifespan=lifespan)
 
 origins = ["*"]
 

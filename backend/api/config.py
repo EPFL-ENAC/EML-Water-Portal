@@ -1,6 +1,6 @@
-from pydantic import model_validator
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from redis import asyncio as aioredis
 
 
 class Config(BaseSettings):
@@ -12,6 +12,11 @@ class Config(BaseSettings):
     KEYCLOAK_URL: str = "https://enac-it-sso.epfl.ch"
     KEYCLOAK_API_ID: str
     KEYCLOAK_API_SECRET: str
+
+    REDIS_URL: str = "redis://localhost"
+    CACHE_API_EXPIRY: int = 60
+    CACHE_SOURCE_EXPIRY: int = 600
+    RESAMPLE_THRESHOLD: int = 7 * 24  # sample data when time range is above 7 days
 
     S3_ENDPOINT_PROTOCOL: str
     S3_ENDPOINT_HOSTNAME: str
@@ -28,3 +33,4 @@ def get_config():
 
 
 config = get_config()
+redis = aioredis.from_url(config.REDIS_URL)
