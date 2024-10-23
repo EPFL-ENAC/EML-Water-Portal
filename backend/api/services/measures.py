@@ -6,6 +6,7 @@ from fastapi.exceptions import HTTPException
 from api.models.measures import Datasets, SensorData, DatasetFile
 import pandas as pd
 import numpy as np
+from fastapi.logger import logger
 from api.config import config, redis
 
 
@@ -97,7 +98,13 @@ class MeasuresService:
         # Retrieve the content of data file and cache it
         content = await redis.get(file_path)
         if not content:
+            logger.info(
+                f"File not found in cache, getting it from S3: {file_path}")
             content, mime_type = await s3_client.get_file(file_path)
+            # check content is not False
+            if not content:
+                raise HTTPException(status_code=404,
+                                    detail=f"File not found: {s3_client.to_s3_key(file_path)}")
             await redis.set(file_path, content, ex=config.CACHE_SOURCE_EXPIRY)
         df = pd.read_csv(io.BytesIO(
             content), sep=dataset_file.separator, skiprows=dataset_file.skip)
