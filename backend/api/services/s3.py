@@ -91,6 +91,7 @@ class S3Client(object):
             Tuple: File content and mimetype
         """
         key = self.to_s3_key(file_path)
+        logger.info(f"Getting file from S3: {config.S3_BUCKET} {key}")
 
         # get file from file path
         session = get_session()
