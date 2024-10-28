@@ -30,7 +30,7 @@ export interface Dataset {
 
 export interface Vector {
   measure: string;
-  values: string[] | number[];
+  values: (string | null)[] | (number | null)[];
 }
 
 export interface SensorData {

@@ -20,14 +20,14 @@ export const useSettingsStore = defineStore('settings', () => {
       measuresVisible: {
         water_level: true,
         water_temperature: true,
-        depth: false,
-        water_samples: false,
-        electro_conductivity: false,
-        dissolved_oxygen: false,
-        ph: false,
-        turbidity: false,
-        oxidation_reduction_potential: false,
-        air_temperature: false,
+        depth: true,
+        water_samples: true,
+        electro_conductivity: true,
+        dissolved_oxygen: true,
+        ph: true,
+        turbidity: true,
+        oxidation_reduction_potential: true,
+        air_temperature: true,
       },
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);

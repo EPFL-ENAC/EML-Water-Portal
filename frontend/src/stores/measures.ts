@@ -5,12 +5,44 @@ export const useMeasuresStore = defineStore('measures', () => {
   const datasets = ref<Datasets>();
   const loading = ref(false);
   const sensors = ref<SensorData[]>([]);
+  const sensorsSampled = ref<SensorData[]>([]);
+  const startDate = ref<Date>();
+  const endDate = ref<Date>();
+  const sensorsRaw = ref<SensorData[]>([]);
+
+  const timeseriesStore = useTimeseriesChartsStore();
+
+  watch(() => timeseriesStore.timeRange, async () => {
+    //console.log('Time range changed', timeseriesStore.timeRange);
+    const startDateRange = timeseriesStore.timeRange[0];
+    const endDateRange = timeseriesStore.timeRange[1];
+    // Calculate the time range in hours
+    const timeRangeHours = (endDateRange.getTime() - startDateRange.getTime()) / (1000 * 60 * 60);
+    //console.log('Time range in hours:', timeRangeHours);
+    if (timeRangeHours < 7 * 24) {
+      //console.log('Time range is less than 7 days');
+      // check if the time range is included in the current time range
+      if (startDate.value && endDate.value && startDateRange.getTime() >= startDate.value.getTime() && endDateRange.getTime() <= endDate.value.getTime()) {
+        console.log('Time range is included in the current time range');
+        return;
+      }
+      if (loading.value) return;
+      startDate.value = startDateRange;
+      endDate.value = endDateRange;
+      loadDatasetsRaw();
+    } else {
+      startDate.value = undefined;
+      endDate.value = undefined;
+      sensors.value = sensorsSampled.value;
+    }
+  });
 
   async function loadDatasets() {
     if (datasets.value) return Promise.resolve();
 
     loading.value = true;
     sensors.value = [];
+    sensorsSampled.value = [];
     const response = await api.get('measures/datasets');
     datasets.value = response.data;
 
@@ -18,11 +50,39 @@ export const useMeasuresStore = defineStore('measures', () => {
     const promises: Promise<void>[] = [];
     datasets.value?.sensors.forEach((sensor) => {
       promises.push(api.get(`measures/dataset/${sensor.name}`).then((response) => {
-        sensors.value.push(response.data);
+        sensorsSampled.value.push(response.data);
       }).finally(() => {
         loaded++;
         if (loaded === datasets.value?.sensors.length) {
           loading.value = false;
+          sensors.value = sensorsSampled.value;
+        }
+      }));
+    });
+    return Promise.all(promises);
+  }
+
+  async function loadDatasetsRaw() {
+    loading.value = true;
+    sensorsRaw.value = [];
+    
+    let loaded = 0;
+    const promises: Promise<void>[] = [];
+    datasets.value?.sensors.forEach((sensor) => {
+      promises.push(api.get(`measures/dataset/${sensor.name}`, {
+        params: {
+          start: startDate.value?.toISOString(),
+          end: endDate.value?.toISOString(),
+        },
+      }).then((response) => {
+        const data = response.data as SensorData;
+        sensorsRaw.value.push(data);
+      }).finally(() => {
+        loaded++;
+        if (loaded === datasets.value?.sensors.length) {
+          loading.value = false;
+          sensors.value = sensorsRaw.value;
+          console.log('Sensors raw:', sensorsRaw.value);
         }
       }));
     });

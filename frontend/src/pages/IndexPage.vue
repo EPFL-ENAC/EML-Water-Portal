@@ -54,7 +54,7 @@
             </q-btn-group>
           </div>
         </q-card>
-        <q-list v-if="!measuresStore.loading">
+        <q-list>
           <q-item-label header class="text-h6">{{
             $t('parameters')
           }}</q-item-label>
@@ -68,6 +68,7 @@
                 <div class="row">
                   <q-checkbox
                     v-model="measuresVisible[measure.key]"
+                    :disable="measuresStore.loading"
                     :label="measure.label"
                   />
                   <template
@@ -84,6 +85,7 @@
                   </template>
                   <q-btn
                     v-if="measuresVisible[measure.key]"
+                    :disable="measuresStore.loading"
                     icon="fullscreen"
                     color="secondary"
                     flat
@@ -133,6 +135,7 @@
           <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
           <q-slider
             v-model="chartHeight"
+            :disable="measuresStore.loading"
             :min="100"
             :max="500"
             :step="50"
@@ -143,6 +146,7 @@
             style="max-width: 200px;" />
           <q-btn-toggle
             v-model="colsSpan"
+            :disable="measuresStore.loading"
             toggle-color="primary"
             :options="[
               {value: '12', slot: 'one'},
@@ -178,7 +182,6 @@
                   />
                 </q-card-section>
               </q-card>
-              
             </div>
           </template>
         </div>

@@ -13,6 +13,7 @@
       {{ $t('no_sensor_data', { measure: props.label }) }}
     </div>
     <div v-else :style="`height: ${height}${heightUnit}; width: 100%;`">
+      <!-- <q-spinner-dots color="primary" v-if="measuresStore.loading || loading" /> -->
       <e-charts
         ref="chart"
         autoresize
@@ -38,11 +39,11 @@ export default defineComponent({
 <script setup lang="ts">
 import { SensorSpecs } from 'src/utils/options';
 import ECharts from 'vue-echarts';
-import type { EChartsOption, ECElementEvent } from 'echarts';
+import type { EChartsOption, ECElementEvent, SeriesOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
-import { initOptions, updateOptions } from './utils';
+import { initOptions } from './utils';
 import {
   TitleComponent,
   TooltipComponent,
@@ -150,8 +151,12 @@ function initChartOptions() {
   if (measuresStore.loading) {
     return;
   }
-  option.value = {};
-  buildOptions();
+  if (option.value.series && option.value.series.length > 0) {
+    updateOptions();
+  } else {
+    option.value = {};
+    buildOptions();
+  }
 }
 
 const onHighlight = (e: ECElementEvent) => {
@@ -262,9 +267,39 @@ function onRangeChange() {
   }
 }
 
+function makeSeries(): SeriesOption[] {
+  return sensors.value.map((s, index) => {
+    const timestamps = s.vectors.find(
+      (col) => col.measure === 'timestamp',
+    )?.values;
+    const column = s.vectors.find((col) => col.measure === props.measure);
+    let colData = column?.values;
+    if (colData && props.precision) {
+      colData = colData.map((d) =>
+        typeof d === 'number' ? d.toFixed(props.precision) : d,
+      );
+    }
+    return {
+      name: s.name,
+      showSymbol: false,
+      animation: false,
+      large: true,
+      symbol: 'none',
+      symbolSize: 0,
+      colorBy: 'series',
+      type: 'line',
+      color: getSensorColor(s.name),
+      data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
+    };
+  });
+}
+
 function buildOptions() {
   loading.value = true;
-  const newOption: EChartsOption = {
+
+  const series = makeSeries();
+
+  option.value = {
     renderer: 'canvas',
     animation: false,
     tooltip: {
@@ -343,34 +378,19 @@ function buildOptions() {
         max: 'dataMax', // Automatically set the maximum value based on the data
       },
     ],
-    series: sensors.value.map((s, index) => {
-      const timestamps = s.vectors.find(
-        (col) => col.measure === 'timestamp',
-      )?.values;
-      const column = s.vectors.find((col) => col.measure === props.measure);
-      let colData = column?.values;
-      if (colData && props.precision) {
-        colData = colData.map((d) =>
-          typeof d === 'number' ? d.toFixed(props.precision) : d,
-        );
-      }
-      return {
-        name: s.name,
-        showSymbol: false,
-        animation: false,
-        large: true,
-        symbol: 'none',
-        symbolSize: 0,
-        colorBy: 'series',
-        type: 'line',
-        color: getSensorColor(s.name),
-        data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
-      };
-    }),
+    series: series,
   };
 
-  option.value = newOption;
   loading.value = false;
+}
+
+function updateOptions() {
+  if (!chart.value) {
+    return;
+  }
+  chart.value.setOption({
+    series: makeSeries()
+  }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
 function getSensorColor(name: string) {
