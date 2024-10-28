@@ -9,6 +9,8 @@ import numpy as np
 from fastapi.logger import logger
 from api.config import config, redis
 
+lock = redis.lock("s3_measures", timeout=10)
+
 
 class MeasuresService:
 
@@ -38,7 +40,7 @@ class MeasuresService:
         for sensor in datasets.sensors:
             if sensor.name == name:
                 file_specs = self.get_file_specs(datasets, sensor.file)
-                df = await self.read_dataset_file(file_specs)
+                df = await self.read_dataset_file_concurrently(file_specs)
                 for column in sensor.columns:
                     if column.name in df.columns:
                         if column.measure == "timestamp":
@@ -91,7 +93,16 @@ class MeasuresService:
             if file.file == name:
                 return file
         raise HTTPException(status_code=404,
-                            detail="File specs not found")
+                            detail=f"File specs not found: {name}")
+
+    async def read_dataset_file_concurrently(self, dataset_file: DatasetFile) -> pd.DataFrame:
+        if await lock.acquire():
+            try:
+                return await self.read_dataset_file(dataset_file)
+            finally:
+                await lock.release()
+        else:
+            return await self.read_dataset_file(dataset_file)
 
     async def read_dataset_file(self, dataset_file: DatasetFile) -> pd.DataFrame:
         file_path = f"timeseries/{dataset_file.file}"
