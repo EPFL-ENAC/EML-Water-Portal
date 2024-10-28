@@ -126,7 +126,7 @@ const play = () => {
         ]);
       }
     }
-  }, 200); // Adjusted interval to reduce frequent updates
+  }, 1000); // Adjusted interval to reduce frequent updates
 };
 
 const stop = () => {

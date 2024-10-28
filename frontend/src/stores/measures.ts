@@ -1,5 +1,6 @@
 import { Datasets, SensorData } from 'src/models';
 import { api } from 'src/boot/api';
+import { roundToNearestHours, addDays } from 'date-fns';
 
 export const useMeasuresStore = defineStore('measures', () => {
   const datasets = ref<Datasets>();
@@ -13,22 +14,19 @@ export const useMeasuresStore = defineStore('measures', () => {
   const timeseriesStore = useTimeseriesChartsStore();
 
   watch(() => timeseriesStore.timeRange, async () => {
-    //console.log('Time range changed', timeseriesStore.timeRange);
     const startDateRange = timeseriesStore.timeRange[0];
     const endDateRange = timeseriesStore.timeRange[1];
     // Calculate the time range in hours
     const timeRangeHours = (endDateRange.getTime() - startDateRange.getTime()) / (1000 * 60 * 60);
-    //console.log('Time range in hours:', timeRangeHours);
     if (timeRangeHours < 7 * 24) {
-      //console.log('Time range is less than 7 days');
       // check if the time range is included in the current time range
       if (startDate.value && endDate.value && startDateRange.getTime() >= startDate.value.getTime() && endDateRange.getTime() <= endDate.value.getTime()) {
-        console.log('Time range is included in the current time range');
+        //console.debug('Time range is included in the current time range');
         return;
       }
+      startDate.value = roundToNearestHours(startDateRange);
+      endDate.value = addDays(startDate.value, 7);
       if (loading.value) return;
-      startDate.value = startDateRange;
-      endDate.value = endDateRange;
       loadDatasetsRaw();
     } else {
       startDate.value = undefined;
@@ -82,7 +80,6 @@ export const useMeasuresStore = defineStore('measures', () => {
         if (loaded === datasets.value?.sensors.length) {
           loading.value = false;
           sensors.value = sensorsRaw.value;
-          console.log('Sensors raw:', sensorsRaw.value);
         }
       }));
     });
