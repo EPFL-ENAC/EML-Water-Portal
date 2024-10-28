@@ -7,7 +7,8 @@ from contextlib import asynccontextmanager
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 
-from api.config import config, redis
+from api.config import config
+from api.cache import redis
 from logging import basicConfig, INFO
 from pydantic import BaseModel
 from api.views.files import router as files_router

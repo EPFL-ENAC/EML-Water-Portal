@@ -2,12 +2,14 @@ import io
 import json
 import pkg_resources
 from api.services.s3 import s3_client
+from api.services.db import db_client
 from fastapi.exceptions import HTTPException
-from api.models.measures import Datasets, SensorData, DatasetFile
+from api.models.measures import Datasets, SensorData, SensorDataSpec, DatasetFile
 import pandas as pd
 import numpy as np
 from fastapi.logger import logger
-from api.config import config, redis
+from api.config import config
+from api.cache import redis
 
 lock = redis.lock("s3_measures", timeout=10)
 
@@ -28,7 +30,7 @@ class MeasuresService:
         return Datasets()
 
     async def get_dataset(self, name: str, from_date=None, to_date=None) -> SensorData:
-        """Get a dataset from the S3 storage
+        """Get a dataset from the S3 or the InfluxDB storage
 
         Args:
             dataset_id (str): The dataset identifier
@@ -39,46 +41,59 @@ class MeasuresService:
         datasets = await self.get_datasets()
         for sensor in datasets.sensors:
             if sensor.name == name:
-                file_specs = self.get_file_specs(datasets, sensor.file)
-                df = await self.read_dataset_file_concurrently(file_specs)
-                for column in sensor.columns:
-                    if column.name in df.columns:
-                        if column.measure == "timestamp":
-                            df[column.name] = pd.to_datetime(
-                                df[column.name], format=column.format)
-                            df.set_index(column.name, drop=False, inplace=True)
-                        elif df[column.name].dtype == 'object':
-                            df[column.name] = df[column.name].str.replace(
-                                ',', '.').astype('float')
-
-                if from_date is None or to_date is None:
-                    # no (or partial) time range defined: sample per hour mean
-                    df = df.resample('h').mean()
-                else:
-                    # if the time range is less than a threshold, keep the original data
-                    df = df[from_date:to_date]
-                    difference = to_date - from_date
-                    hours_difference = difference.total_seconds() / 3600
-                    if hours_difference > config.RESAMPLE_THRESHOLD:
-                        df = df.resample('h').mean()
-                df = df.replace({np.nan: None})
-
-                vectors = []
-                for column in sensor.columns:
-                    if column.name in df.columns:
-                        if column.measure == "timestamp":
-                            vectors.append({
-                                "measure": column.measure,
-                                "values": df[column.name].astype(str).tolist()
-                            })
-                        else:
-                            vectors.append({
-                                "measure": column.measure,
-                                "values": df[column.name].tolist()
-                            })
-                return SensorData(name=sensor.name, vectors=vectors)
+                if sensor.file_spec:
+                    return await self.get_dataset_from_file(datasets, sensor, from_date, to_date)
+                elif sensor.db_spec:
+                    return await self.get_dataset_from_db(sensor, from_date, to_date)
         raise HTTPException(status_code=404,
                             detail="Sensor not found")
+
+    async def get_dataset_from_file(self, datasets: Datasets, sensor: SensorDataSpec, from_date=None, to_date=None) -> SensorData:
+        file_specs = self.get_file_specs(
+            datasets, sensor.file_spec.file)
+        df = await self.read_dataset_file_concurrently(file_specs)
+        for column in sensor.file_spec.columns:
+            if column.name in df.columns:
+                if column.measure == "timestamp":
+                    df[column.name] = pd.to_datetime(
+                        df[column.name], format=column.format)
+                    df.set_index(
+                        column.name, drop=False, inplace=True)
+                elif df[column.name].dtype == 'object':
+                    df[column.name] = df[column.name].str.replace(
+                        ',', '.').astype('float')
+
+        if from_date is None or to_date is None:
+            # no (or partial) time range defined: sample per hour mean
+            df = df.resample('h').mean()
+        else:
+            # if the time range is less than a threshold, keep the original data
+            df = df[from_date:to_date]
+            difference = to_date - from_date
+            hours_difference = difference.total_seconds() / 3600
+            if hours_difference > config.RESAMPLE_THRESHOLD:
+                df = df.resample('h').mean()
+        df = df.replace({np.nan: None})
+
+        vectors = []
+        for column in sensor.file_spec.columns:
+            if column.name in df.columns:
+                if column.measure == "timestamp":
+                    vectors.append({
+                        "measure": column.measure,
+                        "values": df[column.name].astype(str).tolist()
+                    })
+                else:
+                    vectors.append({
+                        "measure": column.measure,
+                        "values": df[column.name].tolist()
+                    })
+        return SensorData(name=sensor.name, vectors=vectors)
+
+    async def get_dataset_from_db(self, sensor: SensorDataSpec, from_date=None, to_date=None) -> SensorData:
+        result = db_client.query(
+            sensor.db_spec.measurement).aggregate("1h").execute()
+        pass
 
     def get_file_specs(self, datasets: Datasets, name: str) -> DatasetFile:
         """Get the file specs from the S3 storage

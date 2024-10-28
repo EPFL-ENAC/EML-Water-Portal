@@ -1,6 +1,5 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
-from redis import asyncio as aioredis
 
 
 class Config(BaseSettings):
@@ -18,6 +17,11 @@ class Config(BaseSettings):
     CACHE_SOURCE_EXPIRY: int = 600
     RESAMPLE_THRESHOLD: int = 7 * 24  # sample data when time range is above 7 days
 
+    INFLUXDB_URL: str
+    INFLUXDB_ORG: str
+    INFLUXDB_TOKEN: str
+    INFLUXDB_BUCKET: str
+
     S3_ENDPOINT_PROTOCOL: str
     S3_ENDPOINT_HOSTNAME: str
     S3_ACCESS_KEY_ID: str
@@ -33,4 +37,3 @@ def get_config():
 
 
 config = get_config()
-redis = aioredis.from_url(config.REDIS_URL)

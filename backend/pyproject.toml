@@ -21,6 +21,7 @@ openpyxl = "^3.1.5"
 python-keycloak = "^4.6.2"
 fastapi-cache2 = "^0.2.2"
 redis = "^5.1.1"
+influxdb-client = "^1.47.0"
 
 
 [build-system]

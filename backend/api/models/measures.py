@@ -8,10 +8,19 @@ class Column(BaseModel):
     format: Optional[str] = None
 
 
-class SensorDataSpec(BaseModel):
-    name: str
+class DataFileSpec(BaseModel):
     file: str
     columns: List[Column]
+
+
+class DataDBSpec(BaseModel):
+    measurement: str
+
+
+class SensorDataSpec(BaseModel):
+    name: str
+    file_spec: Optional[DataFileSpec] = None
+    db_spec: Optional[DataDBSpec] = None
 
 
 class Vector(BaseModel):
