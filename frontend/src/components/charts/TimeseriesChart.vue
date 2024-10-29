@@ -312,7 +312,7 @@ function buildOptions() {
         animation: false,
       },
       confine: true,
-      valueFormatter: (value) => `${value} ${props.unit}`,
+      valueFormatter: (value: number | string) => value === null || value === undefined || value === '' ? '-' : `${Number.parseFloat(value + '').toFixed(2)} ${props.unit}`,
     },
     axisPointer: {
       link: [
