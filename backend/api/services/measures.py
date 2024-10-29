@@ -1,10 +1,11 @@
 import io
 import json
+import datetime
 import pkg_resources
 from api.services.s3 import s3_client
-from api.services.db import db_client
+from api.services.db import db_client, DBQuery
 from fastapi.exceptions import HTTPException
-from api.models.measures import Datasets, SensorData, SensorDataSpec, DatasetFile
+from api.models.measures import Datasets, SensorData, SensorDataSpec, DatasetFile, Vector
 import pandas as pd
 import numpy as np
 from fastapi.logger import logger
@@ -12,6 +13,8 @@ from api.config import config
 from api.cache import redis
 
 lock = redis.lock("s3_measures", timeout=10)
+
+START_DATETIME = datetime.datetime(2024, 4, 8)
 
 
 class MeasuresService:
@@ -48,7 +51,7 @@ class MeasuresService:
         raise HTTPException(status_code=404,
                             detail="Sensor not found")
 
-    async def get_dataset_from_file(self, datasets: Datasets, sensor: SensorDataSpec, from_date=None, to_date=None) -> SensorData:
+    async def get_dataset_from_file(self, datasets: Datasets, sensor: SensorDataSpec, from_date: datetime.datetime = None, to_date: datetime.datetime = None) -> SensorData:
         file_specs = self.get_file_specs(
             datasets, sensor.file_spec.file)
         df = await self.read_dataset_file_concurrently(file_specs)
@@ -65,35 +68,62 @@ class MeasuresService:
 
         if from_date is None or to_date is None:
             # no (or partial) time range defined: sample per hour mean
-            df = df.resample('h').mean()
+            df = df.resample(sensor.file_spec.aggregate).mean()
         else:
             # if the time range is less than a threshold, keep the original data
             df = df[from_date:to_date]
-            difference = to_date - from_date
-            hours_difference = difference.total_seconds() / 3600
-            if hours_difference > config.RESAMPLE_THRESHOLD:
-                df = df.resample('h').mean()
+            if self.to_resample(from_date, to_date):
+                df = df.resample(sensor.file_spec.aggregate).mean()
         df = df.replace({np.nan: None})
 
         vectors = []
         for column in sensor.file_spec.columns:
             if column.name in df.columns:
                 if column.measure == "timestamp":
-                    vectors.append({
-                        "measure": column.measure,
-                        "values": df[column.name].astype(str).tolist()
-                    })
+                    vectors.append(Vector(measure=column.measure,
+                                   values=df[column.name].astype(str).tolist()))
                 else:
-                    vectors.append({
-                        "measure": column.measure,
-                        "values": df[column.name].tolist()
-                    })
+                    vectors.append(Vector(measure=column.measure,
+                                   values=df[column.name].tolist()))
         return SensorData(name=sensor.name, vectors=vectors)
 
-    async def get_dataset_from_db(self, sensor: SensorDataSpec, from_date=None, to_date=None) -> SensorData:
-        result = db_client.query(
-            sensor.db_spec.measurement).aggregate("1h").execute()
-        pass
+    async def get_dataset_from_db(self, sensor: SensorDataSpec, from_date: datetime.datetime = None, to_date: datetime.datetime = None) -> SensorData:
+        from_datetime = from_date if from_date else START_DATETIME
+        to_datetime = to_date if to_date else datetime.datetime.now()
+        query = DBQuery(
+            sensor.db_spec.measurement, from_datetime, to_date if to_date else "now()")
+        query.filter(sensor.db_spec.location.field,
+                     sensor.db_spec.location.value)
+        # TODO: handle multiple measures
+        measure_spec = sensor.db_spec.measures[0]
+        query.filter(measure_spec.filter.field,
+                     measure_spec.filter.value)
+
+        if self.to_resample(from_datetime, to_datetime):
+            query.aggregate(sensor.db_spec.aggregate, "mean")
+
+        content = await redis.get(query.to_string())
+        vectors = []
+        if not content:
+            logger.info(
+                f"Query result not found in cache, getting it from InfluxDB: {query.to_string()}")
+            time, value = db_client.execute(query.to_string())
+            vectors = [
+                Vector(measure="timestamp", values=[
+                    t.strftime("%Y-%m-%d %H:%M:%S") for t in time]),
+                Vector(measure=measure_spec.measure, values=value)
+            ]
+            await redis.set(query.to_string(), json.dumps([vector.model_dump() for vector in vectors]), ex=config.CACHE_SOURCE_EXPIRY)
+        else:
+            vectors = [Vector(**vector_dict)
+                       for vector_dict in json.loads(content)]
+
+        return SensorData(name=sensor.name, vectors=vectors)
+
+    def to_resample(self, from_date: datetime.datetime, to_date: datetime.datetime):
+        difference = to_date - from_date
+        hours_difference = difference.total_seconds() / 3600
+        return hours_difference > config.RESAMPLE_THRESHOLD
 
     def get_file_specs(self, datasets: Datasets, name: str) -> DatasetFile:
         """Get the file specs from the S3 storage

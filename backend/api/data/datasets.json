@@ -319,16 +319,19 @@
     },
     {
       "name": "C1",
-      "file_spec": {
-        "file": "C1.csv",
-        "columns": [
+      "db_spec": {
+        "measurement": "ijinus",
+        "aggregate": "1h",
+        "location": {
+          "field": "ID",
+          "value": "IJA0102-00006283"
+        },
+        "measures": [
           {
-            "name": "Date",
-            "measure": "timestamp",
-            "format": "%d.%m.%y %H:%M"
-          },
-          {
-            "name": "Hauteur d'eau[0] (mm)",
+            "filter": {
+              "field": "_field",
+              "value": "15[0] mm"
+            },
             "measure": "water_level"
           }
         ]
@@ -336,16 +339,19 @@
     },
     {
       "name": "C2",
-      "file_spec": {
-        "file": "C2.csv",
-        "columns": [
+      "db_spec": {
+        "measurement": "ijinus",
+        "aggregate": "1h",
+        "location": {
+          "field": "ID",
+          "value": "IJA0102-00006736"
+        },
+        "measures": [
           {
-            "name": "Date",
-            "measure": "timestamp",
-            "format": "%d.%m.%y %H:%M"
-          },
-          {
-            "name": "Hauteur d'eau[0] (mm)",
+            "filter": {
+              "field": "_field",
+              "value": "15[0] mm"
+            },
             "measure": "water_level"
           }
         ]

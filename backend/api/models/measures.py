@@ -10,11 +10,25 @@ class Column(BaseModel):
 
 class DataFileSpec(BaseModel):
     file: str
+    aggregate: Optional[str] = 'h'
     columns: List[Column]
+
+
+class DBFilter(BaseModel):
+    field: str
+    value: str
+
+
+class DBMeasure(BaseModel):
+    filter: DBFilter
+    measure: str
 
 
 class DataDBSpec(BaseModel):
     measurement: str
+    aggregate: Optional[str] = '1d'
+    location: DBFilter
+    measures: List[DBMeasure]
 
 
 class SensorDataSpec(BaseModel):

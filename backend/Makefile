@@ -14,3 +14,6 @@ redis-up:
 
 redis-stop:
 	docker compose stop redis
+
+redis-down:
+	docker compose down redis
