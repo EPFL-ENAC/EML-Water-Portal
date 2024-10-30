@@ -68,8 +68,10 @@ class MeasuresService:
                 if column.measure == "timestamp":
                     df[column.name] = pd.to_datetime(
                         df[column.name], format=column.format)
+                    df.drop_duplicates(subset=column.name, inplace=True)
                     df.set_index(
                         column.name, drop=False, inplace=True)
+                    df.sort_index(inplace=True)
                 elif df[column.name].dtype == 'object':
                     df[column.name] = df[column.name].str.replace(
                         ',', '.').astype('float')
@@ -79,8 +81,14 @@ class MeasuresService:
             df = df.resample(sensor.file_spec.aggregate).mean()
         else:
             # if the time range is less than a threshold, keep the original data
-            df = df[from_date:to_date]
-            if self.to_resample(from_date, to_date):
+            from_date_range = self.get_nearest_timestamp(df, from_date)
+            to_date_range = self.get_nearest_timestamp(df, to_date)
+            try:
+                df = df[from_date_range:to_date_range]
+            except KeyError:
+                logger.error(
+                    f"Error while filtering the dataset: {sensor.name} {from_date_range} - {to_date_range}")
+            if self.to_resample(from_date_range, to_date_range):
                 df = df.resample(sensor.file_spec.aggregate).mean()
         df = df.replace({np.nan: None})
 
@@ -133,6 +141,15 @@ class MeasuresService:
         difference = to_date - from_date
         hours_difference = difference.total_seconds() / 3600
         return hours_difference > config.RESAMPLE_THRESHOLD
+
+    def get_nearest_timestamp(self, df: pd.DataFrame, timestamp: datetime.datetime):
+        if timestamp in df.index:
+            return timestamp
+        else:
+            # Find the index position of the nearest date
+            idx_pos = df.index.get_indexer([timestamp], method="nearest")[0]
+            nearest_date = df.index[idx_pos]
+            return nearest_date
 
     def get_file_specs(self, datasets: Datasets, name: str) -> DatasetFile:
         """Get the file specs from the S3 storage
