@@ -324,7 +324,7 @@
         "aggregate": "1h",
         "location": {
           "field": "ID",
-          "value": "IJA0102-00006283"
+          "value": "IJA0102-00006736"
         },
         "measures": [
           {
@@ -332,6 +332,20 @@
               "field": "_field",
               "value": "15[0] mm"
             },
+            "measure": "water_level"
+          }
+        ]
+      },
+      "file_spec": {
+        "file": "C1.csv",
+        "columns": [
+          {
+            "name": "Date",
+            "measure": "timestamp",
+            "format": "%d.%m.%y %H:%M"
+          },
+          {
+            "name": "Hauteur d'eau[0] (mm)",
             "measure": "water_level"
           }
         ]
@@ -344,7 +358,7 @@
         "aggregate": "1h",
         "location": {
           "field": "ID",
-          "value": "IJA0102-00006736"
+          "value": "IJA0102-00006283"
         },
         "measures": [
           {
@@ -352,6 +366,20 @@
               "field": "_field",
               "value": "15[0] mm"
             },
+            "measure": "water_level"
+          }
+        ]
+      },
+      "file_spec": {
+        "file": "C2.csv",
+        "columns": [
+          {
+            "name": "Date",
+            "measure": "timestamp",
+            "format": "%d.%m.%y %H:%M"
+          },
+          {
+            "name": "Hauteur d'eau[0] (mm)",
             "measure": "water_level"
           }
         ]

@@ -44,17 +44,25 @@ class MeasuresService:
         datasets = await self.get_datasets()
         for sensor in datasets.sensors:
             if sensor.name == name:
-                if sensor.file_spec:
+                if sensor.db_spec:
+                    try:
+                        return await self.get_dataset_from_db(sensor, from_date, to_date)
+                    except Exception as e:
+                        logger.error(
+                            f"Error while getting dataset from InfluxDB: {e}")
+                        if sensor.file_spec:
+                            logger.warning(
+                                f"Getting dataset from file: {sensor.file_spec.file}")
+                            return await self.get_dataset_from_file(datasets, sensor, from_date, to_date)
+                elif sensor.file_spec:
                     return await self.get_dataset_from_file(datasets, sensor, from_date, to_date)
-                elif sensor.db_spec:
-                    return await self.get_dataset_from_db(sensor, from_date, to_date)
         raise HTTPException(status_code=404,
                             detail="Sensor not found")
 
     async def get_dataset_from_file(self, datasets: Datasets, sensor: SensorDataSpec, from_date: datetime.datetime = None, to_date: datetime.datetime = None) -> SensorData:
         file_specs = self.get_file_specs(
             datasets, sensor.file_spec.file)
-        df = await self.read_dataset_file_concurrently(file_specs)
+        df = await self.read_dataset_file(file_specs)
         for column in sensor.file_spec.columns:
             if column.name in df.columns:
                 if column.measure == "timestamp":
@@ -113,7 +121,8 @@ class MeasuresService:
                     t.strftime("%Y-%m-%d %H:%M:%S") for t in time]),
                 Vector(measure=measure_spec.measure, values=value)
             ]
-            await redis.set(query.to_string(), json.dumps([vector.model_dump() for vector in vectors]), ex=config.CACHE_SOURCE_EXPIRY)
+            await redis.set(query.to_string(), json.dumps(
+                [vector.model_dump() for vector in vectors]), ex=config.CACHE_SOURCE_EXPIRY)
         else:
             vectors = [Vector(**vector_dict)
                        for vector_dict in json.loads(content)]
