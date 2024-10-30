@@ -131,6 +131,20 @@
       </div>
       <div class="col-12 col-md-9">
         <q-toolbar>
+          <template v-for="range in DateRangeOptions" :key="range.value">
+            <q-btn
+              v-if="range.value !== 'custom'"
+              :disable="measuresStore.loading"
+              :label="$t(range.label)"
+              :value="range.value"
+              size="sm"
+              flat
+              no-caps
+              color="grey-6"
+              @click="onDateRangeOption(range.value)"
+            />
+          </template>
+          <q-spinner-dots v-if="measuresStore.loading" color="primary" size="md" class="on-right"/>
           <q-space />
           <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
           <q-slider
@@ -230,7 +244,9 @@ import {
   SensorSpecs,
 } from 'src/utils/options';
 import { Scenario } from 'src/stores/scenarii';
+import { DateRangeOptions } from 'src/utils/options';
 
+const timeseriesStore = useTimeseriesChartsStore();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
@@ -317,4 +333,15 @@ function onToggleSensorLocation(location: string) {
 function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
 }
+
+const onDateRangeOption = (value: string) => {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    // Add one hour to round up to the nearest next hour
+    now.setHours(now.getHours() + 1);
+    const range = Number(value.slice(0, -1));
+    const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
+    const newToDate = now;
+    timeseriesStore.timeRange = [newFromDate, newToDate];
+};
 </script>

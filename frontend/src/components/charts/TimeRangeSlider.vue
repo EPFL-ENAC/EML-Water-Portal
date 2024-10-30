@@ -2,7 +2,20 @@
   <div>
     <div class="slider-container">
       <div class="row">
-        <q-btn round icon="date_range" @click="onShowDateSelector" flat />
+        <q-btn-dropdown
+          v-model="selectedDateRange"
+          flat
+          icon="date_range">
+          <q-list>
+            <template v-for="range in DateRangeOptions" :key="range.value">
+              <q-item clickable v-close-popup @click="onDateRangeOption(range.value)">
+                <q-item-section>
+                  <q-item-label>{{ $t(range.label) }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-list> 
+        </q-btn-dropdown>
         <q-btn
           :class="isDefault ? 'hidden' : ''"
           round
@@ -37,12 +50,14 @@ import TimeRangeDialog from 'src/components/charts/TimeRangeDialog.vue';
 import noUiSlider from 'nouislider';
 import { PipsMode, type API as SliderAPI } from 'nouislider';
 import 'nouislider/dist/nouislider.css';
+import { DateRangeOptions } from 'src/utils/options';
 
 const props = defineProps<{
   step?: number;
   player?: boolean;
 }>();
 
+const selectedDateRange = ref();
 const showDateSelector = ref(false);
 const slider = ref<SliderAPI | null>(null);
 const sliderHTML = ref<HTMLDivElement | null>(null);
@@ -52,6 +67,7 @@ let playInterval: NodeJS.Timeout | undefined;
 const timeseriesStore = useTimeseriesChartsStore();
 
 const defaultStep = 60 * 60 * 1000; //step is hour
+
 
 const updateSlider = () => {
   if (slider.value) {
@@ -245,6 +261,21 @@ const filterPips = (value: number) => {
 
 const onShowDateSelector = () => {
   showDateSelector.value = true;
+};
+
+const onDateRangeOption = (value: string) => {
+  if (value === 'custom') {
+    onShowDateSelector();
+  } else {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    // Add one hour to round up to the nearest next hour
+    now.setHours(now.getHours() + 1);
+    const range = Number(value.slice(0, -1));
+    const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
+    const newToDate = now;
+    timeseriesStore.timeRange = [newFromDate, newToDate];
+  }
 };
 </script>
 <style scoped>

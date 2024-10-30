@@ -1,5 +1,15 @@
 import Gradient from 'javascript-color-gradient';
 
+export const DateRangeOptions = computed(() => {
+  return [
+    { value: '1d', label: 'past_1d' },
+    { value: '2d', label: 'past_2d' },
+    { value: '7d', label: 'past_7d' },
+    { value: '30d', label: 'past_30d' },
+    { value: 'custom', label: 'custom_time_range' },
+  ]
+});
+
 export const MeasureOptions = [
   {
     key: 'water_level',
