@@ -15,7 +15,11 @@ export const useMeasuresStore = defineStore('measures', () => {
 
   watch(() => timeseriesStore.timeRange, async () => {
     const startDateRange = timeseriesStore.timeRange[0];
+    startDateRange.setMinutes(0, 0, 0);
     const endDateRange = timeseriesStore.timeRange[1];
+    endDateRange.setMinutes(0, 0, 0);
+    // Add one hour to round up to the nearest next hour
+    endDateRange.setHours(endDateRange.getHours() + 1);
     // Calculate the time range in hours
     const timeRangeHours = (endDateRange.getTime() - startDateRange.getTime()) / (1000 * 60 * 60);
     if (timeRangeHours < 7 * 24) {
