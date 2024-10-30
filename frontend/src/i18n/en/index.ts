@@ -62,7 +62,7 @@ export default {
   to_date: 'To date',
   parameters: 'Parameters',
   past_1d: 'Past 24 hours',
-  past_2d: 'Past 2 days',
+  past_3d: 'Past 3 days',
   past_7d: 'Past 7 days',
   past_30d: 'Past month',
   custom_time_range: 'Custom',
