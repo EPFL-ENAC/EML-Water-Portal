@@ -76,6 +76,10 @@ class MeasuresService:
                     df[column.name] = df[column.name].str.replace(
                         ',', '.').astype('float')
 
+        # remove columns that are not in the file
+        df = df[[
+            column.name for column in sensor.file_spec.columns if column.name in df.columns]]
+
         if from_date is None or to_date is None:
             # no (or partial) time range defined: sample per hour mean
             df = df.resample(sensor.file_spec.aggregate).mean()
