@@ -29,7 +29,7 @@ class DBFilters(BaseModel):
 
 class DataDBSpec(BaseModel):
     measurement: str
-    aggregate: Optional[str] = '1d'
+    aggregate: Optional[str] = '1h'
     location: DBFilter
     filters: DBFilters
 

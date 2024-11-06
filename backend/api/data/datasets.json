@@ -1,46 +1,6 @@
 {
   "files": [
     {
-      "file": "A1.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "A2.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "A3.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "A4.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "A5.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "A6.csv",
-      "skip": 8,
-      "separator": ";"
-    },
-    {
-      "file": "C1.csv",
-      "skip": 0,
-      "separator": ";"
-    },
-    {
-      "file": "C2.csv",
-      "skip": 0,
-      "separator": ";"
-    },
-    {
       "file": "B.csv",
       "skip": 0,
       "separator": ","

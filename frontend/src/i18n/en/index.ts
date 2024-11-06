@@ -22,6 +22,7 @@ export default {
   },
   about: 'About',
   add_scenario: 'Add scenario',
+  all: 'All',
   apply: 'Apply',
   close: 'Close',
   deep_rooted_trees: 'Deep-rooted trees',

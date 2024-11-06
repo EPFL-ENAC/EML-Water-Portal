@@ -129,6 +129,8 @@ class MeasuresService:
             # transpose long to wide format
             df = pd.DataFrame(
                 {"timestamp": time, "value": value, "measure": measure})
+            # sort by timestamp, measure and value so that the duplicate with non value is kept
+            df = df.sort_values(by=["timestamp", "measure", "value"], key=lambda col: col.isnull())
             df = df.drop_duplicates(subset=["timestamp", "measure"])
             df = df.pivot(index="timestamp", columns="measure", values="value")
             df = df.reset_index()
