@@ -49,272 +49,266 @@
   "sensors": [
     {
       "name": "A1",
-      "file_spec": {
-        "file": "A1.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5590260778401792"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
       "name": "A2",
-      "file_spec": {
-        "file": "A2.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5982192636657664"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
       "name": "A3",
-      "file_spec": {
-        "file": "A3.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5685460447133696"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
       "name": "A4",
-      "file_spec": {
-        "file": "A4.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5377631823724544"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
       "name": "A5",
-      "file_spec": {
-        "file": "A5.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "6278022736248832"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
       "name": "A6",
-      "file_spec": {
-        "file": "A6.csv",
-        "columns": [
-          {
-            "name": "Date Time",
-            "measure": "timestamp",
-            "format": "%Y-%m-%d %H:%M:%S.%f"
-          },
-          {
-            "name": "Temperature (C)",
-            "measure": "water_temperature"
-          },
-          {
-            "name": "Air Temperature (C)",
-            "measure": "air_temperature"
-          },
-          {
-            "name": "Depth (m)",
-            "measure": "depth"
-          },
-          {
-            "name": "Specific Conductivity (µS/cm)",
-            "measure": "electro_conductivity"
-          },
-          {
-            "name": "Turbidity (NTU)",
-            "measure": "turbidity"
-          },
-          {
-            "name": "DO (mg/L)",
-            "measure": "dissolved_oxygen"
-          },
-          {
-            "name": "pH (pH)",
-            "measure": "ph"
-          },
-          {
-            "name": "ORP (mV)",
-            "measure": "oxidation_reduction_potential"
-          }
-        ]
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "6013299219365888"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "depth",
+              "value": "3"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "9"
+            },
+            {
+              "measure": "turbidity",
+              "value": "25"
+            },
+            {
+              "measure": "dissolved_oxygen",
+              "value": "21"
+            },
+            {
+              "measure": "ph",
+              "value": "17"
+            },
+            {
+              "measure": "oxidation_reduction_potential",
+              "value": "19"
+            }
+          ]
+        }
       }
     },
     {
@@ -326,29 +320,15 @@
           "field": "ID",
           "value": "IJA0102-00006736"
         },
-        "measures": [
-          {
-            "filter": {
-              "field": "_field",
+        "filters": {
+          "field": "_field",
+          "measures": [
+            {
+              "measure": "water_level",
               "value": "15[0] mm"
-            },
-            "measure": "water_level"
-          }
-        ]
-      },
-      "file_spec": {
-        "file": "C1.csv",
-        "columns": [
-          {
-            "name": "Date",
-            "measure": "timestamp",
-            "format": "%d.%m.%y %H:%M"
-          },
-          {
-            "name": "Hauteur d'eau[0] (mm)",
-            "measure": "water_level"
-          }
-        ]
+            }
+          ]
+        }
       }
     },
     {
@@ -360,29 +340,15 @@
           "field": "ID",
           "value": "IJA0102-00006283"
         },
-        "measures": [
-          {
-            "filter": {
-              "field": "_field",
+        "filters": {
+          "field": "_field",
+          "measures": [
+            {
+              "measure": "water_level",
               "value": "15[0] mm"
-            },
-            "measure": "water_level"
-          }
-        ]
-      },
-      "file_spec": {
-        "file": "C2.csv",
-        "columns": [
-          {
-            "name": "Date",
-            "measure": "timestamp",
-            "format": "%d.%m.%y %H:%M"
-          },
-          {
-            "name": "Hauteur d'eau[0] (mm)",
-            "measure": "water_level"
-          }
-        ]
+            }
+          ]
+        }
       }
     },
     {

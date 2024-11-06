@@ -20,15 +20,18 @@ class DBFilter(BaseModel):
 
 
 class DBMeasure(BaseModel):
-    filter: DBFilter
     measure: str
+    value: str
 
+class DBFilters(BaseModel):
+    field: str
+    measures: List[DBMeasure]
 
 class DataDBSpec(BaseModel):
     measurement: str
     aggregate: Optional[str] = '1d'
     location: DBFilter
-    measures: List[DBMeasure]
+    filters: DBFilters
 
 
 class SensorDataSpec(BaseModel):

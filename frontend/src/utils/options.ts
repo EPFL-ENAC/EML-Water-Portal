@@ -55,12 +55,6 @@ export const MeasureOptions = [
     unit: 'mV',
     precision: 2,
   },
-  // {
-  //   key: 'air_temperature',
-  //   label: 'Air Temperature',
-  //   unit: '°C',
-  //   precision: 2,
-  // },
 ];
 
 export const SensorSpecs = [
@@ -76,7 +70,6 @@ export const SensorSpecs = [
     measures: [
       'water_temperature',
       'depth',
-      'air_temperature',
       'electro_conductivity',
       'turbidity',
       'dissolved_oxygen',

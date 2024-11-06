@@ -27,7 +27,6 @@ export const useSettingsStore = defineStore('settings', () => {
         ph: true,
         turbidity: true,
         oxidation_reduction_potential: true,
-        air_temperature: true,
       },
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);

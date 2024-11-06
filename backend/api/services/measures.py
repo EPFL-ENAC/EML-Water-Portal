@@ -114,25 +114,32 @@ class MeasuresService:
             sensor.db_spec.measurement, from_datetime, to_date if to_date else "now()")
         query.filter(sensor.db_spec.location.field,
                      sensor.db_spec.location.value)
-        # TODO: handle multiple measures
-        measure_spec = sensor.db_spec.measures[0]
-        query.filter(measure_spec.filter.field,
-                     measure_spec.filter.value)
-
+        # handle multiple measures
+        query.filters(sensor.db_spec.filters)
         if self.to_resample(from_datetime, to_datetime):
             query.aggregate(sensor.db_spec.aggregate, "mean")
+        #query.not_null()
 
         content = await redis.get(query.to_string())
         vectors = []
         if not content:
             logger.info(
                 f"Query result not found in cache, getting it from InfluxDB: {query.to_string()}")
-            time, value = db_client.execute(query.to_string())
+            time, value, measure = db_client.execute(query.to_string(), sensor.db_spec.filters)
+            # transpose long to wide format
+            df = pd.DataFrame(
+                {"timestamp": time, "value": value, "measure": measure})
+            df = df.drop_duplicates(subset=["timestamp", "measure"])
+            df = df.pivot(index="timestamp", columns="measure", values="value")
+            df = df.reset_index()
+            df = df.replace({np.nan: None})
             vectors = [
                 Vector(measure="timestamp", values=[
-                    t.strftime("%Y-%m-%d %H:%M:%S") for t in time]),
-                Vector(measure=measure_spec.measure, values=value)
+                    t.strftime("%Y-%m-%d %H:%M:%S") for t in df['timestamp'].tolist()]),
             ]
+            for column in df.columns:
+                if column != "timestamp":
+                    vectors.append(Vector(measure=column, values=df[column].tolist()))
             await redis.set(query.to_string(), json.dumps(
                 [vector.model_dump() for vector in vectors]), ex=config.CACHE_SOURCE_EXPIRY)
         else:
