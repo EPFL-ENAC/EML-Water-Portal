@@ -6,12 +6,6 @@ class Config(BaseSettings):
 
     PATH_PREFIX: str = "/api"
 
-    # Keycloak
-    KEYCLOAK_REALM: str = "EML"
-    KEYCLOAK_URL: str = "https://enac-it-sso.epfl.ch"
-    KEYCLOAK_API_ID: str
-    KEYCLOAK_API_SECRET: str
-
     REDIS_URL: str = "redis://localhost"
     CACHE_API_EXPIRY: int = 2
     CACHE_SOURCE_EXPIRY: int = 600
