@@ -312,6 +312,26 @@
       }
     },
     {
+      "name": "C3",
+      "db_spec": {
+        "measurement": "ijinus",
+        "aggregate": "1h",
+        "location": {
+          "field": "ID",
+          "value": "IJA0102-00009933"
+        },
+        "filters": {
+          "field": "_field",
+          "measures": [
+            {
+              "measure": "water_level",
+              "value": "22[0]"
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "B1",
       "file_spec": {
         "file": "B.csv",

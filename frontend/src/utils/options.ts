@@ -95,20 +95,9 @@ export const SensorSpecs = [
     title: 'Water level/discharge sensor',
     device: 'Ijinus',
     icon: 'podcasts',
-    locations: ['C1', 'C2'],
-    colors: getSensorFamilyColor('C', 2),
+    locations: ['C1', 'C2','C3'],
+    colors: getSensorFamilyColor('C', 3),
     measures: ['water_level'],
-  },
-  {
-    color: '#fc8449',
-    label: 'D',
-    layer: 'sensors-d',
-    title: 'Water samples to analyse in the lab',
-    device: 'Autosampler ISCO',
-    icon: 'invert_colors',
-    locations: ['D1', 'D2', 'D3', 'D4'],
-    colors: getSensorFamilyColor('D', 4),
-    measures: ['water_samples'],
   },
 ];
 
