@@ -13,7 +13,7 @@ class Config(BaseSettings):
     KEYCLOAK_API_SECRET: str
 
     REDIS_URL: str = "redis://localhost"
-    CACHE_API_EXPIRY: int = 60
+    CACHE_API_EXPIRY: int = 2
     CACHE_SOURCE_EXPIRY: int = 600
     RESAMPLE_THRESHOLD: int = 7 * 24  # sample data when time range is above 7 days
 

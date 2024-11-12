@@ -8,7 +8,7 @@ from api.services.s3 import s3_client
 from fastapi import Depends, Query, APIRouter, HTTPException
 from fastapi.responses import Response
 from api.utils.file_size import size_checker
-from api.auth import require_admin, User
+from api.auth import kc_service, User
 from pydantic import BaseModel
 from api.config import config
 
@@ -56,7 +56,7 @@ async def upload_temp_files(
                status_code=204,
                description="Delete asset present in S3",
                )
-async def delete_file(file_path: str, user: User = Depends(require_admin)):
+async def delete_file(file_path: str, user: User = Depends(kc_service.require_admin())):
     # delete path if it contains /tmp/
     if file_path.startswith(config.S3_PATH_PREFIX):
         await s3_client.delete_file(file_path)
