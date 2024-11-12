@@ -4,7 +4,6 @@ from datetime import datetime
 from api.services.measures import MeasuresService
 from api.models.measures import Datasets, SensorData
 from api.config import config
-#from api.auth import kc_service, User
 
 router = APIRouter()
 
@@ -12,7 +11,6 @@ router = APIRouter()
 @router.get("/datasets", response_model=Datasets)
 # @cache(expire=60)  # Set cache expiry to 60 seconds
 async def get_datasets(
-    # user: User = Depends(kc_service.require_admin()),
 ) -> Datasets:
     """Get all datasets"""
     service = MeasuresService()
@@ -25,7 +23,6 @@ async def get_sensor_dataset(
     name: str,
     start: str = None,
     end: str = None,
-    # user: User = Depends(kc_service.require_admin()),
 ) -> Datasets:
     """Get dataset from sensor name"""
     service = MeasuresService()

@@ -11,7 +11,6 @@ from api.config import config
 from api.cache import redis
 from logging import basicConfig, INFO
 from pydantic import BaseModel
-from api.views.files import router as files_router
 from api.views.measures import router as measures_router
 
 basicConfig(level=INFO)
@@ -51,12 +50,6 @@ class HealthCheck(BaseModel):
 async def get_health(
 ) -> HealthCheck:
     return HealthCheck(status="OK")
-
-app.include_router(
-    files_router,
-    prefix="/files",
-    tags=["Files"],
-)
 
 app.include_router(
     measures_router,
