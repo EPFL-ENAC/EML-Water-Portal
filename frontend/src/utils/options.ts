@@ -52,7 +52,7 @@ export const MeasureOptions = [
   {
     key: 'oxidation_reduction_potential',
     label: 'Oxidation-reduction potential',
-    unit: 'mV',
+    unit: 'V',
     precision: 2,
   },
 ];
