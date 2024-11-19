@@ -29,7 +29,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -37,7 +37,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
@@ -73,7 +73,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -81,7 +81,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
@@ -117,7 +117,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -125,7 +125,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
@@ -161,7 +161,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -169,7 +169,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
@@ -205,7 +205,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -213,7 +213,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
@@ -249,7 +249,7 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "9"
+              "value": "10"
             },
             {
               "measure": "turbidity",
@@ -257,7 +257,7 @@
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "21"
+              "value": "20"
             },
             {
               "measure": "ph",
