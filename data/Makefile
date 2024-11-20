@@ -1,5 +1,6 @@
-version=$(shell date +%FT%H:%M)
+version=dev
 bucket=10208-fcd9acb029f419e6493edf97f4592b96
+path=water-portal/${version}
 
 help:
 	@echo "make cdn              # upload files to s3://${bucket}/water-portal/"
@@ -9,14 +10,14 @@ help:
 
 
 cdn:
-	s3cmd put --recursive --acl-public --guess-mime-type geojson s3://${bucket}/water-portal/${version}/
-	s3cmd put --recursive --acl-public --guess-mime-type timeseries s3://${bucket}/water-portal/${version}/
+	s3cmd put --recursive --acl-public --guess-mime-type geojson s3://${bucket}/${path}/
+	s3cmd put --recursive --acl-public --guess-mime-type timeseries s3://${bucket}/${path}/
 
 ls-cdn:
 	s3cmd ls --acl-public s3://${bucket}/water-portal/
 
 ls:
-	s3cmd ls --acl-public s3://${bucket}/water-portal/${version}/
+	s3cmd ls --acl-public s3://${bucket}/${path}/
 
 sync:
-	s3cmd sync s3://${bucket}/water-portal/${version}/ cdn-local/
+	s3cmd sync s3://${bucket}/${path}/ cdn-local/
