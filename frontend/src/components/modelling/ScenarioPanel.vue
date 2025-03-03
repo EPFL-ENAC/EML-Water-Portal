@@ -11,36 +11,24 @@
     <q-slider
       v-model="selected.tank"
       :min="0"
-      :max="1000"
-      :step="100"
+      :max="500"
+      :step="10"
       debounce="300"
       label
-      marker-labels
+      :marker-labels="tankMarkerLabels"
       @update:model-value="onUpdate"
       class="q-mb-md"
     />
 
-    <div>{{ $t('soil_infiltration') }}</div>
+    <div>{{ $t('roof_to_tank') }}</div>
     <q-slider
-      v-model="selected.soilInfiltration"
-      :min="0"
-      :max="10"
+      v-model="selected.roofToTank"
+      :min="0.1"
+      :max="1"
+      :step="0.1"
       debounce="300"
       label
-      marker-labels
-      @update:model-value="onUpdate"
-      class="q-mb-md"
-    />
-
-    <div>{{ $t('paved_area') }}</div>
-    <q-slider
-      v-model="selected.pavedArea"
-      :min="0"
-      :max="100"
-      debounce="300"
-      label
-      markers
-      :marker-labels="pctMarkerLabels"
+      :marker-labels="rt2tkMarkerLabels"
       @update:model-value="onUpdate"
       class="q-mb-md"
     />
@@ -59,20 +47,18 @@
       </template>
     </div>
 
-    <div>{{ $t('water_reuse') }}</div>
-    <div>
-      <q-checkbox
-        v-model="selected.waterReuseIrrigation"
-        :label="$t('irrigation')"
-        @update:model-value="onUpdate"
-      />
-      <q-checkbox
-        v-model="selected.waterReuseToilet"
-        :label="$t('toilet_flushing')"
-        @update:model-value="onUpdate"
-        class="on-right"
-      />
-    </div>
+    <div>{{ $t('flushing_frequency') }}</div>
+    <q-slider
+      v-model="selected.flushingFrequency"
+      :min="0"
+      :max="5"
+      :step="0.1"
+      debounce="300"
+      label
+      :marker-labels="ffMarkerLabels"
+      @update:model-value="onUpdate"
+      class="q-mb-md"
+    />
   </div>
 </template>
 
@@ -94,11 +80,29 @@ const emit = defineEmits(['update:modelValue']);
 
 const selected = ref({ ...props.modelValue });
 
-const pctMarkerLabels = computed(() => {
+const tankMarkerLabels = computed(() => {
   const obj = {};
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= 5; i++) {
     // eslint-disable-next-line
-    obj[i * 10] = `${i * 10}%`;
+    obj[i * 100] = `${i * 100}`;
+  }
+  return obj;
+});
+
+const rt2tkMarkerLabels = computed(() => {
+  const obj = {};
+  for (let i = 1; i <= 10; i++) {
+    // eslint-disable-next-line
+    obj[i * 0.1] = `${Math.round(i)/ 10}`;
+  }
+  return obj;
+});
+
+const ffMarkerLabels = computed(() => {
+  const obj = {};
+  for (let i = 0; i <= 5; i++) {
+    // eslint-disable-next-line
+    obj[i] = `${i}`;
   }
   return obj;
 });

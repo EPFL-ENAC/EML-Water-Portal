@@ -4,11 +4,9 @@ export interface Scenario {
   name: string; // unique
   watershed: string; // station name/id
   tank: number; // volume
-  soilInfiltration: number; // rate
-  pavedArea: number; // percentage
+  roofToTank: number; // fraction
   vegetation: string;
-  waterReuseIrrigation: boolean;
-  waterReuseToilet: boolean;
+  flushingFrequency: number; // per hour
 }
 
 export const useScenariiStore = defineStore(
@@ -24,12 +22,10 @@ export const useScenariiStore = defineStore(
       return {
         watershed: name,
         name: name,
-        tank: 0,
-        soilInfiltration: 0,
-        pavedArea: 100,
+        tank: 10,
+        roofToTank: 0.5,
         vegetation: 'none',
-        waterReuseIrrigation: false,
-        waterReuseToilet: false,
+        flushingFrequency: 2,
       } as Scenario;
     }
 
