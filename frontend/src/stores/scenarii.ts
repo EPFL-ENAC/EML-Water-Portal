@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import { api } from 'src/boot/api';
+import { ScenarioData } from 'src/models';
 
 export interface Scenario {
   name: string; // unique
@@ -7,6 +9,7 @@ export interface Scenario {
   roofToTank: number; // fraction
   vegetation: string;
   flushingFrequency: number; // per hour
+  data?: ScenarioData;
 }
 
 export const useScenariiStore = defineStore(
@@ -20,8 +23,8 @@ export const useScenariiStore = defineStore(
 
     function makeScenario(name: string) {
       return {
-        watershed: name,
         name: name,
+        watershed: name,
         tank: 10,
         roofToTank: 0.5,
         vegetation: 'none',
@@ -40,6 +43,7 @@ export const useScenariiStore = defineStore(
         scenarii.value[idx] = scenario;
       }
       // TODO add computed line to charts
+      updateScenariiData();
     }
 
     function removeScenario(scenario: Scenario) {
@@ -48,6 +52,28 @@ export const useScenariiStore = defineStore(
           !(s.watershed === scenario.watershed && s.name === scenario.name),
       );
       // TODO remove computed line from charts
+    }
+
+    async function updateScenariiData() {
+      const promises: Promise<void>[] = [];
+      scenarii.value.forEach((scenario) => {
+        if (scenario.data) {
+          return;
+        }
+        promises.push(api.get('scenarii/', {
+          params: {
+            watershed: scenario.watershed,
+            tank: scenario.tank,
+            roofToTank: scenario.roofToTank,
+            vegetation: scenario.vegetation,
+            flushingFrequency: scenario.flushingFrequency,
+          },
+        }).then((response) => {
+          scenario.data = response.data;
+          console.log('scenario.data', scenario.data);
+        }));
+      });
+      return Promise.all(promises);
     }
 
     return {

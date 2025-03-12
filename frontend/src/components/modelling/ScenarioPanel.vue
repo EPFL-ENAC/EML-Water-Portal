@@ -33,20 +33,6 @@
       class="q-mb-md"
     />
 
-    <div>{{ $t('vegetation') }}</div>
-    <div class="q-gutter-sm q-mb-md">
-      <template v-for="vege in VegetationIcons" :key="vege.value">
-        <q-radio
-          v-model="selected.vegetation"
-          :checked-icon="vege.name"
-          :unchecked-icon="vege.name"
-          :val="vege.value"
-          :title="$t(vege.value)"
-          @update:model-value="onUpdate"
-        />
-      </template>
-    </div>
-
     <div>{{ $t('flushing_frequency') }}</div>
     <q-slider
       v-model="selected.flushingFrequency"
@@ -60,6 +46,20 @@
       class="q-mb-md"
     />
   </div>
+
+    <div>{{ $t('vegetation') }}</div>
+    <div class="q-gutter-sm q-mb-md">
+      <template v-for="vege in VegetationIcons" :key="vege.value">
+        <q-radio
+          v-model="selected.vegetation"
+          :checked-icon="vege.name"
+          :unchecked-icon="vege.name"
+          :val="vege.value"
+          :title="$t(vege.value)"
+          @update:model-value="onUpdate"
+        />
+      </template>
+    </div>
 </template>
 
 <script lang="ts">

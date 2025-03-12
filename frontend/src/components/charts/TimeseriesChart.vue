@@ -6,7 +6,7 @@
     >
       {{ $t('water_samples_data_on_demand') }}
     </div>
-    <div v-else-if="sensors.length === 0" class="text-center text-help q-pa-sm">
+    <div v-else-if="sensors.length === 0 && scenarii.length === 0" class="text-center text-help q-pa-sm">
       {{ $t('no_sensor_selected', { measure: props.label }) }}
     </div>
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
@@ -100,6 +100,7 @@ const onDataZoomChange = (e: ECElementEvent) => {
 };
 
 const measuresStore = useMeasuresStore();
+const scenariiStore = useScenariiStore();
 const timeseriesStore = useTimeseriesChartsStore();
 const filtersStore = useFiltersStore();
 
@@ -123,6 +124,19 @@ const sensors = computed(() => {
       })
     : [];
   return rval;
+});
+
+const scenarii = computed(() => {
+  return scenariiStore.scenarii
+    ? scenariiStore.scenarii.filter((scenario) => {
+        return (
+          scenario.data &&
+          scenario.data.vectors.find(
+            (col) => col.measure === props.measure && col.values,
+          )
+        );
+      })
+    : [];
 });
 
 // watch height and heightUnit
@@ -252,6 +266,13 @@ function onPointerSelection() {
 
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
+watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
+  if (newData.length !== oldData.length) {
+    console.log('scenario changed', newData, oldData);
+    updateOptions();
+  }
+});
+
 function onRangeChange() {
   if (
     chart.value !== null &&
@@ -294,10 +315,39 @@ function makeSeries(): SeriesOption[] {
   });
 }
 
+function makeScenariiSeries(): SeriesOption[] {
+  return scenarii.value
+    .filter(scenario => scenario.data)
+    .map((scenario) => {
+      const timestamps = scenario.data.vectors.find(
+        (col) => col.measure === 'timestamp',
+      )?.values;
+      const outflowTotal = scenario.data.vectors.find(
+        (col) => col.measure === 'outflow_total',
+      )?.values;
+
+      return {
+        name: scenario.name,
+        showSymbol: false,
+        animation: false,
+        large: true,
+        symbol: 'none',
+        symbolSize: 0,
+        colorBy: 'series',
+        type: 'line',
+        lineStyle: {
+          type: 'dotted',
+        },
+        color: getScenarioColor(scenario.name, scenario.watershed),
+        data: timestamps?.map((t, index) => [t, outflowTotal ? outflowTotal[index] : 0]),
+      };
+    });
+}
+
 function buildOptions() {
   loading.value = true;
 
-  const series = makeSeries();
+  const series = [...makeSeries(), ...makeScenariiSeries()];
 
   option.value = {
     renderer: 'canvas',
@@ -389,7 +439,7 @@ function updateOptions() {
     return;
   }
   chart.value.setOption({
-    series: makeSeries()
+    series: [...makeSeries(), ...makeScenariiSeries()],
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
@@ -404,6 +454,12 @@ function getSensorColor(name: string) {
     }
   }
   return '#000000';
+}
+
+function getScenarioColor(name: string, watershed: string) {
+    const index = scenarii.value.findIndex(scenario => scenario.name === name);
+    const grayValue = Math.floor((index / scenarii.value.length) * 255);
+    return `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
 }
 </script>
 <style>

@@ -55,6 +55,12 @@ export const MeasureOptions = [
     unit: 'V',
     precision: 2,
   },
+  {
+    key: 'outflow_total',
+    label: 'Computed flow',
+    unit: 'm³/s',
+    precision: 2,
+  }
 ];
 
 export const SensorSpecs = [
