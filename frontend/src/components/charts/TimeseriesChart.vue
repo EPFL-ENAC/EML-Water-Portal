@@ -268,9 +268,7 @@ function onPointerSelection() {
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
 watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
-  if (newData.length !== oldData.length || newData.some((d, i) => d !== oldData[i])) {
-    updateOptions();
-  }
+  updateOptions();
 });
 
 function onRangeChange() {

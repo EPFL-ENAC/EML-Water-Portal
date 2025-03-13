@@ -1,6 +1,11 @@
 {
   "files": [
     {
+      "file": "10_years.csv",
+      "skip": 0,
+      "separator": ";"
+    },
+    {
       "file": "B.csv",
       "skip": 0,
       "separator": ","
@@ -329,6 +334,23 @@
             }
           ]
         }
+      }
+    },
+    {
+      "name": "10_years",
+      "file_spec": {
+        "file": "10_years.csv",
+        "columns": [
+          {
+            "name": "timestamp",
+            "measure": "timestamp",
+            "format": "%Y-%m-%d %H:%M"
+          },
+          {
+            "name": "water_level",
+            "measure": "water_level"
+          }
+        ]
       }
     },
     {

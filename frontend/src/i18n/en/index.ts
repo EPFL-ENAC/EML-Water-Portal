@@ -55,6 +55,7 @@ export default {
   source_code: 'Source Code',
   tank_volume: 'Tank volume (m³)',
   toilet_flushing: 'Toilet flushing',
+  use_historical_data: 'Use historical data',
   vegetation: 'Vegetation',
   water_reuse: 'Water reuse',
   measures: 'Measures',

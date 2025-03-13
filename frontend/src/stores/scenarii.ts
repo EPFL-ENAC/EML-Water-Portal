@@ -9,6 +9,7 @@ export interface Scenario {
   roofToTank: number; // fraction
   vegetation: string;
   flushingFrequency: number; // per hour
+  useHistoricalData?: boolean;
   data?: ScenarioData;
 }
 
@@ -29,6 +30,7 @@ export const useScenariiStore = defineStore(
         roofToTank: 0.5,
         vegetation: 'none',
         flushingFrequency: 2,
+        useHistoricalData: false,
       } as Scenario;
     }
 
@@ -61,6 +63,7 @@ export const useScenariiStore = defineStore(
           roofToTank: scenario.roofToTank,
           vegetation: scenario.vegetation,
           flushingFrequency: scenario.flushingFrequency,
+          useHistoricalData: scenario.useHistoricalData,
         },
       }).then((response) => {
         scenario.data = response.data;

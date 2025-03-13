@@ -47,7 +47,7 @@
     />
   </div>
 
-    <div>{{ $t('vegetation') }}</div>
+  <div>{{ $t('vegetation') }}</div>
     <div class="q-gutter-sm q-mb-md">
       <template v-for="vege in VegetationIcons" :key="vege.value">
         <q-radio
@@ -60,6 +60,13 @@
         />
       </template>
     </div>
+
+  <q-checkbox
+    v-model="selected.useHistoricalData"
+    :label="$t('use_historical_data')"
+    @update:model-value="onUpdate"
+    class="q-mb-md"
+  />
 </template>
 
 <script lang="ts">

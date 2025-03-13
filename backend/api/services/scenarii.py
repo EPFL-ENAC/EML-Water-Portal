@@ -14,9 +14,10 @@ class ScenariiService:
         name: str,
         watershed: str,
         tank: float,
-        roofToTank: float,
+        roof_to_tank: float,
         vegetation: str,
-        flushingFrequency: float,
+        flushing_frequency: float,
+        use_historical_data: bool = False,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
     ) -> ScenarioData:
@@ -42,7 +43,7 @@ class ScenariiService:
 
         measures_service = MeasuresService()
         sensor_data = await measures_service.get_dataset(
-            "C3", from_date, to_date
+            "10_years" if use_historical_data else "C3", from_date, to_date
         )
         vector_map = {
             vector.measure: vector.values for vector in sensor_data.vectors
@@ -72,9 +73,9 @@ class ScenariiService:
         model_params = uhm.ModelParameters(
             area_params=uhm.area_params[watershed],
             Vmax=tank,
-            frac_rt2tk=roofToTank,
+            frac_rt2tk=roof_to_tank,
             vegetation=uhm.vegetation_params[vegetation],
-            flushingFrequency=flushingFrequency,
+            flushingFrequency=flushing_frequency,
             resolution=time_resolution_minutes,
         )
         input_data = uhm.preprocess(input_data)

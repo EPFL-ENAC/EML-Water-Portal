@@ -18,6 +18,7 @@ async def get_scenario_data(
     roofToTank: float,
     vegetation: str,
     flushingFrequency: float,
+    useHistoricalData: bool = False,
     start: str | None = None,
     end: str | None = None,
 ) -> ScenarioData:
@@ -39,9 +40,10 @@ async def get_scenario_data(
         name=name,
         watershed=watershed,
         tank=tank,
-        roofToTank=roofToTank,
+        roof_to_tank=roofToTank,
         vegetation=vegetation,
-        flushingFrequency=flushingFrequency,
+        flushing_frequency=flushingFrequency,
+        use_historical_data=useHistoricalData,
         from_date=from_date,
         to_date=to_date,
     )
