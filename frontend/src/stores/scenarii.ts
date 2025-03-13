@@ -63,12 +63,20 @@ export const useScenariiStore = defineStore(
           roofToTank: scenario.roofToTank,
           vegetation: scenario.vegetation,
           flushingFrequency: scenario.flushingFrequency,
-          useHistoricalData: scenario.useHistoricalData,
+          // useHistoricalData: scenario.useHistoricalData,
         },
       }).then((response) => {
         scenario.data = response.data;
         console.log('scenario.data', scenario.data);
       });
+    }
+
+    async function updateScenariiData() {
+      const promises: Promise<void>[] = [];
+      scenarii.value.forEach((scenario) => {
+        promises.push(updateScenarioData(scenario));
+      });
+      return Promise.all(promises);
     }
 
     return {

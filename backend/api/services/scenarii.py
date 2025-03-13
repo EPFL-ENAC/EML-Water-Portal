@@ -43,7 +43,10 @@ class ScenariiService:
 
         measures_service = MeasuresService()
         sensor_data = await measures_service.get_dataset(
-            "10_years" if use_historical_data else "C3", from_date, to_date
+            "10_years" if use_historical_data else "C3",
+            from_date,
+            to_date,
+            False,
         )
         vector_map = {
             vector.measure: vector.values for vector in sensor_data.vectors
@@ -54,7 +57,7 @@ class ScenariiService:
                 "time": pd.to_datetime(
                     vector_map["timestamp"], format="%Y-%m-%d %H:%M:%S"
                 ),
-                "precp": vector_map["water_level"],
+                "precp": vector_map["precipitation"],
             }
         )
         input_data["precp"] = input_data["precp"].astype(float)
@@ -64,6 +67,7 @@ class ScenariiService:
             input_data.index.diff().mean().total_seconds() / 60
         )
         time_resolution_minutes = max(1, time_resolution_minutes)
+
         # Resample to ensure constant time resolution
         input_data = input_data.resample(
             f"{time_resolution_minutes}min"
@@ -88,7 +92,9 @@ class ScenariiService:
                     t.strftime("%Y-%m-%d %H:%M:%S") for t in output_data.index
                 ],
             ),
-            Vector(measure="water_level", values=input_data["precp"].tolist()),
+            Vector(
+                measure="precipitation", values=input_data["precp"].tolist()
+            ),
             Vector(
                 measure="outflow_total", values=output_data["Qout"].tolist()
             ),

@@ -11,7 +11,7 @@
     <q-slider
       v-model="selected.tank"
       :min="0"
-      :max="500"
+      :max="5000"
       :step="10"
       debounce="300"
       label
@@ -37,7 +37,7 @@
     <q-slider
       v-model="selected.flushingFrequency"
       :min="0"
-      :max="5"
+      :max="50"
       :step="0.1"
       debounce="300"
       label
@@ -91,7 +91,7 @@ const tankMarkerLabels = computed(() => {
   const obj = {};
   for (let i = 0; i <= 5; i++) {
     // eslint-disable-next-line
-    obj[i * 100] = `${i * 100}`;
+    obj[i * 1000] = `${i * 1000}`;
   }
   return obj;
 });
@@ -109,7 +109,7 @@ const ffMarkerLabels = computed(() => {
   const obj = {};
   for (let i = 0; i <= 5; i++) {
     // eslint-disable-next-line
-    obj[i] = `${i}`;
+    obj[i * 10] = `${i * 10}`;
   }
   return obj;
 });

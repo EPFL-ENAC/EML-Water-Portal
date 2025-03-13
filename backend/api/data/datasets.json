@@ -329,7 +329,7 @@
           "field": "_field",
           "measures": [
             {
-              "measure": "water_level",
+              "measure": "precipitation",
               "value": "22[0]"
             }
           ]
@@ -347,8 +347,8 @@
             "format": "%Y-%m-%d %H:%M"
           },
           {
-            "name": "water_level",
-            "measure": "water_level"
+            "name": "precipitation",
+            "measure": "precipitation"
           }
         ]
       }
