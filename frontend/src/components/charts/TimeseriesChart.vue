@@ -268,7 +268,6 @@ watch(() => timeseriesStore.timeRange, onRangeChange);
 
 watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
   if (newData.length !== oldData.length) {
-    console.log('scenario changed', newData, oldData);
     updateOptions();
   }
 });
@@ -327,7 +326,7 @@ function makeScenariiSeries(): SeriesOption[] {
       )?.values;
 
       return {
-        name: scenario.name,
+        name: `${scenario.name} (${scenario.watershed})`,
         showSymbol: false,
         animation: false,
         large: true,
@@ -457,9 +456,11 @@ function getSensorColor(name: string) {
 }
 
 function getScenarioColor(name: string, watershed: string) {
-    const index = scenarii.value.findIndex(scenario => scenario.name === name);
-    const grayValue = Math.floor((index / scenarii.value.length) * 255);
-    return `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+    // return a random LCh color of fixed lightness
+    const lightness = 60;
+    const chroma = 80;
+    const hue = Math.random() * 360;
+    return `lch(${lightness} ${chroma} ${hue})`;
 }
 </script>
 <style>

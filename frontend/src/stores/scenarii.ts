@@ -70,7 +70,6 @@ export const useScenariiStore = defineStore(
           },
         }).then((response) => {
           scenario.data = response.data;
-          console.log('scenario.data', scenario.data);
         }));
       });
       return Promise.all(promises);

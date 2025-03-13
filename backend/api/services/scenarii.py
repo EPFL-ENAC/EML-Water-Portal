@@ -58,9 +58,14 @@ class ScenariiService:
         input_data["precp"] = input_data["precp"].astype(float)
         input_data = input_data.fillna(0)
         input_data = input_data.set_index("time", drop=True)
-        # If needed, resample from hourly to 5 minutes, keeping constant values
-        # during the hour
-        input_data = input_data.resample("5min").ffill()
+        time_resolution_minutes = round(
+            input_data.index.diff().mean().total_seconds() / 60
+        )
+        time_resolution_minutes = max(1, time_resolution_minutes)
+        # Resample to ensure constant time resolution
+        input_data = input_data.resample(
+            f"{time_resolution_minutes}min"
+        ).mean()
         input_data["time"] = input_data.index
 
         model_params = uhm.ModelParameters(
