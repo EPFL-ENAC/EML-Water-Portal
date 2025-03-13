@@ -37,9 +37,10 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { ScenarioData, SensorData } from 'src/models';
 import { SensorSpecs } from 'src/utils/options';
 import ECharts from 'vue-echarts';
-import type { EChartsOption, ECElementEvent, SeriesOption } from 'echarts';
+import type { EChartsOption, ECElementEvent, SeriesOption, LineStyleOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -267,7 +268,7 @@ function onPointerSelection() {
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
 watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
-  if (newData.length !== oldData.length) {
+  if (newData.length !== oldData.length || newData.some((d, i) => d !== oldData[i])) {
     updateOptions();
   }
 });
@@ -287,30 +288,35 @@ function onRangeChange() {
   }
 }
 
-function makeSeries(): SeriesOption[] {
+function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string, lineStyle: LineStyleOption): SeriesOption {
+  const timestamps = s.vectors.find(
+    (col) => col.measure === 'timestamp',
+  )?.values;
+  const column = s.vectors.find((col) => col.measure === props.measure);
+  let colData = column?.values;
+  if (colData && props.precision) {
+    colData = colData.map((d) =>
+      typeof d === 'number' ? d.toFixed(props.precision) : d,
+    );
+  }
+  return {
+    name: s.name,
+    showSymbol: false,
+    animation: false,
+    large: true,
+    symbol: 'none',
+    symbolSize: 0,
+    colorBy: 'series',
+    type: 'line',
+    lineStyle: lineStyle,
+    color: getColor(s.name),
+    data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
+  };
+}
+
+function makeSensorsSeries(): SeriesOption[] {
   return sensors.value.map((s, index) => {
-    const timestamps = s.vectors.find(
-      (col) => col.measure === 'timestamp',
-    )?.values;
-    const column = s.vectors.find((col) => col.measure === props.measure);
-    let colData = column?.values;
-    if (colData && props.precision) {
-      colData = colData.map((d) =>
-        typeof d === 'number' ? d.toFixed(props.precision) : d,
-      );
-    }
-    return {
-      name: s.name,
-      showSymbol: false,
-      animation: false,
-      large: true,
-      symbol: 'none',
-      symbolSize: 0,
-      colorBy: 'series',
-      type: 'line',
-      color: getSensorColor(s.name),
-      data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
-    };
+    return makeSerie(s, getSensorColor, {});
   });
 }
 
@@ -318,35 +324,14 @@ function makeScenariiSeries(): SeriesOption[] {
   return scenarii.value
     .filter(scenario => scenario.data)
     .map((scenario) => {
-      const timestamps = scenario.data.vectors.find(
-        (col) => col.measure === 'timestamp',
-      )?.values;
-      const outflowTotal = scenario.data.vectors.find(
-        (col) => col.measure === 'outflow_total',
-      )?.values;
-
-      return {
-        name: `${scenario.name} (${scenario.watershed})`,
-        showSymbol: false,
-        animation: false,
-        large: true,
-        symbol: 'none',
-        symbolSize: 0,
-        colorBy: 'series',
-        type: 'line',
-        lineStyle: {
-          type: 'dotted',
-        },
-        color: getScenarioColor(scenario.name, scenario.watershed),
-        data: timestamps?.map((t, index) => [t, outflowTotal ? outflowTotal[index] : 0]),
-      };
+      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dotted' });
     });
 }
 
 function buildOptions() {
   loading.value = true;
 
-  const series = [...makeSeries(), ...makeScenariiSeries()];
+  const series = [...makeSensorsSeries(), ...makeScenariiSeries()];
 
   option.value = {
     renderer: 'canvas',
@@ -438,7 +423,7 @@ function updateOptions() {
     return;
   }
   chart.value.setOption({
-    series: [...makeSeries(), ...makeScenariiSeries()],
+    series: [...makeSensorsSeries(), ...makeScenariiSeries()],
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
@@ -455,12 +440,12 @@ function getSensorColor(name: string) {
   return '#000000';
 }
 
-function getScenarioColor(name: string, watershed: string) {
-    // return a random LCh color of fixed lightness
-    const lightness = 60;
-    const chroma = 80;
-    const hue = Math.random() * 360;
-    return `lch(${lightness} ${chroma} ${hue})`;
+function getScenarioColor(name: string) {
+  const hash = (s: string): number => [...s].reduce((h, c) => Math.imul(31, h) + c.charCodeAt(0) | 0, 0);
+  const lightness = 50;
+  const chroma = 50;
+  const hue = hash(name) % 360;
+  return `lch(${lightness} ${chroma} ${hue})`;
 }
 </script>
 <style>

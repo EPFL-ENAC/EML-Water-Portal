@@ -11,6 +11,7 @@ from fastapi.exceptions import HTTPException
 class ScenariiService:
     async def get_scenario_data(
         self,
+        name: str,
         watershed: str,
         tank: float,
         roofToTank: float,
@@ -74,6 +75,7 @@ class ScenariiService:
             frac_rt2tk=roofToTank,
             vegetation=uhm.vegetation_params[vegetation],
             flushingFrequency=flushingFrequency,
+            resolution=time_resolution_minutes,
         )
         input_data = uhm.preprocess(input_data)
         output_data = uhm.model_st(input_data, model_params)
@@ -90,16 +92,16 @@ class ScenariiService:
                 measure="outflow_total", values=output_data["Qout"].tolist()
             ),
             Vector(
-                measure="outflow_road", values=output_data["Qroad"].tolist()
-            ),
-            Vector(
-                measure="outflow_roof", values=output_data["Qroof"].tolist()
-            ),
-            Vector(
-                measure="outflow_soil", values=output_data["Qsoil"].tolist()
-            ),
-            Vector(
                 measure="outflow_tank", values=output_data["Qtank"].tolist()
             ),
+            Vector(
+                measure="soil_moisture",
+                values=output_data["soil_mois"].tolist(),
+            ),
+            Vector(
+                measure="volume_tank", values=output_data["v_tank"].tolist()
+            ),
         ]
-        return ScenarioData(vectors=output_vectors)
+        return ScenarioData(
+            name=f"{name} ({watershed})", vectors=output_vectors
+        )

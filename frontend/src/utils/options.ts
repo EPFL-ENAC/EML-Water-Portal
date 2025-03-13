@@ -57,10 +57,28 @@ export const MeasureOptions = [
   },
   {
     key: 'outflow_total',
-    label: 'Computed flow',
+    label: 'Total flow',
     unit: 'm³/s',
     precision: 2,
-  }
+  },
+  {
+    key: 'outflow_tank',
+    label: 'Flow from tanks',
+    unit: 'm³/s',
+    precision: 2,
+  },
+  {
+    key: 'soil_moisture',
+    label: 'Soil moisture level',
+    unit: '-',
+    precision: 2,
+  },
+  {
+    key: 'volume_tank',
+    label: 'Tank volume',
+    unit: 'm³/s',
+    precision: 2,
+  },
 ];
 
 export const SensorSpecs = [

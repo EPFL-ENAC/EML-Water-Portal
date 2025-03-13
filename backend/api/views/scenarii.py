@@ -12,6 +12,7 @@ router = APIRouter()
 @router.get("/")
 @cache(expire=config.CACHE_API_EXPIRY)
 async def get_scenario_data(
+    name: str,
     watershed: str,
     tank: float,
     roofToTank: float,
@@ -35,6 +36,7 @@ async def get_scenario_data(
     )
 
     return await service.get_scenario_data(
+        name=name,
         watershed=watershed,
         tank=tank,
         roofToTank=roofToTank,

@@ -62,6 +62,7 @@ export const useScenariiStore = defineStore(
         }
         promises.push(api.get('scenarii/', {
           params: {
+            name: scenario.name,
             watershed: scenario.watershed,
             tank: scenario.tank,
             roofToTank: scenario.roofToTank,
@@ -70,6 +71,7 @@ export const useScenariiStore = defineStore(
           },
         }).then((response) => {
           scenario.data = response.data;
+          console.log('scenario.data', scenario.data);
         }));
       });
       return Promise.all(promises);
