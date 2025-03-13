@@ -42,8 +42,7 @@ export const useScenariiStore = defineStore(
       } else {
         scenarii.value[idx] = scenario;
       }
-      // TODO add computed line to charts
-      updateScenariiData();
+      updateScenarioData(scenario);
     }
 
     function removeScenario(scenario: Scenario) {
@@ -51,30 +50,22 @@ export const useScenariiStore = defineStore(
         (s) =>
           !(s.watershed === scenario.watershed && s.name === scenario.name),
       );
-      // TODO remove computed line from charts
     }
 
-    async function updateScenariiData() {
-      const promises: Promise<void>[] = [];
-      scenarii.value.forEach((scenario) => {
-        if (scenario.data) {
-          return;
-        }
-        promises.push(api.get('scenarii/', {
-          params: {
-            name: scenario.name,
-            watershed: scenario.watershed,
-            tank: scenario.tank,
-            roofToTank: scenario.roofToTank,
-            vegetation: scenario.vegetation,
-            flushingFrequency: scenario.flushingFrequency,
-          },
-        }).then((response) => {
-          scenario.data = response.data;
-          console.log('scenario.data', scenario.data);
-        }));
+    async function updateScenarioData(scenario: Scenario) {
+      api.get('scenarii/', {
+        params: {
+          name: scenario.name,
+          watershed: scenario.watershed,
+          tank: scenario.tank,
+          roofToTank: scenario.roofToTank,
+          vegetation: scenario.vegetation,
+          flushingFrequency: scenario.flushingFrequency,
+        },
+      }).then((response) => {
+        scenario.data = response.data;
+        console.log('scenario.data', scenario.data);
       });
-      return Promise.all(promises);
     }
 
     return {

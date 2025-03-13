@@ -444,7 +444,7 @@ function getScenarioColor(name: string) {
   const hash = (s: string): number => [...s].reduce((h, c) => Math.imul(31, h) + c.charCodeAt(0) | 0, 0);
   const lightness = 50;
   const chroma = 50;
-  const hue = hash(name) % 360;
+  const hue = Math.abs(hash(name)) % 360;
   return `lch(${lightness} ${chroma} ${hue})`;
 }
 </script>
