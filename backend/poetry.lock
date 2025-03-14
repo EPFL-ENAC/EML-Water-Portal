@@ -508,8 +508,8 @@ test = ["pytest (>=8.3.4)", "pytest-cov (>=6.0.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/EPFL-ENAC/EML-urban-hydro-model.git"
-reference = "v0.1.1"
-resolved_reference = "ced09473b218de310b8347592cd819e7b2cc438c"
+reference = "v0.1.2"
+resolved_reference = "04f92df95858d569a419f32c40a420e0205c944d"
 
 [[package]]
 name = "enacit4r-files"
@@ -2111,4 +2111,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "965e3ccc71337fd1f4b793b5d4ef2252aea80605d700629f14d0c213e7257d44"
+content-hash = "cafd824b0c32e18b7d44709c7e730d2cb630ec27579d5736e980370275e6b52b"
