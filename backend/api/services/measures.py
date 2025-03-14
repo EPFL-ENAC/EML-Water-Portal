@@ -225,6 +225,9 @@ class MeasuresService:
                 Vector(**vector_dict) for vector_dict in json.loads(content)
             ]
 
+        if sensor.name == "C2":
+            vectors.append(await self.compute_flow(vectors))
+
         return SensorData(name=sensor.name, vectors=vectors)
 
     def to_resample(
@@ -297,3 +300,20 @@ class MeasuresService:
         )
 
         return df
+
+    async def compute_flow(self, vectors: list[Vector]) -> Vector:
+        vector_map = {vector.measure: vector.values for vector in vectors}
+        water_level = np.array(vector_map["water_level"])
+
+        Qp = np.zeros_like(water_level)
+        D = 1.25  # pipe diameter [m]
+        ks = 4 / 1000  # roughness coefficient [m]
+        phi = 2 * np.pi - 2 * np.arccos((water_level / 1000 - D / 2) / (D / 2))
+        Ap = (phi - np.sin(phi)) / (2 * np.pi)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            Rp = 1 - np.sin(phi) / phi
+        Qp = np.nan_to_num(
+            (1 + np.log(Rp) / np.log(3.7 * D / ks)) * Ap * Rp**0.5, nan=0
+        )
+
+        return Vector(measure="outflow_total", values=Qp.tolist())

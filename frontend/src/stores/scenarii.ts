@@ -85,6 +85,7 @@ export const useScenariiStore = defineStore(
       makeScenario,
       applyScenario,
       removeScenario,
+      updateScenariiData,
     };
   },
   { persist: true },
