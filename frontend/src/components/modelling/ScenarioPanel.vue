@@ -100,7 +100,7 @@ const rt2tkMarkerLabels = computed(() => {
   const obj = {};
   for (let i = 1; i <= 10; i++) {
     // eslint-disable-next-line
-    obj[i * 0.1] = `${Math.round(i)/ 10}`;
+    obj[i * 0.1] = `${(i / 10).toFixed(1)}`;
   }
   return obj;
 });
