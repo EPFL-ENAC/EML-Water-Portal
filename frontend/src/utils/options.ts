@@ -12,6 +12,12 @@ export const DateRangeOptions = computed(() => {
 
 export const MeasureOptions = [
   {
+    key: 'precipitation',
+    label: 'Precipitation',
+    unit: 'mm/5min',
+    precision: 0,
+  },
+  {
     key: 'water_level',
     label: 'Water level',
     unit: 'mm',
@@ -53,6 +59,30 @@ export const MeasureOptions = [
     key: 'oxidation_reduction_potential',
     label: 'Oxidation-reduction potential',
     unit: 'V',
+    precision: 2,
+  },
+  {
+    key: 'outflow_total',
+    label: 'Total flow',
+    unit: 'm³/s',
+    precision: 2,
+  },
+  {
+    key: 'outflow_tank',
+    label: 'Flow from tanks',
+    unit: 'm³/s',
+    precision: 2,
+  },
+  {
+    key: 'soil_moisture',
+    label: 'Soil moisture level',
+    unit: '-',
+    precision: 2,
+  },
+  {
+    key: 'volume_tank',
+    label: 'Tank volume',
+    unit: 'm³',
     precision: 2,
   },
 ];
@@ -97,7 +127,7 @@ export const SensorSpecs = [
     icon: 'podcasts',
     locations: ['C1', 'C2','C3'],
     colors: getSensorFamilyColor('C', 3),
-    measures: ['water_level'],
+    measures: ['precipitation', 'water_level'],
   },
 ];
 

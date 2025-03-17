@@ -26,11 +26,11 @@
                     <q-badge color="grey-7">{{
                       `${$t('tank_volume')}: ${scenario.tank}`
                     }}</q-badge>
-                    <q-badge color="grey-7" class="on-right">{{
-                      `${$t('soil_infiltration')}: ${scenario.soilInfiltration}`
+                    <q-badge color="grey-7">{{
+                      `${$t('roof_to_tank')}: ${scenario.roofToTank}`
                     }}</q-badge>
-                    <q-badge color="grey-7" class="on-right">{{
-                      `${$t('paved_area')}: ${scenario.pavedArea}`
+                    <q-badge color="grey-7">{{
+                      `${$t('flushing_frequency')}: ${scenario.flushingFrequency}`
                     }}</q-badge>
                   </div>
                   <div>
@@ -38,17 +38,6 @@
                       :name="getVegetationIcon(scenario.vegetation)"
                       :title="$t(scenario.vegetation)"
                     />
-                    <span
-                      v-if="
-                        scenario.waterReuseIrrigation ||
-                        scenario.waterReuseToilet
-                      "
-                      color="grey-6"
-                      class="on-right text-caption"
-                      >{{
-                        `${$t('water_reuse')}: ${scenario.waterReuseIrrigation ? $t('irrigation') : ''} ${scenario.waterReuseToilet ? $t('toilet_flushing') : ''}`
-                      }}</span
-                    >
                   </div>
                 </q-item-section>
                 <q-item-section side>

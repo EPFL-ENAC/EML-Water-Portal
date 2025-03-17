@@ -37,3 +37,8 @@ export interface SensorData {
   name: string;
   vectors: Vector[];
 }
+
+export interface ScenarioData {
+  name: string;
+  vectors: Vector[];
+}

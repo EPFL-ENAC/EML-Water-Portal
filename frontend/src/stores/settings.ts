@@ -18,6 +18,7 @@ export const useSettingsStore = defineStore('settings', () => {
       intro_shown: false,
       theme: 'light',
       measuresVisible: {
+        precipitation: true,
         water_level: true,
         water_temperature: true,
         depth: true,
@@ -27,6 +28,10 @@ export const useSettingsStore = defineStore('settings', () => {
         ph: true,
         turbidity: true,
         oxidation_reduction_potential: true,
+        outflow_total: true,
+        outflow_tank: true,
+        soil_moisture: true,
+        volume_tank: true,
       },
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);

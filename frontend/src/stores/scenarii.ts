@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
+import { api } from 'src/boot/api';
+import { ScenarioData } from 'src/models';
 
 export interface Scenario {
   name: string; // unique
   watershed: string; // station name/id
   tank: number; // volume
-  soilInfiltration: number; // rate
-  pavedArea: number; // percentage
+  roofToTank: number; // fraction
   vegetation: string;
-  waterReuseIrrigation: boolean;
-  waterReuseToilet: boolean;
+  flushingFrequency: number; // per hour
+  useHistoricalData?: boolean;
+  data?: ScenarioData;
 }
 
 export const useScenariiStore = defineStore(
@@ -22,14 +24,13 @@ export const useScenariiStore = defineStore(
 
     function makeScenario(name: string) {
       return {
-        watershed: name,
         name: name,
-        tank: 0,
-        soilInfiltration: 0,
-        pavedArea: 100,
+        watershed: name,
+        tank: 10,
+        roofToTank: 0.5,
         vegetation: 'none',
-        waterReuseIrrigation: false,
-        waterReuseToilet: false,
+        flushingFrequency: 2,
+        useHistoricalData: false,
       } as Scenario;
     }
 
@@ -43,7 +44,7 @@ export const useScenariiStore = defineStore(
       } else {
         scenarii.value[idx] = scenario;
       }
-      // TODO add computed line to charts
+      updateScenarioData(scenario);
     }
 
     function removeScenario(scenario: Scenario) {
@@ -51,7 +52,31 @@ export const useScenariiStore = defineStore(
         (s) =>
           !(s.watershed === scenario.watershed && s.name === scenario.name),
       );
-      // TODO remove computed line from charts
+    }
+
+    async function updateScenarioData(scenario: Scenario) {
+      api.get('scenarii/', {
+        params: {
+          name: scenario.name,
+          watershed: scenario.watershed,
+          tank: scenario.tank,
+          roofToTank: scenario.roofToTank,
+          vegetation: scenario.vegetation,
+          flushingFrequency: scenario.flushingFrequency,
+          // useHistoricalData: scenario.useHistoricalData,
+        },
+      }).then((response) => {
+        scenario.data = response.data;
+        console.log('scenario.data', scenario.data);
+      });
+    }
+
+    async function updateScenariiData() {
+      const promises: Promise<void>[] = [];
+      scenarii.value.forEach((scenario) => {
+        promises.push(updateScenarioData(scenario));
+      });
+      return Promise.all(promises);
     }
 
     return {
@@ -60,6 +85,7 @@ export const useScenariiStore = defineStore(
       makeScenario,
       applyScenario,
       removeScenario,
+      updateScenariiData,
     };
   },
   { persist: true },

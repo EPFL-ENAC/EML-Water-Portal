@@ -6,7 +6,7 @@
     >
       {{ $t('water_samples_data_on_demand') }}
     </div>
-    <div v-else-if="sensors.length === 0" class="text-center text-help q-pa-sm">
+    <div v-else-if="sensors.length === 0 && scenarii.length === 0" class="text-center text-help q-pa-sm">
       {{ $t('no_sensor_selected', { measure: props.label }) }}
     </div>
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
@@ -37,9 +37,10 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { ScenarioData, SensorData } from 'src/models';
 import { SensorSpecs } from 'src/utils/options';
 import ECharts from 'vue-echarts';
-import type { EChartsOption, ECElementEvent, SeriesOption } from 'echarts';
+import type { EChartsOption, ECElementEvent, SeriesOption, LineStyleOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -100,6 +101,7 @@ const onDataZoomChange = (e: ECElementEvent) => {
 };
 
 const measuresStore = useMeasuresStore();
+const scenariiStore = useScenariiStore();
 const timeseriesStore = useTimeseriesChartsStore();
 const filtersStore = useFiltersStore();
 
@@ -123,6 +125,19 @@ const sensors = computed(() => {
       })
     : [];
   return rval;
+});
+
+const scenarii = computed(() => {
+  return scenariiStore.scenarii
+    ? scenariiStore.scenarii.filter((scenario) => {
+        return (
+          scenario.data &&
+          scenario.data.vectors.find(
+            (col) => col.measure === props.measure && col.values,
+          )
+        );
+      })
+    : [];
 });
 
 // watch height and heightUnit
@@ -252,6 +267,10 @@ function onPointerSelection() {
 
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
+watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
+  updateOptions();
+});
+
 function onRangeChange() {
   if (
     chart.value !== null &&
@@ -267,37 +286,50 @@ function onRangeChange() {
   }
 }
 
-function makeSeries(): SeriesOption[] {
+function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string, lineStyle: LineStyleOption): SeriesOption {
+  const timestamps = s.vectors.find(
+    (col) => col.measure === 'timestamp',
+  )?.values;
+  const column = s.vectors.find((col) => col.measure === props.measure);
+  let colData = column?.values;
+  if (colData && props.precision) {
+    colData = colData.map((d) =>
+      typeof d === 'number' ? d.toFixed(props.precision) : d,
+    );
+  }
+  return {
+    name: s.name,
+    showSymbol: false,
+    animation: false,
+    large: true,
+    symbol: 'none',
+    symbolSize: 0,
+    colorBy: 'series',
+    type: 'line',
+    lineStyle: lineStyle,
+    color: getColor(s.name),
+    data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
+  };
+}
+
+function makeSensorsSeries(): SeriesOption[] {
   return sensors.value.map((s, index) => {
-    const timestamps = s.vectors.find(
-      (col) => col.measure === 'timestamp',
-    )?.values;
-    const column = s.vectors.find((col) => col.measure === props.measure);
-    let colData = column?.values;
-    if (colData && props.precision) {
-      colData = colData.map((d) =>
-        typeof d === 'number' ? d.toFixed(props.precision) : d,
-      );
-    }
-    return {
-      name: s.name,
-      showSymbol: false,
-      animation: false,
-      large: true,
-      symbol: 'none',
-      symbolSize: 0,
-      colorBy: 'series',
-      type: 'line',
-      color: getSensorColor(s.name),
-      data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
-    };
+    return makeSerie(s, getSensorColor, {});
   });
+}
+
+function makeScenariiSeries(): SeriesOption[] {
+  return scenarii.value
+    .filter(scenario => scenario.data)
+    .map((scenario) => {
+      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dotted' });
+    });
 }
 
 function buildOptions() {
   loading.value = true;
 
-  const series = makeSeries();
+  const series = [...makeSensorsSeries(), ...makeScenariiSeries()];
 
   option.value = {
     renderer: 'canvas',
@@ -389,7 +421,7 @@ function updateOptions() {
     return;
   }
   chart.value.setOption({
-    series: makeSeries()
+    series: [...makeSensorsSeries(), ...makeScenariiSeries()],
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
@@ -404,6 +436,14 @@ function getSensorColor(name: string) {
     }
   }
   return '#000000';
+}
+
+function getScenarioColor(name: string) {
+  const hash = (s: string): number => [...s].reduce((h, c) => Math.imul(31, h) + c.charCodeAt(0) | 0, 0);
+  const lightness = 50;
+  const chroma = 50;
+  const hue = Math.abs(hash(name)) % 360;
+  return `lch(${lightness} ${chroma} ${hue})`;
 }
 </script>
 <style>
