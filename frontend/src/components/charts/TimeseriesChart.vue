@@ -439,8 +439,8 @@ function getSensorColor(name: string) {
 }
 
 function getScenarioColor(name: string) {
-  const hash = (s: string): number => [...s].reduce((h, c) => Math.imul(31, h) + c.charCodeAt(0) | 0, 0);
-  const lightness = 50;
+  const hash = (s: string): number => s.split('').reduce((h, c) => (h ^ c.charCodeAt(0)) * 16777619 >>> 0, 2166136261);
+  const lightness = 60;
   const chroma = 50;
   const hue = Math.abs(hash(name)) % 360;
   return `lch(${lightness} ${chroma} ${hue})`;
