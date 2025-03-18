@@ -93,9 +93,6 @@ class ScenariiService:
                 ],
             ),
             Vector(
-                measure="precipitation", values=input_data["precp"].tolist()
-            ),
-            Vector(
                 measure="outflow_total", values=output_data["Qout"].tolist()
             ),
             Vector(
