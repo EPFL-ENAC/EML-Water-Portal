@@ -9,7 +9,7 @@ export const VegetationIcons = [
   },
   {
     name: 'local_florist',
-    value: 'schrubs',
+    value: 'shrubs',
   },
   {
     name: 'park',

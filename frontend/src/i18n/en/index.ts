@@ -47,7 +47,7 @@ export default {
   scenario: 'Scenario',
   scenarios_for_watershed: 'Scenarios for watershed: {name}',
   scenarios: 'Scenarios',
-  schrubs: 'Schrubs',
+  shrubs: 'Shrubs',
   sensors_to_filter_info:
     'Click sensors on the map to filter measures. Click again to deselect.',
   sensors: 'Sensors',
