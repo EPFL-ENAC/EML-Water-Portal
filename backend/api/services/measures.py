@@ -303,7 +303,8 @@ class MeasuresService:
 
     async def compute_flow(self, vectors: list[Vector]) -> Vector:
         vector_map = {vector.measure: vector.values for vector in vectors}
-        water_level = np.array(vector_map["water_level"])
+        water_level = np.array(vector_map["water_level"], dtype=float)
+        water_level = np.nan_to_num(water_level, 0)
 
         Qp = np.zeros_like(water_level)
         D = 1.25  # pipe diameter [m]
