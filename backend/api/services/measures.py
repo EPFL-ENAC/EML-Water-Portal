@@ -308,9 +308,8 @@ class MeasuresService:
         for vector in vectors:
             if vector.measure == "precipitation":
                 vector.values = [
-                    float(v) / 5
+                    (float(v) / 5 if v is not None else None)
                     for v in vector.values
-                    if isinstance(v, int) or isinstance(v, float)
                 ]
 
     async def compute_flow(self, vectors: list[Vector]) -> Vector:
