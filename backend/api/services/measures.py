@@ -225,6 +225,9 @@ class MeasuresService:
                 Vector(**vector_dict) for vector_dict in json.loads(content)
             ]
 
+        if sensor.name == "C3":
+            await self.rescale_precipitation(vectors)
+
         if sensor.name == "C2":
             vectors.append(await self.compute_flow(vectors))
 
@@ -300,6 +303,15 @@ class MeasuresService:
         )
 
         return df
+
+    async def rescale_precipitation(self, vectors: list[Vector]) -> None:
+        for vector in vectors:
+            if vector.measure == "precipitation":
+                vector.values = [
+                    float(v) / 5
+                    for v in vector.values
+                    if isinstance(v, int) or isinstance(v, float)
+                ]
 
     async def compute_flow(self, vectors: list[Vector]) -> Vector:
         vector_map = {vector.measure: vector.values for vector in vectors}
