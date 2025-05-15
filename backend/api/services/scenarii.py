@@ -79,7 +79,7 @@ class ScenariiService:
             Vmax=tank,
             frac_rt2tk=roof_to_tank,
             vegetation=uhm.vegetation_params[vegetation],
-            flushingFrequency=flushing_frequency,
+            flushing_frequency=flushing_frequency,
             resolution=time_resolution_minutes,
         )
         input_data = uhm.preprocess(input_data)
