@@ -33,6 +33,7 @@ export default {
   irrigation: 'Irrigation',
   layers: 'Layers',
   legends: 'Legends',
+  line_color: 'Line color',
   name: 'Name',
   none: 'None',
   water_samples_data_on_demand: 'Water samples data are available on demand',

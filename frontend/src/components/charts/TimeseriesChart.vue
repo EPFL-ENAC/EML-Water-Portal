@@ -286,7 +286,7 @@ function onRangeChange() {
   }
 }
 
-function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string, lineStyle: LineStyleOption): SeriesOption {
+function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) => string, lineStyle: LineStyleOption): SeriesOption {
   const timestamps = s.vectors.find(
     (col) => col.measure === 'timestamp',
   )?.values;
@@ -307,7 +307,7 @@ function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string
     colorBy: 'series',
     type: 'line',
     lineStyle: lineStyle,
-    color: getColor(s.name),
+    color: getColor(s),
     data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
   };
 }
@@ -425,7 +425,8 @@ function updateOptions() {
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
-function getSensorColor(name: string) {
+function getSensorColor(sensorData: SensorData) {
+  const name = sensorData.name;
   const sensor = SensorSpecs.find((ss) => ss.locations.includes(name));
   if (!sensor) {
     return '#000000';
@@ -438,16 +439,8 @@ function getSensorColor(name: string) {
   return '#000000';
 }
 
-let scenarioColors: Record<string, string> = {};
-
-function getScenarioColor(name: string) {
-  // Paul Tol's "muted" color scheme
-  const colors = ['#333288', '#88ccee', '#44aa99', '#117733', '#999933', '#ddcc77', '#cc6677', '#882255', '#aa4499', '#dddddd'];
-  if (!scenarioColors[name]) {
-    const index = Object.keys(scenarioColors).length % colors.length;
-    scenarioColors[name] = colors[index];
-  }
-  return scenarioColors[name];
+function getScenarioColor(scenarioData: ScenarioData) {
+  return scenarioData.lineColor;
 }
 </script>
 <style>

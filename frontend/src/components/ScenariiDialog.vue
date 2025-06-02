@@ -21,7 +21,15 @@
             >
               <q-item>
                 <q-item-section>
-                  <q-item-label>{{ scenario.name }}</q-item-label>
+                  <q-item-label>
+                    <q-icon
+                      name="circle"
+                      :style="{ color: scenario.lineColor, position: 'relative', top: '-0.1rem' }"
+                      class="q-mr-xs"
+                      size="1rem"
+                    />
+                    {{ scenario.name }}
+                  </q-item-label>
                   <div class="q-mt-sm">
                     <q-badge color="grey-7">{{
                       `${$t('tank_volume')}: ${scenario.tank}`

@@ -48,18 +48,46 @@
   </div>
 
   <div>{{ $t('vegetation') }}</div>
-    <div class="q-gutter-sm q-mb-md">
-      <template v-for="vege in VegetationIcons" :key="vege.value">
-        <q-radio
-          v-model="selected.vegetation"
-          :checked-icon="vege.name"
-          :unchecked-icon="vege.name"
-          :val="vege.value"
-          :title="$t(vege.value)"
-          @update:model-value="onUpdate"
-        />
-      </template>
-    </div>
+  <div class="q-gutter-sm q-mb-md">
+    <template v-for="vege in VegetationIcons" :key="vege.value">
+      <q-radio
+        v-model="selected.vegetation"
+        :checked-icon="vege.name"
+        :unchecked-icon="vege.name"
+        :val="vege.value"
+        :title="$t(vege.value)"
+        @update:model-value="onUpdate"
+      />
+    </template>
+  </div>
+
+  <div>{{ $t('line_color') }}</div>
+  <q-input
+    v-model="selected.lineColor"
+    filled
+    dense
+    readonly
+    @update:model-value="onUpdate"
+  >
+    <template v-slot:prepend>
+      <q-icon
+      name="circle"
+      :style="{ color: selected.lineColor }"
+      size="1.2rem"
+    />
+    </template>
+    <template v-slot:append>
+      <q-icon name="colorize" class="cursor-pointer">
+        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+          <q-color
+            v-model="selected.lineColor"
+            :palette="colors"
+            @update:model-value="onUpdate"
+          />
+        </q-popup-proxy>
+      </q-icon>
+    </template>
+  </q-input>
 </template>
 
 <script lang="ts">
@@ -68,7 +96,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Scenario } from 'src/stores/scenarii';
+import { Scenario, colors } from 'src/stores/scenarii';
 import { VegetationIcons } from 'src/utils/icons';
 
 interface Props {
