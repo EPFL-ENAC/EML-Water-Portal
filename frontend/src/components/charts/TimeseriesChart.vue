@@ -322,7 +322,7 @@ function makeScenariiSeries(): SeriesOption[] {
   return scenarii.value
     .filter(scenario => scenario.data)
     .map((scenario) => {
-      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dotted' });
+      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dashed' });
     });
 }
 
@@ -438,12 +438,16 @@ function getSensorColor(name: string) {
   return '#000000';
 }
 
+let scenarioColors: Record<string, string> = {};
+
 function getScenarioColor(name: string) {
-  const hash = (s: string): number => s.split('').reduce((h, c) => (h ^ c.charCodeAt(0)) * 16777619 >>> 0, 2166136261);
-  const lightness = 60;
-  const chroma = 50;
-  const hue = Math.abs(hash(name)) % 360;
-  return `lch(${lightness} ${chroma} ${hue})`;
+  // Paul Tol's "muted" color scheme
+  const colors = ['#333288', '#88ccee', '#44aa99', '#117733', '#999933', '#ddcc77', '#cc6677', '#882255', '#aa4499', '#dddddd'];
+  if (!scenarioColors[name]) {
+    const index = Object.keys(scenarioColors).length % colors.length;
+    scenarioColors[name] = colors[index];
+  }
+  return scenarioColors[name];
 }
 </script>
 <style>
