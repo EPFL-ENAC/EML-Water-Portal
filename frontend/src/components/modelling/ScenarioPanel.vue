@@ -60,13 +60,6 @@
         />
       </template>
     </div>
-
-  <q-checkbox
-    v-model="selected.useHistoricalData"
-    :label="$t('use_historical_data')"
-    @update:model-value="onUpdate"
-    class="q-mb-md"
-  />
 </template>
 
 <script lang="ts">
