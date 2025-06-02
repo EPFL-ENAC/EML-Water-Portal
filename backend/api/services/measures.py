@@ -328,4 +328,7 @@ class MeasuresService:
             (1 + np.log(Rp) / np.log(3.7 * D / ks)) * Ap * Rp**0.5, nan=0
         )
 
+        # Convert flow from m³/s to L/s
+        Qp = Qp * 1000
+
         return Vector(measure="outflow_total", values=Qp.tolist())
