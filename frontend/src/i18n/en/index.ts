@@ -65,6 +65,8 @@ export default {
   from_date: 'From date',
   to_date: 'To date',
   parameters: 'Parameters',
+  parameters_measured: 'Measured',
+  parameters_scenario: 'Scenario',
   past_1d: 'Past 24 hours',
   past_3d: 'Past 3 days',
   past_7d: 'Past 7 days',

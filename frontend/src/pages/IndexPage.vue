@@ -55,51 +55,56 @@
           </div>
         </q-card>
         <q-list>
-          <q-item-label header class="text-h6">{{
+          <q-item-label header class="text-h5">{{
             $t('parameters')
           }}</q-item-label>
-          <q-list separator dense>
-            <q-item
-              v-ripple
-              v-for="measure in MeasureOptions"
-              :key="measure.key"
-            >
-              <q-item-section>
-                <div class="row">
-                  <q-checkbox
-                    v-model="measuresVisible[measure.key]"
-                    :disable="measuresStore.loading"
-                    :label="measure.label"
-                  />
-                  <template
-                    v-for="spec in getSensorSpec(measure.key)"
-                    :key="spec.label"
-                  >
-                    <q-icon
-                      name="circle"
-                      :style="`color: ${spec.color};`"
-                      :title="`${spec.label}: ${spec.title}`"
-                      class="on-right"
-                      style="margin-top: 14px"
+          <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
+            <q-item-label header class="text-h6">{{
+              $t(category)
+            }}</q-item-label>
+            <q-list separator dense>
+              <q-item
+                v-ripple
+                v-for="measure in MeasureOptions.filter((m) => m.is_scenario_measure === (category === 'parameters_scenario'))"
+                :key="measure.key"
+              >
+                <q-item-section>
+                  <div class="row">
+                    <q-checkbox
+                      v-model="measuresVisible[measure.key]"
+                      :disable="measuresStore.loading"
+                      :label="measure.label"
                     />
-                  </template>
-                  <q-btn
-                    v-if="measuresVisible[measure.key]"
-                    :disable="measuresStore.loading"
-                    icon="fullscreen"
-                    color="secondary"
-                    flat
-                    dense
-                    rounded
-                    size="sm"
-                    @click="onShowMeasure(measure.key)"
-                    class="on-right"
-                  />
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-          <q-item-label header class="text-h6 q-pb-none">{{
+                    <template
+                      v-for="spec in getSensorSpec(measure.key)"
+                      :key="spec.label"
+                    >
+                      <q-icon
+                        name="circle"
+                        :style="`color: ${spec.color};`"
+                        :title="`${spec.label}: ${spec.title}`"
+                        class="on-right"
+                        style="margin-top: 14px"
+                      />
+                    </template>
+                    <q-btn
+                      v-if="measuresVisible[measure.key]"
+                      :disable="measuresStore.loading"
+                      icon="fullscreen"
+                      color="secondary"
+                      flat
+                      dense
+                      rounded
+                      size="sm"
+                      @click="onShowMeasure(measure.key)"
+                      class="on-right"
+                    />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+          <q-item-label header class="text-h5 q-pb-none">{{
             $t('time_range')
           }}</q-item-label>
           <q-item>
@@ -107,7 +112,7 @@
               <time-range-slider player class="q-ml-md q-mr-md" />
             </div>
           </q-item>
-          <q-item-label header class="text-h6 q-pb-none">
+          <q-item-label header class="text-h5 q-pb-none">
             <span>{{ $t('scenarios') }}</span>
           </q-item-label>
           <q-item>
@@ -222,7 +227,7 @@
     <q-dialog v-if="measureSelected" v-model="showMeasure" maximized>
       <q-card>
         <q-bar class="bg-white q-ma-md">
-          <div class="text-h6">
+          <div class="text-h5">
             {{ MeasureOptions.find((m) => m.key === measureSelected)?.label }}
           </div>
           <q-space />
