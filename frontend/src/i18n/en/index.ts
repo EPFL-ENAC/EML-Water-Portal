@@ -24,6 +24,7 @@ export default {
   add_scenario: 'Add scenario',
   all: 'All',
   apply: 'Apply',
+  cancel: 'Cancel',
   close: 'Close',
   deep_rooted_trees: 'Deep-rooted trees',
   flushing_frequency: 'Tank flushing frequency (per hour)',

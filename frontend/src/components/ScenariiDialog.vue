@@ -89,7 +89,6 @@
     <scenario-dialog
       v-model="showScenario"
       :scenario="selectedScenario"
-      @apply="onApply"
       @remove="onRemove"
     />
   </q-dialog>

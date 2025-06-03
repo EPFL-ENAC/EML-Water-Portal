@@ -122,11 +122,16 @@
                 @remove="onRemoveScenario(scenario)"
                 size="sm"
               >
+                <q-icon
+                  name="circle"
+                  :style="{ color: scenario.lineColor, position: 'relative', left: '-0.3rem' }"
+                  size="0.9rem"
+                />
                 {{ `${scenario.watershed}: ${scenario.name}` }}
               </q-chip>
             </div>
           </q-item>
-    
+
         </q-list>
       </div>
       <div class="col-12 col-md-9">

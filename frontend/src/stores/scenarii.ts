@@ -78,7 +78,7 @@ export const useScenariiStore = defineStore(
       }).then((response) => {
         scenario.data = response.data;
         scenario.data.lineColor = scenario.lineColor;
-        console.log('scenario.data', scenario.data);
+        // console.log('scenario.data', scenario.data);
       });
     }
 
