@@ -65,7 +65,7 @@
             <q-list separator dense>
               <q-item
                 v-ripple
-                v-for="measure in MeasureOptions.filter((m) => m.is_scenario_measure === (category === 'parameters_scenario'))"
+                v-for="measure in measuresFiltered(category)"
                 :key="measure.key"
               >
                 <q-item-section>
@@ -200,24 +200,35 @@
             </template>
           </q-btn-toggle>
         </q-toolbar>
-        <div class="row">
-          <template v-for="measure in MeasureOptions" :key="measure.key">
-            <div v-show="measuresVisible[measure.key]" :class="colsClass">
-              <q-card square bordered flat>
-                <q-card-section>
-                  <timeseries-chart
-                    :measure="measure.key"
-                    :label="measure.label"
-                    :unit="measure.unit"
-                    :precision="measure.precision"
-                    :height="chartHeight"
-                    stacked
-                  />
-                </q-card-section>
-              </q-card>
-            </div>
-          </template>
-        </div>
+        <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
+          <q-item-label header class="text-h6">{{
+            $t(category)
+          }}</q-item-label>
+          <div v-if="measuresFiltered(category).some((measure) => measuresVisible[measure.key])" class="row">
+            <template
+              v-for="measure in measuresFiltered(category)"
+              :key="measure.key"
+            >
+              <div v-show="measuresVisible[measure.key]" :class="colsClass">
+                <q-card square bordered flat>
+                  <q-card-section>
+                    <timeseries-chart
+                      :measure="measure.key"
+                      :label="measure.label"
+                      :unit="measure.unit"
+                      :precision="measure.precision"
+                      :height="chartHeight"
+                      stacked
+                    />
+                  </q-card-section>
+                </q-card>
+              </div>
+            </template>
+          </div>
+          <div v-else class="text-help q-ml-md">
+            {{ $t('no_measure_selected') }}
+          </div>
+        </template>
       </div>
     </div>
 
@@ -315,6 +326,10 @@ watch(
 );
 
 watch(() => measuresVisible.value, onMeasureVisibilityChange, { deep: true });
+
+const measuresFiltered = (category: string) => {
+  return MeasureOptions.filter((m) => m.is_scenario_measure === (category === 'parameters_scenario'));
+};
 
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {

@@ -61,6 +61,7 @@ export default {
   vegetation: 'Vegetation',
   water_reuse: 'Water reuse',
   measures: 'Measures',
+  no_measure_selected: 'No measure selected',
   time_range: 'Time range',
   from_date: 'From date',
   to_date: 'To date',
