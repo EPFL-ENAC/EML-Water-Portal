@@ -19,13 +19,19 @@
                 <q-btn-dropdown
                   v-if="sensor.label !== 'D'"
                   size="14px"
-                  :label="`Sensors ${sensor.label}`"
-                  :title="sensor.title"
+                  :label="$t('sensors_label', { name: sensor.label })"
+                  :title="`${sensor.label}: ${getLabel(locale, sensor.title)}`"
                   no-caps
+                  stretch
                   class="text-grey-3"
                   :style="`background-color: ${sensor.color};`"
                 >
                   <q-list>
+                    <q-item dense class="text-caption">
+                      <q-item-section>
+                        {{ getLabel(locale, sensor.title) }}
+                      </q-item-section>
+                    </q-item>
                     <q-item dense class="q-pa-none">
                       <q-item-section class="q-pa-none">
                         <q-btn-group flat spread>
@@ -82,7 +88,7 @@
                       <q-icon
                         name="circle"
                         :style="`color: ${spec.color};`"
-                        :title="`${spec.label}: ${spec.title}`"
+                        :title="`${spec.label}: ${getLabel(locale, spec.title)}`"
                         class="on-right"
                         style="margin-top: 14px"
                       />
@@ -275,7 +281,9 @@ import {
 } from 'src/utils/options';
 import { Scenario } from 'src/stores/scenarii';
 import { DateRangeOptions } from 'src/utils/options';
+import { getLabel } from 'src/utils/misc';
 
+const { locale } = useI18n();
 const timeseriesStore = useTimeseriesChartsStore();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
