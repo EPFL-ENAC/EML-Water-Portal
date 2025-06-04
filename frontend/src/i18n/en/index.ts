@@ -53,6 +53,7 @@ export default {
   sensors_to_filter_info:
     'Click sensors on the map to filter measures. Click again to deselect.',
   sensors: 'Sensors',
+  sensors_label: 'Sensors {name}',
   shallow_rooted_trees: 'Shallow-rooted trees',
   source_code: 'Source Code',
   tank_volume: 'Tank volume (m³)',
