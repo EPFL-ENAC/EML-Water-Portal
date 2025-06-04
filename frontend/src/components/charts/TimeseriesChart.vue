@@ -286,7 +286,7 @@ function onRangeChange() {
   }
 }
 
-function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string, lineStyle: LineStyleOption): SeriesOption {
+function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) => string, lineStyle: LineStyleOption): SeriesOption {
   const timestamps = s.vectors.find(
     (col) => col.measure === 'timestamp',
   )?.values;
@@ -307,7 +307,7 @@ function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string
     colorBy: 'series',
     type: 'line',
     lineStyle: lineStyle,
-    color: getColor(s.name),
+    color: getColor(s),
     data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
   };
 }
@@ -322,7 +322,7 @@ function makeScenariiSeries(): SeriesOption[] {
   return scenarii.value
     .filter(scenario => scenario.data)
     .map((scenario) => {
-      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dotted' });
+      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dashed' });
     });
 }
 
@@ -425,7 +425,8 @@ function updateOptions() {
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
-function getSensorColor(name: string) {
+function getSensorColor(sensorData: SensorData) {
+  const name = sensorData.name;
   const sensor = SensorSpecs.find((ss) => ss.locations.includes(name));
   if (!sensor) {
     return '#000000';
@@ -438,12 +439,8 @@ function getSensorColor(name: string) {
   return '#000000';
 }
 
-function getScenarioColor(name: string) {
-  const hash = (s: string): number => s.split('').reduce((h, c) => (h ^ c.charCodeAt(0)) * 16777619 >>> 0, 2166136261);
-  const lightness = 60;
-  const chroma = 50;
-  const hue = Math.abs(hash(name)) % 360;
-  return `lch(${lightness} ${chroma} ${hue})`;
+function getScenarioColor(scenarioData: ScenarioData) {
+  return scenarioData.lineColor;
 }
 </script>
 <style>

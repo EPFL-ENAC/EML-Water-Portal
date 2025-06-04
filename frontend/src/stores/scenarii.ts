@@ -9,17 +9,26 @@ export interface Scenario {
   roofToTank: number; // fraction
   vegetation: string;
   flushingFrequency: number; // per hour
+  lineColor: string;
   useHistoricalData?: boolean;
   data?: ScenarioData;
 }
+
+export const colors = ['#333288', '#88ccee', '#44aa99', '#117733', '#999933', '#ddcc77', '#cc6677', '#882255', '#aa4499', '#dddddd'];
 
 export const useScenariiStore = defineStore(
   'scenarii',
   () => {
     const scenarii = ref<Scenario[]>([]);
+    // Paul Tol's "muted" color scheme
 
     function reset() {
       // TODO reset scenario
+    }
+
+    function getNewScenarioColor(): string {
+      const index = scenarii.value.length % colors.length;
+      return colors[index];
     }
 
     function makeScenario(name: string) {
@@ -30,6 +39,7 @@ export const useScenariiStore = defineStore(
         roofToTank: 0.5,
         vegetation: 'none',
         flushingFrequency: 2,
+        lineColor: getNewScenarioColor(),
         useHistoricalData: false,
       } as Scenario;
     }
@@ -67,7 +77,8 @@ export const useScenariiStore = defineStore(
         },
       }).then((response) => {
         scenario.data = response.data;
-        console.log('scenario.data', scenario.data);
+        scenario.data.lineColor = scenario.lineColor;
+        // console.log('scenario.data', scenario.data);
       });
     }
 

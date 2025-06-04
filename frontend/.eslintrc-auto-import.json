@@ -98,6 +98,7 @@
     "useMeasuresStore": true,
     "useTimeseriesChartsStore": true,
     "useModelsStore": true,
-    "useScenariiStore": true
+    "useScenariiStore": true,
+    "colors": true
   }
 }
