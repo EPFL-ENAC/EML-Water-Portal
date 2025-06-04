@@ -8,12 +8,19 @@ declare module '@vue/runtime-core' {
   }
 }
 
+interface CustomWindow extends Window {
+  env: {
+    CDN_FOLDER: string
+    API_URL: string
+    API_PATH: string
+  }
+}
+
+const appEnv = (window as unknown as CustomWindow).env
+
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch/';
-
-const fileStoreUrl = `${cdnUrl}water-portal/${process.env.CDN_FOLDER}`;
-
-const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
-
+const fileStoreUrl = `${cdnUrl}water-portal/${appEnv.CDN_FOLDER}`;
+const baseUrl = `${appEnv.API_URL}${appEnv.API_PATH}`
 const api = axios.create({
   baseURL: baseUrl,
 });
