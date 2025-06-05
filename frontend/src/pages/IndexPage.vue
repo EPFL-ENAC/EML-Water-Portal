@@ -110,14 +110,6 @@
               </q-item>
             </q-list>
           </template>
-          <q-item-label header class="text-h5 q-pb-none">{{
-            $t('time_range')
-          }}</q-item-label>
-          <q-item>
-            <div class="full-width q-mb-xl">
-              <time-range-slider player class="q-ml-md q-mr-md" />
-            </div>
-          </q-item>
           <q-item-label header class="text-h5 q-pb-none">
             <span>{{ $t('scenarios') }}</span>
           </q-item-label>
@@ -147,42 +139,32 @@
       </div>
       <div class="col-12 col-md-9">
         <q-toolbar>
-          <template v-for="range in DateRangeOptions" :key="range.value">
-            <q-btn
-              v-if="range.value !== 'custom'"
-              :disable="measuresStore.loading"
-              :label="$t(range.label)"
-              :value="range.value"
-              size="sm"
-              flat
-              no-caps
-              color="grey-6"
-              @click="onDateRangeOption(range.value)"
-            />
-          </template>
-          <q-btn
-            :disable="measuresStore.loading"
-            :label="$t('all')"
-            size="sm"
-            flat
-            no-caps
-            color="grey-6"
-            @click="onDateRangeOption(null)"
-          />
-          <q-spinner-dots v-if="measuresStore.loading" color="primary" size="md" class="on-right"/>
+          <div class="full-width q-mt-sm q-mb-xl">
+            <time-range-slider player class="q-ml-md q-mr-md" />
+          </div>
           <q-space />
-          <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
-          <q-slider
-            v-model="chartHeight"
+          <q-btn
+            :title="$t('charts_height')"
             :disable="measuresStore.loading"
-            :min="100"
-            :max="500"
-            :step="50"
-            :label-value="chartHeight + ' px'"
-            switch-label-side
-            debounce="300"
-            class="q-mr-lg"
-            style="max-width: 200px;" />
+            icon="height"
+            size="xs"
+            class="q-mr-sm"
+          >
+            <q-menu class="q-pa-sm">
+              <div class="text-caption q-mb-sm">{{ $t('charts_height') }}</div>
+              <q-slider
+                v-model="chartHeight"
+                :disable="measuresStore.loading"
+                :min="100"
+                :max="500"
+                :step="50"
+                :label-value="chartHeight + ' px'"
+                switch-label-side
+                debounce="300"
+                class="q-pl-sm q-pr-sm"
+              />
+            </q-menu>
+          </q-btn>
           <q-btn-toggle
             v-model="colsSpan"
             :disable="measuresStore.loading"
@@ -280,7 +262,6 @@ import {
   SensorSpecs,
 } from 'src/utils/options';
 import { Scenario } from 'src/stores/scenarii';
-import { DateRangeOptions } from 'src/utils/options';
 import { getLabel } from 'src/utils/misc';
 
 const { locale } = useI18n();
@@ -376,18 +357,4 @@ function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
 }
 
-const onDateRangeOption = (value: string | null) => {
-  if (value === null) {
-    timeseriesStore.timeRange = [timeseriesStore.MIN_DATE, timeseriesStore.MAX_DATE];
-    return;
-  }
-  const now = new Date();
-  now.setMinutes(0, 0, 0);
-  // Add one hour to round up to the nearest next hour
-  now.setHours(now.getHours() + 1);
-  const range = Number(value.slice(0, -1));
-  const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
-  const newToDate = now;
-  timeseriesStore.timeRange = [newFromDate, newToDate];
-};
 </script>

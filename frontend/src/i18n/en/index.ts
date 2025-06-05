@@ -25,6 +25,7 @@ export default {
   all: 'All',
   apply: 'Apply',
   cancel: 'Cancel',
+  charts_height: 'Charts height',
   close: 'Close',
   deep_rooted_trees: 'Deep-rooted trees',
   flushing_frequency: 'Tank flushing frequency (per hour)',
