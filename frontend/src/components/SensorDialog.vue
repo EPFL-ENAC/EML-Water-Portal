@@ -117,7 +117,7 @@ watch(
 
 const sensorProperties = computed(() => mapStore.sensorSelected?.properties);
 
-const sensorSpec = computed(() => sensorProperties.value?.locationName ? SensorSpecs.find((ss) => ss.locations.includes(sensorProperties.value?.locationName)) : null);
+const sensorSpec = computed(() => sensorProperties.value?.name ? SensorSpecs.find((ss) => ss.locations.includes(sensorProperties.value?.name)) : null);
 
 const sensorMeasures = computed(() => sensorProperties.value?.measures
   .split('|')
