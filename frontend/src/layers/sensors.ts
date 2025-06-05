@@ -47,7 +47,7 @@ export class SensorsLayerManager extends LayerManager {
       const name = feature.properties?.name || '';
       const idx = sensorSpec?.locations.indexOf(name);
       const familyColor = sensorSpec?.color || '#FFFFFF';
-      const color = idx !== undefined && idx > -1 ? sensorSpec?.colors[idx] || familyColor : familyColor;
+      const color = idx >= 0 ? sensorSpec?.colors[idx] || familyColor : familyColor;
       return {
         ...feature,
         properties: {
