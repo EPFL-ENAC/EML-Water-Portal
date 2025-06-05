@@ -15,10 +15,10 @@ In addition to the aforementioned data, the portal provides rainfall information
 ### Sensors
 You can select the sensors of interest from the "Sensors A," "Sensors B," and "Sensors C" sections. By clicking on these sections, a dropdown menu will show all the sensors in each group. You can choose to display or hide certain sensors on the graphs by checking or unchecking the boxes.
 
-### Parameters:
+### Parameters
 The "Parameters" section allows you to select the types of graphs you want to display on the right side of the portal. The graphs will display the data from the sensors you selected in the "Sensors" section located just below the interactive map. You can enlarge any graph by clicking on the "full screen" icon next to the parameter name.
 
-### Time Range:
+### Time Range
 In this section, you can select the time range for the data you want to display on the graphs by using the calendar icons. You can also zoom in and out on the graphs to adjust the time range of the data being displayed.
 
 ### Scenarios
