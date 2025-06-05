@@ -28,25 +28,37 @@ export const useHelpStore = defineStore('help', () => {
   }
 
   async function loadSensorsInfo() {
-    const response = await fetch('sensors_info.csv');
-    const text = await response.text();
-    Papa.parse(text, {
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) {
-        sensorsInfo.value = (results.data as SensorInfoCSV[]).map(row => {
-          return {
-            sensor: row.sensor,
-            site_name: row.site_name,
-            model: row.model,
-            site_description: {
-              en: row.site_description_en || '',
-              fr: row.site_description_fr || ''
-            }
-          };
-        });
+    try {
+      const response = await fetch('sensors_info.csv');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch sensors_info.csv: ${response.statusText}`);
       }
-    });
+      const text = await response.text();
+      Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          sensorsInfo.value = (results.data as SensorInfoCSV[]).map(row => {
+            return {
+              sensor: row.sensor,
+              site_name: row.site_name,
+              model: row.model,
+              site_description: {
+                en: row.site_description_en || '',
+                fr: row.site_description_fr || ''
+              }
+            };
+          });
+        },
+        error: function(error) {
+          console.error('Error parsing CSV:', error);
+          sensorsInfo.value = []; // Fallback to an empty array
+        }
+      });
+    } catch (error) {
+      console.error('Error loading sensors info:', error);
+      sensorsInfo.value = []; // Fallback to an empty array
+    }
   }
 
   async function getSensorInfo(sensor: string) {
