@@ -106,7 +106,12 @@ watch(
   async (value) => {
     showDialog.value = value;
     selected.value = filtersStore.sensors.includes(mapStore.sensorSelected?.properties.name) || false;
-    info.value = await helpStore.getSensorInfo(mapStore.sensorSelected?.properties.name);
+    try {
+      info.value = await helpStore.getSensorInfo(mapStore.sensorSelected?.properties.name);
+    } catch (error) {
+      console.error('Error retrieving sensor info:', error);
+      info.value = undefined; // Fallback value
+    }
   },
 );
 
