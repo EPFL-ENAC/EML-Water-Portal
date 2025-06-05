@@ -86,8 +86,8 @@
 
   <simple-dialog
     v-model="showIntro"
-    :title="$t('app_title')"
     :content="IntroductionMd"
+    width="1000px"
   />
 
   <simple-dialog v-model="showResources" :title="$t('resources')">
@@ -108,7 +108,8 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import IntroductionMd from 'src/assets/introduction.md';
+import IntroductionEnMd from 'src/assets/introduction-en.md';
+import IntroductionFrMd from 'src/assets/introduction-fr.md';
 import essentialLinks from 'src/assets/links.json';
 import EssentialLink from 'src/components/EssentialLink.vue';
 import SimpleDialog from 'src/components/SimpleDialog.vue';
@@ -124,9 +125,12 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['toggle']);
 
 const settingsStore = useSettingsStore();
+const { locale } = useI18n();
 
 const showIntro = ref(false);
 const showResources = ref(false);
+
+const IntroductionMd = computed(() => locale.value === 'fr' ? IntroductionFrMd : IntroductionEnMd);
 
 onMounted(() => {
   if (!settingsStore.settings?.intro_shown) {
