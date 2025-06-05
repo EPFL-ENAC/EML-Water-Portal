@@ -78,6 +78,10 @@
     <a href="https://www.epfl.ch/labs/eml/" target="_blank" class="q-mt-xs">
       <span class="text-logo q-mb-xs">EML</span>
     </a>
+    <span class="text-logo q-mt-xs q-ml-xs q-mr-xs text-grey-6">/</span>
+    <a href="https://www.epfl.ch/labs/lch/" target="_blank" class="q-mt-xs">
+      <span class="text-logo q-mb-xs">LCH</span>
+    </a>
   </q-toolbar>
 
   <simple-dialog
