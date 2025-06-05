@@ -265,7 +265,6 @@ import { Scenario } from 'src/stores/scenarii';
 import { getLabel } from 'src/utils/misc';
 
 const { locale } = useI18n();
-const timeseriesStore = useTimeseriesChartsStore();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
