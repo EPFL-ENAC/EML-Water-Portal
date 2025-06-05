@@ -46,7 +46,8 @@ export class SensorsLayerManager extends LayerManager {
       const sensorSpec = SensorSpecs.find((opt) => opt.label === this.family);
       const name = feature.properties?.name || '';
       const idx = sensorSpec?.locations.indexOf(name);
-      const color = idx !== undefined && idx > -1 ? sensorSpec?.colors[idx] || '#FFFFFF' : '#FFFFFF';
+      const familyColor = sensorSpec?.color || '#FFFFFF';
+      const color = idx !== undefined && idx > -1 ? sensorSpec?.colors[idx] || familyColor : familyColor;
       return {
         ...feature,
         properties: {
@@ -61,8 +62,6 @@ export class SensorsLayerManager extends LayerManager {
       data: this.data,
     });
 
-    const color =
-      SensorSpecs.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),
@@ -79,10 +78,10 @@ export class SensorsLayerManager extends LayerManager {
           17,
           10, // Radius at zoom level 17 and above
         ],
-        'circle-color': color,
-        'circle-stroke-color': 'black',
+        'circle-color': ['get', 'color'],
+        'circle-stroke-color': '#ccc',
         'circle-stroke-width': 1,
-        'circle-opacity': ['case', ['get', 'selected'], 1, 0.1],
+        'circle-opacity': ['case', ['get', 'selected'], 1, 0.5],
       },
     });
 
