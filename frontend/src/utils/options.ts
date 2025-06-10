@@ -77,6 +77,7 @@ export const MeasureOptions = [
   {
     key: 'oxidation_reduction_potential',
     label: 'ORP with platinum foil reference electrode',
+    axis_label: 'ORP',
     unit: 'V',
     precision: 2,
     is_scenario_measure: false,

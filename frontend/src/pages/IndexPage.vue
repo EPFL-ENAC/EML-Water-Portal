@@ -204,7 +204,7 @@
                   <q-card-section>
                     <timeseries-chart
                       :measure="measure.key"
-                      :label="measure.label"
+                      :label="measure.axis_label || measure.label"
                       :unit="measure.unit"
                       :precision="measure.precision"
                       :height="chartHeight"
