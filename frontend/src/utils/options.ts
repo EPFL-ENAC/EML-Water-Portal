@@ -12,8 +12,6 @@ export const DateRangeOptions = computed(() => {
 
 export interface MeasureOption {
   key: string;
-  label: string;
-  axis_label?: string;
   unit: string;
   precision: number;
   is_scenario_measure: boolean;
@@ -22,99 +20,84 @@ export interface MeasureOption {
 export const MeasureOptions: MeasureOption[] = [
   {
     key: 'precipitation',
-    label: 'Precipitation',
     unit: 'mm/5min',
     precision: 0,
     is_scenario_measure: false,
   },
   {
     key: 'water_level',
-    label: 'Water level',
     unit: 'mm',
     precision: 0,
     is_scenario_measure: false,
   },
   {
     key: 'depth',
-    label: 'Depth',
     unit: 'm',
     precision: 3,
     is_scenario_measure: false,
   },
   {
     key: 'water_temperature',
-    label: 'Water Temperature',
     unit: '°C',
     precision: 2,
     is_scenario_measure: false,
   },
   // {
   //   key: 'water_samples',
-  //   label: 'Water Samples',
   //   unit: '',
   //   precision: 2,
   //   is_scenario_measure: false,
   // },
   {
     key: 'electro_conductivity',
-    label: 'Electrical conductivity',
     unit: 'µs/cm',
     precision: 2,
     is_scenario_measure: false,
   },
   {
     key: 'dissolved_oxygen',
-    label: 'Dissolved oxygen',
     unit: 'mg/L',
     precision: 2,
     is_scenario_measure: false,
   },
   {
     key: 'ph',
-    label: 'pH',
     unit: 'pH',
     precision: 2,
     is_scenario_measure: false,
   },
   {
     key: 'turbidity',
-    label: 'Turbidity',
     unit: 'NTU',
     precision: 2,
     is_scenario_measure: false,
   },
   {
     key: 'oxidation_reduction_potential',
-    label: 'ORP with platinum foil reference electrode',
-    axis_label: 'ORP',
     unit: 'V',
     precision: 2,
     is_scenario_measure: false,
   },
   {
     key: 'outflow_total',
-    label: 'Total flow',
     unit: 'L/s',
     precision: 1,
     is_scenario_measure: true,
   },
   {
     key: 'outflow_tank',
-    label: 'Flow from tanks',
     unit: 'L/s',
     precision: 1,
     is_scenario_measure: true,
   },
   {
     key: 'soil_moisture',
-    label: 'Soil moisture level',
     unit: '-',
     precision: 4,
     is_scenario_measure: true,
   },
   {
     key: 'volume_tank',
-    label: 'Tank volume',
     unit: 'm³',
     precision: 2,
     is_scenario_measure: true,
@@ -131,8 +114,8 @@ export const SensorSpecs = [
     label: 'A',
     layer: 'sensors-a',
     title: {
-      en: 'Multiparameter sensors',
-      fr: 'Capteurs multiparamétriques',
+      en: 'Multi-parameters sensors',
+      fr: 'Capteurs multi-paramétriques',
     },
     device: 'In-Situ',
     icon: 'opacity',

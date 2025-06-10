@@ -20,6 +20,64 @@ export default {
     'sensors-c': 'Sensors C',
     'sensors-d': 'Sensors D',
   },
+  measure: {
+    air_temperature: {
+      label: 'Air temperature',
+      axis_label: 'Air temperature',
+    },
+    precipitation: {
+      label: 'Precipitation',
+      axis_label: 'Precipitation',
+    },
+    water_level: {
+      label: 'Water level',
+      axis_label: 'Water level',
+    },
+    depth: {
+      label: 'Water depth',
+      axis_label: 'Depth',
+    },
+    water_temperature: {
+      label: 'Water temperature',
+      axis_label: 'Water temperature',
+    },
+    electro_conductivity: {
+      label: 'Electro-conductivity',
+      axis_label: 'Electro-conductivity',
+    },
+    dissolved_oxygen: {
+      label: 'Dissolved oxygen',
+      axis_label: 'Dissolved oxygen',
+    },
+    ph: {
+      label: 'pH',
+      axis_label: 'pH',
+    },
+    turbidity: {
+      label: 'Turbidity',
+      axis_label: 'Turbidity',
+    },
+    oxidation_reduction_potential: {
+      label: 'Oxidation-reduction potential',
+      axis_label: 'ORP',
+    },
+    outflow_total: {
+      label: 'Total outflow',
+      axis_label: 'Total outflow',
+    },
+    outflow_tank: {
+      label: 'Flow from tanks',
+      axis_label: 'Flow from tanks',
+    },
+    soil_moisture: {
+      label: 'Soil moisture',
+      axis_label: 'Soil moisture',
+    },
+    volume_tank: {
+      label: 'Tank volume',
+      axis_label: 'Tank volume',
+    },
+  },
   about: 'About',
   add_scenario: 'Add scenario',
   all: 'All',
@@ -65,6 +123,7 @@ export default {
   scenario: 'Scenario',
   scenarios_for_watershed: 'Scenarios for watershed: {name}',
   scenarios: 'Scenarios',
+  sensor_label: 'Sensor {name}',
   sensors_label: 'Sensors {name}',
   sensors_to_filter_info: 'Click sensors on the map to filter measures. Click again to deselect.',
   sensors: 'Sensors',
