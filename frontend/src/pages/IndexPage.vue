@@ -18,20 +18,19 @@
               <template v-for="sensor in SensorSpecs" :key="sensor.color">
                 <q-btn-dropdown
                   v-if="sensor.label !== 'D'"
+                  :title="sensor.label"
                   size="14px"
-                  :label="$t('sensors_label', { name: sensor.label })"
-                  :title="`${sensor.label}: ${getLabel(locale, sensor.title)}`"
                   no-caps
                   stretch
                   class="text-grey-3"
                   :style="`background-color: ${sensor.color};`"
                 >
+                  <template v-slot:label>
+                    <div class="text-wrap text-left" style="white-space: normal; max-width: 150px;">
+                      {{ getLabel(locale, sensor.title) }}
+                    </div>
+                  </template>
                   <q-list>
-                    <q-item dense class="text-caption">
-                      <q-item-section>
-                        {{ getLabel(locale, sensor.title) }}
-                      </q-item-section>
-                    </q-item>
                     <q-item dense class="q-pa-none">
                       <q-item-section class="q-pa-none">
                         <q-btn-group flat spread>
