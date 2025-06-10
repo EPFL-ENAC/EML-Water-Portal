@@ -69,6 +69,7 @@ interface Props {
   height?: number;
   heightUnit?: string;
   stacked?: boolean; // if stacked, hide x-axis labels and propagate axis pointer selection to other charts (via store)
+  zoom?: boolean; // if true, enable zooming on the chart
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -76,6 +77,7 @@ const props = withDefaults(defineProps<Props>(), {
   precision: 2,
   unit: '',
   heightUnit: 'px',
+  zoom: false,
 });
 
 const onDataZoomChange = (e: ECElementEvent) => {
@@ -213,6 +215,10 @@ const onDownplay = () => {
 
 onMounted(() => {
   initChartOptions();
+  // delay the initial range change to ensure the chart is ready
+  setTimeout(() => {
+    onRangeChange();
+  }, 100);
 });
 
 watch([() => measuresStore.loading, () => sensors.value], () => {
@@ -357,7 +363,7 @@ function buildOptions() {
       {
         type: 'inside',
         xAxisIndex: 0,
-        disabled: true,
+        disabled: !props.zoom,
       },
     ],
     grid: [

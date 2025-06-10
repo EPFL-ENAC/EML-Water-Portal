@@ -10,7 +10,16 @@ export const DateRangeOptions = computed(() => {
   ]
 });
 
-export const MeasureOptions = [
+export interface MeasureOption {
+  key: string;
+  label: string;
+  axis_label?: string;
+  unit: string;
+  precision: number;
+  is_scenario_measure: boolean;
+}
+
+export const MeasureOptions: MeasureOption[] = [
   {
     key: 'precipitation',
     label: 'Precipitation',

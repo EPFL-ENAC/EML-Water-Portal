@@ -229,19 +229,20 @@
       <q-card>
         <q-bar class="bg-white q-ma-md">
           <div class="text-h5">
-            {{ MeasureOptions.find((m) => m.key === measureSelected)?.label }}
+            {{ measureSelected.label }}
           </div>
           <q-space />
           <q-btn dense flat icon="close" size="lg" v-close-popup> </q-btn>
         </q-bar>
         <q-card-section>
           <timeseries-chart
-            :measure="measureSelected"
-            :label="
-              MeasureOptions.find((m) => m.key === measureSelected)?.label || ''
-            "
+            :measure="measureSelected.key"
+            :label="measureSelected.axis_label || measureSelected.label"
+            :unit="measureSelected.unit"
+            :precision="measureSelected.precision"
             :height="80"
             :height-unit="'vh'"
+            zoom
             :debounce-time="30"
             class="q-pa-sm"
           />
@@ -260,6 +261,7 @@ import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import SensorDialog from 'src/components/SensorDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
+  type MeasureOption,
   MeasureOptions,
   SensorSpecs,
 } from 'src/utils/options';
@@ -276,7 +278,7 @@ const scenariiStore = useScenariiStore();
 const showScenario = ref(false);
 const showSensor = ref(false);
 const showMeasure = ref(false);
-const measureSelected = ref<string>();
+const measureSelected = ref<MeasureOption>();
 const colsSpan = ref('6');
 const colsClass = computed(() => `col-12 col-md-${colsSpan.value}`);
 const chartHeight = ref(200);
@@ -334,8 +336,8 @@ function onMeasureVisibilityChange() {
 }
 
 function onShowMeasure(measure: string) {
-  measureSelected.value = measure;
-  showMeasure.value = true;
+  measureSelected.value = MeasureOptions.find((m) => m.key === measure);
+  showMeasure.value = measureSelected.value !== undefined;
 }
 
 function getSensorSpec(measure: string) {
