@@ -357,6 +357,7 @@ function buildOptions() {
       {
         type: 'inside',
         xAxisIndex: 0,
+        disabled: true,
       },
     ],
     grid: [
