@@ -6,7 +6,7 @@
       </q-card-actions>
       <q-card-section>
         <div class="text-h6 q-mb-sm">
-          {{ `Sensor: ${sensorProperties?.name}` }} 
+          {{ $t('sensor_label', {name: sensorProperties?.name}) }} 
           <q-chip :label="getLabel(locale, sensorSpec?.title)" size="sm" class="q-ml-sm" color="primary" text-color="white" />
         </div>
         <div>
@@ -44,7 +44,7 @@
               <q-item-section>
                 <ul class="q-pl-md">
                 <template v-for="measure in sensorMeasures" :key="measure">
-                  <li>{{ measure }}</li>
+                  <li>{{ $t(`measure.${measure.replaceAll(' ', '_')}.label`) }}</li>
                 </template>
               </ul>
               </q-item-section>

@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import { createI18n } from 'vue-i18n';
+import { Quasar, Cookies } from 'quasar';
 
 import messages from 'src/i18n';
 
@@ -21,13 +22,38 @@ declare module 'vue-i18n' {
 }
 /* eslint-enable @typescript-eslint/no-empty-interface */
 
-export default boot(({ app }) => {
-  const i18n = createI18n({
-    locale: 'en',
-    legacy: false,
-    messages,
-  });
+const defaultLocales = ['en', 'fr']
 
+const locales = defaultLocales
+
+function getCurrentLocale(): string {
+  let detectedLocale = Cookies.get('locale')
+    ? Cookies.get('locale') // previously selected
+    : Quasar.lang.getLocale() // browser
+  if (!detectedLocale) {
+    detectedLocale = locales[0]
+  } else if (!locales.includes(detectedLocale)) {
+    detectedLocale = detectedLocale.split('-')[0]
+    if (!detectedLocale || !locales.includes(detectedLocale)) {
+      detectedLocale = locales[0]
+    }
+  }
+  return detectedLocale || locales[0] || 'en'
+}
+
+const i18n = createI18n<{ message: MessageSchema }, MessageLanguages>({
+  locale: getCurrentLocale(),
+  fallbackLocale: locales[0] || 'en',
+  globalInjection: true,
+  legacy: false,
+  messages,
+})
+
+export default boot(({ app }) => {
   // Set i18n instance on app
   app.use(i18n);
 });
+
+const t = i18n.global.t
+
+export { i18n, t, locales, getCurrentLocale }

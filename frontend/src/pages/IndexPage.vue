@@ -78,7 +78,7 @@
                     <q-checkbox
                       v-model="measuresVisible[measure.key]"
                       :disable="measuresStore.loading"
-                      :label="measure.label"
+                      :label="$t(`measure.${measure.key}.label`)"
                     />
                     <template
                       v-for="spec in getSensorSpec(measure.key)"
@@ -204,7 +204,7 @@
                   <q-card-section>
                     <timeseries-chart
                       :measure="measure.key"
-                      :label="measure.axis_label || measure.label"
+                      :label="$t(`measure.${measure.key}.axis_label`)"
                       :unit="measure.unit"
                       :precision="measure.precision"
                       :height="chartHeight"
@@ -237,7 +237,7 @@
         <q-card-section>
           <timeseries-chart
             :measure="measureSelected.key"
-            :label="measureSelected.axis_label || measureSelected.label"
+            :label="$t(`measure.${measureSelected.key}.label`)"
             :unit="measureSelected.unit"
             :precision="measureSelected.precision"
             :height="80"
