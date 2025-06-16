@@ -60,9 +60,6 @@
           </div>
         </q-card>
         <q-list>
-          <q-item-label header class="text-h5">{{
-            $t('parameters')
-          }}</q-item-label>
           <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
             <q-item-label header class="text-h6">{{
               $t(category)
