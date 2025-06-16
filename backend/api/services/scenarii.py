@@ -79,11 +79,16 @@ class ScenariiService:
             Vmax=tank,
             frac_rt2tk=roof_to_tank,
             vegetation=uhm.vegetation_params[vegetation],
-            flushingFrequency=flushing_frequency,
+            flushing_frequency=flushing_frequency,
             resolution=time_resolution_minutes,
         )
         input_data = uhm.preprocess(input_data)
         output_data = uhm.model_st(input_data, model_params)
+
+        # Convert flows from m³/s to L/s
+        for col in ["Qout", "Qtank"]:
+            if col in output_data:
+                output_data[col] = output_data[col] * 1000
 
         output_vectors = [
             Vector(
@@ -91,9 +96,6 @@ class ScenariiService:
                 values=[
                     t.strftime("%Y-%m-%d %H:%M:%S") for t in output_data.index
                 ],
-            ),
-            Vector(
-                measure="precipitation", values=input_data["precp"].tolist()
             ),
             Vector(
                 measure="outflow_total", values=output_data["Qout"].tolist()

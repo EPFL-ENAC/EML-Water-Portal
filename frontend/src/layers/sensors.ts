@@ -46,7 +46,8 @@ export class SensorsLayerManager extends LayerManager {
       const sensorSpec = SensorSpecs.find((opt) => opt.label === this.family);
       const name = feature.properties?.name || '';
       const idx = sensorSpec?.locations.indexOf(name);
-      const color = idx !== undefined && idx > -1 ? sensorSpec?.colors[idx] || '#FFFFFF' : '#FFFFFF';
+      const familyColor = sensorSpec?.color || '#FFFFFF';
+      const color = idx >= 0 ? sensorSpec?.colors[idx] || familyColor : familyColor;
       return {
         ...feature,
         properties: {
@@ -61,8 +62,6 @@ export class SensorsLayerManager extends LayerManager {
       data: this.data,
     });
 
-    const color =
-      SensorSpecs.find((opt) => opt.label === this.family)?.color || '#FFFFFF';
     map.addLayer({
       id: this.getId(),
       source: this.getId(),
@@ -75,14 +74,14 @@ export class SensorsLayerManager extends LayerManager {
           10,
           5, // Radius at zoom level 10 and above
           15,
-          8, // Radius at zoom level 15 and above
+          this.family === 'B' ? 6 : 8, // Radius at zoom level 15 and above
           17,
-          10, // Radius at zoom level 17 and above
+          this.family === 'B' ? 8 : 10, // Radius at zoom level 17 and above
         ],
-        'circle-color': color,
-        'circle-stroke-color': 'black',
+        'circle-color': ['get', 'color'],
+        'circle-stroke-color': '#ccc',
         'circle-stroke-width': 1,
-        'circle-opacity': ['case', ['get', 'selected'], 1, 0.1],
+        'circle-opacity': ['case', ['get', 'selected'], 1, 0.5],
       },
     });
 
@@ -93,7 +92,7 @@ export class SensorsLayerManager extends LayerManager {
       layout: {
         'text-font': ['Roboto'],
         'text-field': ['get', 'name'], // Get the 'name' property from each feature
-        'text-size': 14, // Text size
+        'text-size': this.family === 'B' ? 12 : 14, // Text size
         'text-anchor': 'top', // Anchor text at the top of the point
         'text-offset': [0, 0.5], // Offset text slightly so it doesn't overlap the point
       },

@@ -21,7 +21,15 @@
             >
               <q-item>
                 <q-item-section>
-                  <q-item-label>{{ scenario.name }}</q-item-label>
+                  <q-item-label>
+                    <span
+                      :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '0.06rem', fontWeight: 'bold' }"
+                      class="q-mr-xs"
+                    >
+                    --
+                    </span>
+                    {{ scenario.name }}
+                  </q-item-label>
                   <div class="q-mt-sm">
                     <q-badge color="grey-7">{{
                       `${$t('tank_volume')}: ${scenario.tank}`
@@ -81,7 +89,6 @@
     <scenario-dialog
       v-model="showScenario"
       :scenario="selectedScenario"
-      @apply="onApply"
       @remove="onRemove"
     />
   </q-dialog>

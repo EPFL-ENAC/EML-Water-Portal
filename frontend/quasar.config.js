@@ -63,11 +63,7 @@ module.exports = configure(function (ctx) {
 
       // publicPath: '/',
       // analyze: true,
-      env: {
-        API_URL: ctx.dev ? 'http://localhost:8000' : process.env.API_URL,
-        API_PATH: ctx.dev ? '' : process.env.API_PATH,
-        CDN_FOLDER: ctx.dev ? 'dev' : process.env.CDN_FOLDER,
-      },
+      env: {},
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,

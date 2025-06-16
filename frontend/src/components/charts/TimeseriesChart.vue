@@ -69,6 +69,7 @@ interface Props {
   height?: number;
   heightUnit?: string;
   stacked?: boolean; // if stacked, hide x-axis labels and propagate axis pointer selection to other charts (via store)
+  zoom?: boolean; // if true, enable zooming on the chart
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -76,6 +77,7 @@ const props = withDefaults(defineProps<Props>(), {
   precision: 2,
   unit: '',
   heightUnit: 'px',
+  zoom: false,
 });
 
 const onDataZoomChange = (e: ECElementEvent) => {
@@ -213,6 +215,10 @@ const onDownplay = () => {
 
 onMounted(() => {
   initChartOptions();
+  // delay the initial range change to ensure the chart is ready
+  setTimeout(() => {
+    onRangeChange();
+  }, 100);
 });
 
 watch([() => measuresStore.loading, () => sensors.value], () => {
@@ -286,7 +292,7 @@ function onRangeChange() {
   }
 }
 
-function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string, lineStyle: LineStyleOption): SeriesOption {
+function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) => string, lineStyle: LineStyleOption): SeriesOption {
   const timestamps = s.vectors.find(
     (col) => col.measure === 'timestamp',
   )?.values;
@@ -307,7 +313,7 @@ function makeSerie(s: ScenarioData | SensorData, getColor: (s: string) => string
     colorBy: 'series',
     type: 'line',
     lineStyle: lineStyle,
-    color: getColor(s.name),
+    color: getColor(s),
     data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
   };
 }
@@ -322,7 +328,7 @@ function makeScenariiSeries(): SeriesOption[] {
   return scenarii.value
     .filter(scenario => scenario.data)
     .map((scenario) => {
-      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dotted' });
+      return makeSerie(scenario.data as ScenarioData, getScenarioColor, { type: 'dashed' });
     });
 }
 
@@ -357,6 +363,7 @@ function buildOptions() {
       {
         type: 'inside',
         xAxisIndex: 0,
+        disabled: !props.zoom,
       },
     ],
     grid: [
@@ -425,7 +432,8 @@ function updateOptions() {
   }, { notMerge: false, replaceMerge: ['series'] }); // Preserve current zoom range
 }
 
-function getSensorColor(name: string) {
+function getSensorColor(sensorData: SensorData) {
+  const name = sensorData.name;
   const sensor = SensorSpecs.find((ss) => ss.locations.includes(name));
   if (!sensor) {
     return '#000000';
@@ -438,12 +446,8 @@ function getSensorColor(name: string) {
   return '#000000';
 }
 
-function getScenarioColor(name: string) {
-  const hash = (s: string): number => [...s].reduce((h, c) => Math.imul(31, h) + c.charCodeAt(0) | 0, 0);
-  const lightness = 50;
-  const chroma = 50;
-  const hue = Math.abs(hash(name)) % 360;
-  return `lch(${lightness} ${chroma} ${hue})`;
+function getScenarioColor(scenarioData: ScenarioData) {
+  return scenarioData.lineColor;
 }
 </script>
 <style>

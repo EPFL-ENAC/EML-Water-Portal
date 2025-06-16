@@ -41,4 +41,13 @@ export interface SensorData {
 export interface ScenarioData {
   name: string;
   vectors: Vector[];
+  lineColor: string;
 }
+
+export interface SensorInfo {
+  sensor: string
+  site_name: string
+  model: string
+  site_description: { en: string; fr: string }
+}
+

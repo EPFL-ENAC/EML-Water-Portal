@@ -225,6 +225,9 @@ class MeasuresService:
                 Vector(**vector_dict) for vector_dict in json.loads(content)
             ]
 
+        if sensor.name == "C3":
+            await self.rescale_precipitation(vectors)
+
         if sensor.name == "C2":
             vectors.append(await self.compute_flow(vectors))
 
@@ -301,9 +304,18 @@ class MeasuresService:
 
         return df
 
+    async def rescale_precipitation(self, vectors: list[Vector]) -> None:
+        for vector in vectors:
+            if vector.measure == "precipitation":
+                vector.values = [
+                    (float(v) / 5 if v is not None else None)
+                    for v in vector.values
+                ]
+
     async def compute_flow(self, vectors: list[Vector]) -> Vector:
         vector_map = {vector.measure: vector.values for vector in vectors}
-        water_level = np.array(vector_map["water_level"])
+        water_level = np.array(vector_map["water_level"], dtype=float)
+        water_level = np.nan_to_num(water_level, 0)
 
         Qp = np.zeros_like(water_level)
         D = 1.25  # pipe diameter [m]
@@ -315,5 +327,8 @@ class MeasuresService:
         Qp = np.nan_to_num(
             (1 + np.log(Rp) / np.log(3.7 * D / ks)) * Ap * Rp**0.5, nan=0
         )
+
+        # Convert flow from m³/s to L/s
+        Qp = Qp * 1000
 
         return Vector(measure="outflow_total", values=Qp.tolist())

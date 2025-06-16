@@ -33,8 +33,8 @@ export const useMapStore = defineStore('map', () => {
     new RejetsECLayerManager(),
     new RejetsEULayerManager(),
     new MeteoLayerManager(),
-    new SensorsLayerManager('A'),
     new SensorsLayerManager('B'),
+    new SensorsLayerManager('A'),
     new SensorsLayerManager('C'),
   ];
 
@@ -43,8 +43,8 @@ export const useMapStore = defineStore('map', () => {
       id: lm.getId(),
       visible: [
         'river',
-        'sensors-a',
         'sensors-b',
+        'sensors-a',
         'sensors-c',
         'conduite_principale_ec',
         'bv',

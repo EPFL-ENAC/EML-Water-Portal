@@ -2,28 +2,28 @@
   <div>
     <div class="slider-container">
       <div class="row">
-        <q-btn-dropdown
-          v-model="selectedDateRange"
-          flat
-          icon="date_range">
-          <q-list>
-            <template v-for="range in DateRangeOptions" :key="range.value">
-              <q-item clickable v-close-popup @click="onDateRangeOption(range.value)">
-                <q-item-section>
-                  <q-item-label>{{ $t(range.label) }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-list> 
-        </q-btn-dropdown>
+        <template v-for="range in DateRangeOptions" :key="range.value">
+          <q-btn
+            :disable="measuresStore.loading"
+            :label="$t(range.label)"
+            :value="range.value"
+            size="sm"
+            flat
+            no-caps
+            color="grey-6"
+            @click="onDateRangeOption(range.value)"
+          />
+        </template>
         <q-btn
-          :class="isDefault ? 'hidden' : ''"
-          round
-          icon="restore"
-          @click="resetSlider"
-          hidden
+          :disable="measuresStore.loading"
+          :label="$t('all')"
+          size="sm"
           flat
-        ></q-btn>
+          no-caps
+          color="grey-6"
+          @click="onDateRangeOption(null)"
+        />
+        <q-spinner-dots v-if="measuresStore.loading" color="primary" size="md" class="on-right"/>
         <q-space />
         <q-btn
           v-if="player"
@@ -32,6 +32,8 @@
           @click="togglePlay"
           :disable="isDefault"
           flat
+          dense
+          size="sm"
         />
       </div>
     </div>
@@ -52,12 +54,13 @@ import { PipsMode, type API as SliderAPI } from 'nouislider';
 import 'nouislider/dist/nouislider.css';
 import { DateRangeOptions } from 'src/utils/options';
 
+const measuresStore = useMeasuresStore();
+
 const props = defineProps<{
   step?: number;
   player?: boolean;
 }>();
 
-const selectedDateRange = ref();
 const showDateSelector = ref(false);
 const slider = ref<SliderAPI | null>(null);
 const sliderHTML = ref<HTMLDivElement | null>(null);
@@ -263,19 +266,24 @@ const onShowDateSelector = () => {
   showDateSelector.value = true;
 };
 
-const onDateRangeOption = (value: string) => {
+const onDateRangeOption = (value: string | null) => {
+  timeseriesStore.lastUpdatedChartID = 'timeRangeShortcuts';
+  if (value === null) {
+    resetSlider();
+    return;
+  }
   if (value === 'custom') {
     onShowDateSelector();
-  } else {
-    const now = new Date();
-    now.setMinutes(0, 0, 0);
-    // Add one hour to round up to the nearest next hour
-    now.setHours(now.getHours() + 1);
-    const range = Number(value.slice(0, -1));
-    const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
-    const newToDate = now;
-    timeseriesStore.timeRange = [newFromDate, newToDate];
+    return;
   }
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
+  // Add one hour to round up to the nearest next hour
+  now.setHours(now.getHours() + 1);
+  const range = Number(value.slice(0, -1));
+  const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
+  const newToDate = now;
+  timeseriesStore.timeRange = [newFromDate, newToDate];
 };
 </script>
 <style scoped>

@@ -18,13 +18,18 @@
               <template v-for="sensor in SensorSpecs" :key="sensor.color">
                 <q-btn-dropdown
                   v-if="sensor.label !== 'D'"
+                  :title="sensor.label"
                   size="14px"
-                  :label="`Sensors ${sensor.label}`"
-                  :title="sensor.title"
                   no-caps
+                  stretch
                   class="text-grey-3"
                   :style="`background-color: ${sensor.color};`"
                 >
+                  <template v-slot:label>
+                    <div class="text-wrap text-left" style="white-space: normal; max-width: 150px;">
+                      {{ getLabel(locale, sensor.title) }}
+                    </div>
+                  </template>
                   <q-list>
                     <q-item dense class="q-pa-none">
                       <q-item-section class="q-pa-none">
@@ -55,159 +60,161 @@
           </div>
         </q-card>
         <q-list>
-          <q-item-label header class="text-h6">{{
-            $t('parameters')
-          }}</q-item-label>
-          <q-list separator dense>
-            <q-item
-              v-ripple
-              v-for="measure in MeasureOptions"
-              :key="measure.key"
-            >
-              <q-item-section>
-                <div class="row">
-                  <q-checkbox
-                    v-model="measuresVisible[measure.key]"
-                    :disable="measuresStore.loading"
-                    :label="measure.label"
-                  />
-                  <template
-                    v-for="spec in getSensorSpec(measure.key)"
-                    :key="spec.label"
-                  >
-                    <q-icon
-                      name="circle"
-                      :style="`color: ${spec.color};`"
-                      :title="`${spec.label}: ${spec.title}`"
-                      class="on-right"
-                      style="margin-top: 14px"
-                    />
-                  </template>
-                  <q-btn
-                    v-if="measuresVisible[measure.key]"
-                    :disable="measuresStore.loading"
-                    icon="fullscreen"
-                    color="secondary"
-                    flat
-                    dense
-                    rounded
-                    size="sm"
-                    @click="onShowMeasure(measure.key)"
-                    class="on-right"
-                  />
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-          <q-item-label header class="text-h6 q-pb-none">{{
-            $t('time_range')
-          }}</q-item-label>
-          <q-item>
-            <div class="full-width q-mb-xl">
-              <time-range-slider player class="q-ml-md q-mr-md" />
-            </div>
-          </q-item>
-          <q-item-label header class="text-h6 q-pb-none">
-            <span>{{ $t('scenarios') }}</span>
-          </q-item-label>
-          <q-item>
-            <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
-              {{ $t('scenario_info') }}
-            </div>
-            <div v-else>
-              <q-chip
-                v-for="scenario in scenariiStore.scenarii"
-                :key="`${scenario.watershed}:${scenario.name}`"
-                removable
-                @remove="onRemoveScenario(scenario)"
-                size="sm"
+          <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
+            <q-item-label header class="text-h6">{{
+              $t(category)
+            }}</q-item-label>
+            <q-list separator dense>
+              <q-item
+                v-ripple
+                v-for="measure in measuresFiltered(category)"
+                :key="measure.key"
               >
-                {{ `${scenario.watershed}: ${scenario.name}` }}
-              </q-chip>
-            </div>
-          </q-item>
-    
+                <q-item-section>
+                  <div class="row">
+                    <q-checkbox
+                      v-model="measuresVisible[measure.key]"
+                      :disable="measuresStore.loading"
+                      :label="$t(`measure.${measure.key}.label`)"
+                    />
+                    <template
+                      v-for="spec in getSensorSpec(measure.key)"
+                      :key="spec.label"
+                    >
+                      <q-icon
+                        name="circle"
+                        :style="`color: ${spec.color};`"
+                        :title="`${spec.label}: ${getLabel(locale, spec.title)}`"
+                        class="on-right"
+                        style="margin-top: 14px"
+                      />
+                    </template>
+                    <q-btn
+                      v-if="measuresVisible[measure.key]"
+                      :disable="measuresStore.loading"
+                      icon="fullscreen"
+                      color="secondary"
+                      flat
+                      dense
+                      rounded
+                      size="sm"
+                      @click="onShowMeasure(measure.key)"
+                      class="on-right"
+                    />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+
         </q-list>
       </div>
       <div class="col-12 col-md-9">
-        <q-toolbar>
-          <template v-for="range in DateRangeOptions" :key="range.value">
-            <q-btn
-              v-if="range.value !== 'custom'"
-              :disable="measuresStore.loading"
-              :label="$t(range.label)"
-              :value="range.value"
-              size="sm"
-              flat
-              no-caps
-              color="grey-6"
-              @click="onDateRangeOption(range.value)"
-            />
-          </template>
-          <q-btn
-            :disable="measuresStore.loading"
-            :label="$t('all')"
-            size="sm"
-            flat
-            no-caps
-            color="grey-6"
-            @click="onDateRangeOption(null)"
-          />
-          <q-spinner-dots v-if="measuresStore.loading" color="primary" size="md" class="on-right"/>
-          <q-space />
-          <span class="text-help on-left" style="font-size: smaller;">Charts height</span>
-          <q-slider
-            v-model="chartHeight"
-            :disable="measuresStore.loading"
-            :min="100"
-            :max="500"
-            :step="50"
-            :label-value="chartHeight + ' px'"
-            switch-label-side
-            debounce="300"
-            class="q-mr-lg"
-            style="max-width: 200px;" />
-          <q-btn-toggle
-            v-model="colsSpan"
-            :disable="measuresStore.loading"
-            toggle-color="primary"
-            :options="[
-              {value: '12', slot: 'one'},
-              {value: '6', slot: 'two'},
-            ]"
-            size="xs"
-          >
-            <template v-slot:one>
-              <div class="row items-center no-wrap">
-                <q-icon name="splitscreen" />
-              </div>
-            </template>
-
-            <template v-slot:two>
-              <div class="row items-center no-wrap">
-                <q-icon name="grid_view" />
-              </div>
-            </template>
-          </q-btn-toggle>
-        </q-toolbar>
-        <div class="row">
-          <template v-for="measure in MeasureOptions" :key="measure.key">
-            <div v-show="measuresVisible[measure.key]" :class="colsClass">
-              <q-card square bordered flat>
-                <q-card-section>
-                  <timeseries-chart
-                    :measure="measure.key"
-                    :label="measure.label"
-                    :unit="measure.unit"
-                    :precision="measure.precision"
-                    :height="chartHeight"
-                    stacked
-                  />
-                </q-card-section>
-              </q-card>
+        <div class="bg-white" style="position: sticky; top: 53px; z-index: 1000;">
+          <q-toolbar>
+            <div class="full-width q-mt-sm q-mb-xl">
+              <time-range-slider player class="q-ml-md q-mr-md" />
             </div>
-          </template>
+            <q-space />
+            <q-btn
+              :title="$t('charts_height')"
+              :disable="measuresStore.loading"
+              icon="height"
+              size="xs"
+              class="q-mr-sm"
+            >
+              <q-menu class="q-pa-sm">
+                <div class="text-caption q-mb-sm">{{ $t('charts_height') }}</div>
+                <q-slider
+                  v-model="chartHeight"
+                  :disable="measuresStore.loading"
+                  :min="100"
+                  :max="500"
+                  :step="50"
+                  :label-value="chartHeight + ' px'"
+                  switch-label-side
+                  debounce="300"
+                  class="q-pl-sm q-pr-sm"
+                />
+              </q-menu>
+            </q-btn>
+            <q-btn-toggle
+              v-model="colsSpan"
+              :disable="measuresStore.loading"
+              toggle-color="primary"
+              :options="[
+                {value: '12', slot: 'one'},
+                {value: '6', slot: 'two'},
+              ]"
+              size="xs"
+            >
+              <template v-slot:one>
+                <div class="row items-center no-wrap">
+                  <q-icon name="splitscreen" />
+                </div>
+              </template>
+
+              <template v-slot:two>
+                <div class="row items-center no-wrap">
+                  <q-icon name="grid_view" />
+                </div>
+              </template>
+            </q-btn-toggle>
+          </q-toolbar>
+          <q-separator />
         </div>
+        <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
+          <q-item-label header class="text-h6">{{
+            $t(category)
+          }}</q-item-label>
+          <div v-if="category === 'parameters_scenario'">
+            <q-item>
+              <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
+                {{ $t('scenario_info') }}
+              </div>
+              <div v-else>
+                <q-chip
+                  v-for="scenario in scenariiStore.scenarii"
+                  :key="`${scenario.watershed}:${scenario.name}`"
+                  removable
+                  @remove="onRemoveScenario(scenario)"
+                  size="sm"
+                >
+                  <span
+                    :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', left: '-0.2rem', top: '-0.1rem', fontWeight: 'bold' }"
+                  >
+                  --
+                  </span>
+                  {{ `${scenario.watershed}: ${scenario.name}` }}
+                </q-chip>
+              </div>
+            </q-item>
+          </div>
+          <div v-if="measuresFiltered(category).some((measure) => measuresVisible[measure.key])" class="row">
+            <template
+              v-for="measure in measuresFiltered(category)"
+              :key="measure.key"
+            >
+              <div v-show="measuresVisible[measure.key]" :class="colsClass">
+                <q-card square bordered flat>
+                  <q-card-section>
+                    <timeseries-chart
+                      :measure="measure.key"
+                      :label="$t(`measure.${measure.key}.axis_label`)"
+                      :unit="measure.unit"
+                      :precision="measure.precision"
+                      :height="chartHeight"
+                      stacked
+                    />
+                  </q-card-section>
+                </q-card>
+              </div>
+            </template>
+          </div>
+          <div v-else class="text-help q-ml-md">
+            {{ $t('no_measure_selected') }}
+          </div>
+        </template>
       </div>
     </div>
 
@@ -217,20 +224,21 @@
     <q-dialog v-if="measureSelected" v-model="showMeasure" maximized>
       <q-card>
         <q-bar class="bg-white q-ma-md">
-          <div class="text-h6">
-            {{ MeasureOptions.find((m) => m.key === measureSelected)?.label }}
+          <div class="text-h5">
+            {{ measureSelected.label }}
           </div>
           <q-space />
           <q-btn dense flat icon="close" size="lg" v-close-popup> </q-btn>
         </q-bar>
         <q-card-section>
           <timeseries-chart
-            :measure="measureSelected"
-            :label="
-              MeasureOptions.find((m) => m.key === measureSelected)?.label || ''
-            "
+            :measure="measureSelected.key"
+            :label="$t(`measure.${measureSelected.key}.label`)"
+            :unit="measureSelected.unit"
+            :precision="measureSelected.precision"
             :height="80"
             :height-unit="'vh'"
+            zoom
             :debounce-time="30"
             class="q-pa-sm"
           />
@@ -249,13 +257,14 @@ import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import SensorDialog from 'src/components/SensorDialog.vue';
 import { Settings } from 'src/stores/settings';
 import {
+  type MeasureOption,
   MeasureOptions,
   SensorSpecs,
 } from 'src/utils/options';
 import { Scenario } from 'src/stores/scenarii';
-import { DateRangeOptions } from 'src/utils/options';
+import { getLabel } from 'src/utils/misc';
 
-const timeseriesStore = useTimeseriesChartsStore();
+const { locale } = useI18n();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
@@ -265,7 +274,7 @@ const scenariiStore = useScenariiStore();
 const showScenario = ref(false);
 const showSensor = ref(false);
 const showMeasure = ref(false);
-const measureSelected = ref<string>();
+const measureSelected = ref<MeasureOption>();
 const colsSpan = ref('6');
 const colsClass = computed(() => `col-12 col-md-${colsSpan.value}`);
 const chartHeight = ref(200);
@@ -306,6 +315,10 @@ watch(
 
 watch(() => measuresVisible.value, onMeasureVisibilityChange, { deep: true });
 
+const measuresFiltered = (category: string) => {
+  return MeasureOptions.filter((m) => m.is_scenario_measure === (category === 'parameters_scenario'));
+};
+
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
     mapStore.applyState();
@@ -319,8 +332,8 @@ function onMeasureVisibilityChange() {
 }
 
 function onShowMeasure(measure: string) {
-  measureSelected.value = measure;
-  showMeasure.value = true;
+  measureSelected.value = MeasureOptions.find((m) => m.key === measure);
+  showMeasure.value = measureSelected.value !== undefined;
 }
 
 function getSensorSpec(measure: string) {
@@ -343,18 +356,4 @@ function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
 }
 
-const onDateRangeOption = (value: string | null) => {
-  if (value === null) {
-    timeseriesStore.timeRange = [timeseriesStore.MIN_DATE, timeseriesStore.MAX_DATE];
-    return;
-  }
-  const now = new Date();
-  now.setMinutes(0, 0, 0);
-  // Add one hour to round up to the nearest next hour
-  now.setHours(now.getHours() + 1);
-  const range = Number(value.slice(0, -1));
-  const newFromDate = new Date(now.getTime() - range * 24 * 60 * 60 * 1000);
-  const newToDate = now;
-  timeseriesStore.timeRange = [newFromDate, newToDate];
-};
 </script>
