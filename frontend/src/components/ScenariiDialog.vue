@@ -22,12 +22,12 @@
               <q-item>
                 <q-item-section>
                   <q-item-label>
-                    <q-icon
-                      name="circle"
-                      :style="{ color: scenario.lineColor, position: 'relative', top: '-0.1rem' }"
+                    <span
+                      :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '0.06rem', fontWeight: 'bold' }"
                       class="q-mr-xs"
-                      size="1rem"
-                    />
+                    >
+                    --
+                    </span>
                     {{ scenario.name }}
                   </q-item-label>
                   <div class="q-mt-sm">

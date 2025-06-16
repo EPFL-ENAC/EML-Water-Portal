@@ -106,30 +106,6 @@
               </q-item>
             </q-list>
           </template>
-          <q-item-label header class="text-h5 q-pb-none">
-            <span>{{ $t('scenarios') }}</span>
-          </q-item-label>
-          <q-item>
-            <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
-              {{ $t('scenario_info') }}
-            </div>
-            <div v-else>
-              <q-chip
-                v-for="scenario in scenariiStore.scenarii"
-                :key="`${scenario.watershed}:${scenario.name}`"
-                removable
-                @remove="onRemoveScenario(scenario)"
-                size="sm"
-              >
-                <q-icon
-                  name="circle"
-                  :style="{ color: scenario.lineColor, position: 'relative', left: '-0.3rem' }"
-                  size="0.9rem"
-                />
-                {{ `${scenario.watershed}: ${scenario.name}` }}
-              </q-chip>
-            </div>
-          </q-item>
 
         </q-list>
       </div>
@@ -191,6 +167,29 @@
           <q-item-label header class="text-h6">{{
             $t(category)
           }}</q-item-label>
+          <div v-if="category === 'parameters_scenario'">
+            <q-item>
+              <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
+                {{ $t('scenario_info') }}
+              </div>
+              <div v-else>
+                <q-chip
+                  v-for="scenario in scenariiStore.scenarii"
+                  :key="`${scenario.watershed}:${scenario.name}`"
+                  removable
+                  @remove="onRemoveScenario(scenario)"
+                  size="sm"
+                >
+                  <span
+                    :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', left: '-0.2rem', top: '-0.1rem', fontWeight: 'bold' }"
+                  >
+                  --
+                  </span>
+                  {{ `${scenario.watershed}: ${scenario.name}` }}
+                </q-chip>
+              </div>
+            </q-item>
+          </div>
           <div v-if="measuresFiltered(category).some((measure) => measuresVisible[measure.key])" class="row">
             <template
               v-for="measure in measuresFiltered(category)"
