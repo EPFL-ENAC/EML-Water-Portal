@@ -134,6 +134,7 @@ export default {
   to_date: 'Jusqu\'au',
   toilet_flushing: 'Chasse d\'eau des toilettes',
   type: 'Type',
+  use_custom_percent_paved: 'Personnaliser le pourcentage de surface pavée',
   use_historical_data: 'Utiliser les données historiques',
   vegetation: 'Végétation',
   water_reuse: 'Réutilisation de l\'eau',

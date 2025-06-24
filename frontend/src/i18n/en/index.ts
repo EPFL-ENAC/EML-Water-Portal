@@ -135,6 +135,7 @@ export default {
   toilet_flushing: 'Toilet flushing',
   type: 'Type',
   use_historical_data: 'Use historical data',
+  use_custom_percent_paved: 'Use a custom percentage of paved area',
   vegetation: 'Vegetation',
   water_reuse: 'Water reuse',
   water_samples_data_on_demand: 'Water samples data are available on demand',

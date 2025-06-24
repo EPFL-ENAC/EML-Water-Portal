@@ -43,7 +43,7 @@ class ScenariiService:
             )
 
         if custom_percent_paved is not None and (
-            custom_percent_paved <= 0 or custom_percent_paved > 100
+            custom_percent_paved < 0 or custom_percent_paved >= 100
         ):
             raise HTTPException(
                 status_code=400,

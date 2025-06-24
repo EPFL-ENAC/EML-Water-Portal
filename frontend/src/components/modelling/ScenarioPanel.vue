@@ -61,7 +61,27 @@
     </template>
   </div>
 
-  <div>{{ $t('line_color') }}</div>
+  <div>
+    <q-checkbox
+      v-model="selected.useCustomPercentPaved"
+      :label="$t('use_custom_percent_paved')"
+      @update:model-value="onUpdate"
+    />
+
+    <q-slider
+      v-if="selected.useCustomPercentPaved"
+      v-model="selected.customPercentPaved"
+      :min="0"
+      :max="99"
+      :step="1"
+      debounce="300"
+      label
+      :marker-labels="percentPavedMarkerLabels"
+      @update:model-value="onUpdate"
+    />
+  </div>
+
+  <div class="q-mt-md">{{ $t('line_color') }}</div>
   <q-input
     v-model="selected.lineColor"
     filled
@@ -131,6 +151,16 @@ const ffMarkerLabels = computed(() => {
   for (let i = 0; i <= 5; i++) {
     // eslint-disable-next-line
     obj[i * 10] = `${i * 10}`;
+  }
+  return obj;
+});
+
+const percentPavedMarkerLabels = computed(() => {
+  const obj = {};
+  obj[99] = '99%';
+  for (let i = 0; i < 5; i++) {
+    // eslint-disable-next-line
+    obj[i * 20] = `${i * 20}%`;
   }
   return obj;
 });
