@@ -86,6 +86,7 @@ export default {
   charts_height: 'Charts height',
   close: 'Close',
   color: 'Color',
+  custom_percent_paved: 'Custom percentage of paved area',
   custom_time_range: 'Custom',
   deep_rooted_trees: 'Deep-rooted trees',
   device_model: 'Device model',

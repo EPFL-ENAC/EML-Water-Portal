@@ -40,6 +40,9 @@
                     <q-badge color="grey-7">{{
                       `${$t('flushing_frequency')}: ${scenario.flushingFrequency}`
                     }}</q-badge>
+                    <q-badge color="grey-7" v-if="scenario.useCustomPercentPaved">{{
+                      `${$t('custom_percent_paved')}: ${scenario.customPercentPaved}%`
+                    }}</q-badge>
                   </div>
                   <div>
                     <q-icon

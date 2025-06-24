@@ -87,6 +87,7 @@ export default {
   close: 'Fermer',
   color: 'Couleur',
   custom_time_range: 'Personnalisé',
+  custom_percent_paved: 'Pourcentage personnalisé de surface pavée',
   deep_rooted_trees: 'Arbres à racines profondes',
   device_model: 'Modèle de l\'appareil',
   filter_data: 'Filtrer les données',
