@@ -10,7 +10,7 @@
     <div>{{ $t('tank_volume') }}</div>
     <q-slider
       v-model="selected.tank"
-      :min="0"
+      :min="10"
       :max="5000"
       :step="10"
       debounce="300"
@@ -130,7 +130,8 @@ const selected = ref({ ...props.modelValue });
 
 const tankMarkerLabels = computed(() => {
   const obj = {};
-  for (let i = 0; i <= 5; i++) {
+  obj[10] = '10';
+  for (let i = 1; i <= 10; i++) {
     // eslint-disable-next-line
     obj[i * 1000] = `${i * 1000}`;
   }
