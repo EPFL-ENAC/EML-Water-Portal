@@ -19,7 +19,7 @@
               v-for="scenario in watershedScenarii"
               :key="scenario.name"
             >
-              <q-item :class="{ 'chip-disabled': !scenario.enabled }" >
+              <q-item :class="{ 'item-disabled': !scenario.enabled }" >
                 <q-item-section>
                   <q-item-label>
                     <q-checkbox
@@ -167,7 +167,7 @@ function getVegetationIcon(vegetation: string) {
 
 <style scoped>
 
-.chip-disabled {
+.item-disabled {
   opacity: 0.6;
 }
 
