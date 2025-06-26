@@ -10,6 +10,8 @@ export interface Scenario {
   vegetation: string;
   flushingFrequency: number; // per hour
   lineColor: string;
+  useCustomPercentPaved: boolean;
+  customPercentPaved?: number; // 0-100
   useHistoricalData?: boolean;
   data?: ScenarioData;
 }
@@ -40,6 +42,8 @@ export const useScenariiStore = defineStore(
         vegetation: 'none',
         flushingFrequency: 2,
         lineColor: getNewScenarioColor(),
+        useCustomPercentPaved: false,
+        customPercentPaved: 70,
         useHistoricalData: false,
       } as Scenario;
     }
@@ -73,6 +77,7 @@ export const useScenariiStore = defineStore(
           roofToTank: scenario.roofToTank,
           vegetation: scenario.vegetation,
           flushingFrequency: scenario.flushingFrequency,
+          customPercentPaved: scenario.useCustomPercentPaved ? scenario.customPercentPaved : undefined,
           // useHistoricalData: scenario.useHistoricalData,
         },
       }).then((response) => {

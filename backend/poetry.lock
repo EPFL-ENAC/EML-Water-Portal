@@ -511,7 +511,7 @@ yaml = ["ruamel.yaml"]
 
 [[package]]
 name = "eml-urban-hydro-model"
-version = "0.1.3"
+version = "0.1.0"
 description = "Urban Hydrological Model"
 optional = false
 python-versions = ">=3.10"
@@ -532,8 +532,8 @@ test = ["pytest (>=8.3.4)", "pytest-cov (>=6.0.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/EPFL-ENAC/EML-urban-hydro-model.git"
-reference = "v0.1.3"
-resolved_reference = "d23a9521b844a878744a2506483b266c63b27c58"
+reference = "v0.1.4"
+resolved_reference = "815cd2ca07fcb85908382aed4b819a4d4997de07"
 
 [[package]]
 name = "enacit4r-files"
@@ -2258,4 +2258,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "201738ef7cdf7db33c5a686d752819a5033c4e6b4e01fe022b5cb6afbc663a8f"
+content-hash = "ab4d7ecc8d2a73763423e215264e73ef717f81374c02818a1aa73c8981d056e7"

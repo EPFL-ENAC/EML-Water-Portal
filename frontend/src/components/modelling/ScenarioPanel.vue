@@ -10,7 +10,7 @@
     <div>{{ $t('tank_volume') }}</div>
     <q-slider
       v-model="selected.tank"
-      :min="0"
+      :min="10"
       :max="5000"
       :step="10"
       debounce="300"
@@ -61,7 +61,27 @@
     </template>
   </div>
 
-  <div>{{ $t('line_color') }}</div>
+  <div>
+    <q-checkbox
+      v-model="selected.useCustomPercentPaved"
+      :label="$t('use_custom_percent_paved')"
+      @update:model-value="onUpdate"
+    />
+
+    <q-slider
+      v-if="selected.useCustomPercentPaved"
+      v-model="selected.customPercentPaved"
+      :min="0"
+      :max="99"
+      :step="1"
+      debounce="300"
+      label
+      :marker-labels="percentPavedMarkerLabels"
+      @update:model-value="onUpdate"
+    />
+  </div>
+
+  <div class="q-mt-md">{{ $t('line_color') }}</div>
   <q-input
     v-model="selected.lineColor"
     filled
@@ -110,7 +130,8 @@ const selected = ref({ ...props.modelValue });
 
 const tankMarkerLabels = computed(() => {
   const obj = {};
-  for (let i = 0; i <= 5; i++) {
+  obj[10] = '10';
+  for (let i = 1; i <= 10; i++) {
     // eslint-disable-next-line
     obj[i * 1000] = `${i * 1000}`;
   }
@@ -132,6 +153,16 @@ const ffMarkerLabels = computed(() => {
     // eslint-disable-next-line
     obj[i * 10] = `${i * 10}`;
   }
+  return obj;
+});
+
+const percentPavedMarkerLabels = computed(() => {
+  const obj = {};
+  for (let i = 0; i < 5; i++) {
+    // eslint-disable-next-line
+    obj[i * 20] = `${i * 20}%`;
+  }
+  obj[99] = '99%';
   return obj;
 });
 
