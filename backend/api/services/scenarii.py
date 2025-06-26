@@ -48,8 +48,8 @@ class ScenariiService:
             raise HTTPException(
                 status_code=400,
                 detail=(
-                    "Custom percentage of paved area must be between 0 and"
-                    " 100."
+                    "Custom percentage of paved area must be within the range"
+                    " of 0 (inclusive) to 100 (exclusive)."
                 ),
             )
 

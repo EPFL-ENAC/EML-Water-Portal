@@ -158,11 +158,11 @@ const ffMarkerLabels = computed(() => {
 
 const percentPavedMarkerLabels = computed(() => {
   const obj = {};
-  obj[99] = '99%';
   for (let i = 0; i < 5; i++) {
     // eslint-disable-next-line
     obj[i * 20] = `${i * 20}%`;
   }
+  obj[99] = '99%';
   return obj;
 });
 

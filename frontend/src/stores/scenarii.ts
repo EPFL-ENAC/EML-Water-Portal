@@ -69,7 +69,6 @@ export const useScenariiStore = defineStore(
     }
 
     async function updateScenarioData(scenario: Scenario) {
-      console.log("AAA", scenario.useCustomPercentPaved ? scenario.customPercentPaved : undefined);
       api.get('scenarii/', {
         params: {
           name: scenario.name,
