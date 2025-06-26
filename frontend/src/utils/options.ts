@@ -104,13 +104,13 @@ export const MeasureOptions: MeasureOption[] = [
   },
 ];
 
-const gradientA = getSensorFamilyColorGradient('A', 6);
+const gradientA = getSensorFamilyColorGradient('A', 10);
 const gradientB = getSensorFamilyColorGradient('B', 15);
 const gradientC = getSensorFamilyColorGradient('C', 3);
 
 export const SensorSpecs = [
   {
-    color: gradientA[2],
+    color: gradientA[4],
     label: 'A',
     layer: 'sensors-a',
     title: {
@@ -119,7 +119,7 @@ export const SensorSpecs = [
     },
     device: 'In-Situ',
     icon: 'opacity',
-    locations: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
+    locations: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10'],
     colors: gradientA,
     measures: [
       'water_temperature',
@@ -166,7 +166,7 @@ export function getSensorFamilyColorGradient(name: string, midpoints: number) {
     case 'A':
       // colors = ['#440154','#414487','#2a788e','#22a884','#7ad151','#fde725']; // viridis
       // colors = ['#000004','#420a68','#932667','#dd513a','#fca50a','#fcffa4']; // inferno
-      colors = ['#0d0887','#6a00a8','#b12a90','#e16462','#fca636','#f0f921'].reverse(); // plasma
+      colors = ['#0d0887','#46039f','#7201a8','#9c179e','#bd3786','#d8576b','#ed7953','#fb9f3a','#fdca26','#f0f921'].reverse(); // plasma
       break;
     case 'B':
       colors = ['#92ffc0', '#002661'];
@@ -185,6 +185,10 @@ export function getSensorFamilyColorGradient(name: string, midpoints: number) {
       colors[3],
       colors[4],
       colors[5],
+      colors[6],
+      colors[7],
+      colors[8],
+      colors[9]
     );
 
   gradient.setMidpoint(Math.max(colors.length, midpoints));
