@@ -59,6 +59,7 @@
             </q-btn-group>
           </div>
         </q-card>
+        <div class="q-ml-md"><q-icon name="lightbulb" size="xs"/> <span class="text-help">{{ $t('map_help') }}</span></div>
         <q-list>
           <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
             <q-item-label header class="text-h6">{{

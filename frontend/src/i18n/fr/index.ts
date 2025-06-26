@@ -102,6 +102,7 @@ export default {
   legends: 'Légendes',
   line_color: 'Couleur de la ligne',
   location_name: 'Nom de l\'emplacement',
+  map_help: 'Cliquez sur le bassin versant pour tester les scénarios',
   measures: 'Mesures',
   name: 'Nom',
   no_measure_selected: 'Aucune mesure sélectionnée',
