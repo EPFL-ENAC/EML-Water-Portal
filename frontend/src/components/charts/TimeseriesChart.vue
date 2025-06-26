@@ -133,6 +133,7 @@ const scenarii = computed(() => {
   return scenariiStore.scenarii
     ? scenariiStore.scenarii.filter((scenario) => {
         return (
+          scenario.enabled &&
           scenario.data &&
           scenario.data.vectors.find(
             (col) => col.measure === props.measure && col.values,
