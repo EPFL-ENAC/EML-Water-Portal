@@ -102,6 +102,7 @@ export default {
   legends: 'Legends',
   line_color: 'Line color',
   location_name: 'Location name',
+  map_help: 'Click on catchment to test scenarios',
   measures: 'Measures',
   name: 'Name',
   no_measure_selected: 'No measure selected',

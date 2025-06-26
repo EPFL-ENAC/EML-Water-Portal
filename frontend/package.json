@@ -20,7 +20,6 @@
     "date-fns": "^3.6.0",
     "javascript-color-gradient": "^2.5.0",
     "maplibre-gl": "^4.3.2",
-    "maplibregl-theme-switcher": "github:EPFL-ENAC/maplibregl-theme-switcher#1.2.0",
     "nouislider": "^15.8.1",
     "papaparse": "^5.5.3",
     "pinia": "^2.1.7",

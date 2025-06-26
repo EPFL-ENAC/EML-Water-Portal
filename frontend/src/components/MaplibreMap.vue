@@ -22,10 +22,6 @@ export default defineComponent({
 import 'maplibre-gl/dist/maplibre-gl.css';
 import 'maplibregl-theme-switcher/styles.css';
 import {
-  ThemeSwitcherControl,
-  ThemeDefinition,
-} from 'maplibregl-theme-switcher';
-import {
   AttributionControl,
   FullscreenControl,
   Map,
@@ -36,7 +32,6 @@ import {
   type StyleSpecification,
 } from 'maplibre-gl';
 import { DivControl } from 'src/utils/control';
-import { Settings } from 'src/stores/settings';
 
 interface Props {
   styleSpec?: string | StyleSpecification | undefined;
@@ -44,7 +39,6 @@ interface Props {
   zoom?: number;
   minZoom?: number;
   maxZoom?: number;
-  themes?: ThemeDefinition[];
   position?: boolean | string | undefined;
   attribution?: string;
 }
@@ -64,13 +58,6 @@ const settingsStore = useSettingsStore();
 const DEFAULT_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.swisstopo.admin.ch/" target="_blank">Swisstopo</a>, <a href="https://www.epfl.ch/" target="_blank">EPFL</a>';
 // to be adapted to the style.json
-const DEFAULT_THEME = 'light';
-const THEMES: ThemeDefinition[] = [
-  { id: 'classic', label: 'Classic' },
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
-  { id: 'swissimage', label: 'Aerial' },
-];
 
 const loading = ref(true);
 
@@ -92,18 +79,6 @@ onMounted(() => {
   map.addControl(new FullscreenControl());
 
   const settings = settingsStore.settings;
-  map.addControl(
-    new ThemeSwitcherControl(THEMES, {
-      defaultStyle: settings?.theme || DEFAULT_THEME,
-      eventListeners: {
-        onChange(event: MouseEvent, style) {
-          // persist the last theme choice
-          settingsStore.saveSettings({ theme: style } as Settings);
-          return false;
-        },
-      },
-    }),
-  );
 
   map.addControl(
     new AttributionControl({
@@ -132,13 +107,6 @@ onMounted(() => {
   }
 
   map.once('load', () => {
-    THEMES.map((th) => th.id).forEach((id) => {
-      map?.setLayoutProperty(
-        id,
-        'visibility',
-        id === settings?.theme ? 'visible' : 'none',
-      );
-    });
     emit('map:loaded', map as Map);
     loading.value = false;
   });
