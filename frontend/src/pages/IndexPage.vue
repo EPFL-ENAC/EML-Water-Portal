@@ -7,6 +7,7 @@
         <q-card bordered class="q-ma-sm q-mb-md">
           <div style="height: 250px">
             <q-btn
+              v-show="mapStore.map"
               dense
               @click="onToggle"
               size="13px"
