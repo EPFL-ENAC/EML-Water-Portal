@@ -16,6 +16,7 @@ export default {
     rejets_ec: 'Rejets (eaux claires)',
     rejets_eu: 'Rejets (eaux usées)',
     'sensors-a': 'Capteurs A',
+    'sensors-a_unil': 'Capteurs A (Unil)',
     'sensors-b': 'Capteurs B',
     'sensors-c': 'Capteurs C',
     'sensors-d': 'Capteurs D',
@@ -77,6 +78,14 @@ export default {
       label: 'Volume du réservoir',
       axis_label: 'Volume du réservoir',
     },
+    fdom: {
+      label: 'Matière organique dissoute fluorescente',
+      axis_label: 'MODF',
+    },
+    nitrate: {
+      label: 'Nitrate',
+      axis_label: 'Nitrate',
+    }
   },
   about: 'À propos',
   add_scenario: 'Ajouter un scénario',

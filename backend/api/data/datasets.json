@@ -319,7 +319,7 @@
       }
     },
     {
-      "name": "A7",
+      "name": "A_Unil1",
       "db_spec": {
         "measurement": "hydrovu",
         "aggregate": "1h",
@@ -336,11 +336,13 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "fdom",
@@ -355,7 +357,7 @@
       }
     },
     {
-      "name": "A8",
+      "name": "A_Unil2",
       "db_spec": {
         "measurement": "hydrovu",
         "aggregate": "1h",
@@ -372,11 +374,13 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "fdom",
@@ -391,7 +395,7 @@
       }
     },
     {
-      "name": "A9",
+      "name": "A_Unil3",
       "db_spec": {
         "measurement": "hydrovu",
         "aggregate": "1h",
@@ -408,11 +412,13 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "fdom",
@@ -427,7 +433,7 @@
       }
     },
     {
-      "name": "A10",
+      "name": "A_Unil4",
       "db_spec": {
         "measurement": "hydrovu",
         "aggregate": "1h",
@@ -444,11 +450,13 @@
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "fdom",

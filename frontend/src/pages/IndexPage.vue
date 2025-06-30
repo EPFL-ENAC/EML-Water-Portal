@@ -13,50 +13,48 @@
               @map:loaded="onMapLoaded"
             />
           </div>
-          <div>
-            <q-btn-group flat spread class="q-ma-none">
-              <template v-for="sensor in SensorSpecs" :key="sensor.color">
-                <q-btn-dropdown
-                  v-if="sensor.label !== 'D'"
-                  :title="sensor.label"
-                  size="14px"
-                  no-caps
-                  stretch
-                  class="text-grey-3"
-                  :style="`background-color: ${sensor.color};`"
-                >
-                  <template v-slot:label>
-                    <div class="text-wrap text-left" style="white-space: normal; max-width: 150px;">
-                      {{ getLabel(locale, sensor.title) }}
-                    </div>
-                  </template>
-                  <q-list>
-                    <q-item dense class="q-pa-none">
-                      <q-item-section class="q-pa-none">
-                        <q-btn-group flat spread>
-                          <q-btn flat size="sm" :label="$t('all')" @click="onApplySensors(sensor.label)" />
-                          <q-btn flat size="sm" :label="$t('clear')" @click="onRemoveSensors(sensor.label)" />
-                        </q-btn-group>
+          <div class="row">
+            <template v-for="sensor in SensorSpecs" :key="sensor.color">
+              <q-btn-dropdown
+                v-if="sensor.label !== 'D'"
+                :title="sensor.label"
+                no-caps
+                stretch
+                unelevated
+                class="text-grey-3 col-12 col-sm-6 col-md-12 col-lg-6"
+                :style="`background-color: ${sensor.color};`"
+              >
+                <template v-slot:label>
+                  <div class="text-wrap text-left" style="white-space: normal;">
+                    {{ getLabel(locale, sensor.title) }}
+                  </div>
+                </template>
+                <q-list>
+                  <q-item dense class="q-pa-none">
+                    <q-item-section class="q-pa-none">
+                      <q-btn-group flat spread>
+                        <q-btn flat size="sm" :label="$t('all')" @click="onApplySensors(sensor.label)" />
+                        <q-btn flat size="sm" :label="$t('clear')" @click="onRemoveSensors(sensor.label)" />
+                      </q-btn-group>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <template v-for="(location, idx) in sensor.locations" :key="location">
+                    <q-item dense clickable @click="onToggleSensorLocation(location)">
+                      <q-item-section avatar>
+                        <q-icon color="secondary" :name="filtersStore.sensors.includes(location) ? 'check_box' : 'check_box_outline_blank'" />
+                      </q-item-section>
+                      <q-item-section no-wrap>
+                        <span>{{ location }}</span>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-icon name="circle" size="xs" :style="`color: ${sensor.colors[idx]}`" />
                       </q-item-section>
                     </q-item>
-                    <q-separator />
-                    <template v-for="(location, idx) in sensor.locations" :key="location">
-                      <q-item dense clickable @click="onToggleSensorLocation(location)">
-                        <q-item-section avatar>
-                          <q-icon color="secondary" :name="filtersStore.sensors.includes(location) ? 'check_box' : 'check_box_outline_blank'" />
-                        </q-item-section>
-                        <q-item-section no-wrap>
-                          <span>{{ location }}</span>
-                        </q-item-section>
-                        <q-item-section side>
-                          <q-icon name="circle" size="xs" :style="`color: ${sensor.colors[idx]}`" />
-                        </q-item-section>
-                      </q-item>
-                    </template>
-                  </q-list>
-                </q-btn-dropdown>
-              </template>
-            </q-btn-group>
+                  </template>
+                </q-list>
+              </q-btn-dropdown>
+            </template>
           </div>
         </q-card>
         <div class="q-ml-md"><q-icon name="lightbulb" size="xs"/> <span class="text-help">{{ $t('map_help') }}</span></div>

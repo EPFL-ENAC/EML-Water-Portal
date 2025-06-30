@@ -35,6 +35,7 @@ export const useMapStore = defineStore('map', () => {
     new MeteoLayerManager(),
     new SensorsLayerManager('B'),
     new SensorsLayerManager('A'),
+    new SensorsLayerManager('A_Unil'),
     new SensorsLayerManager('C'),
   ];
 
@@ -45,6 +46,7 @@ export const useMapStore = defineStore('map', () => {
         'river',
         'sensors-b',
         'sensors-a',
+        'sensors-a_unil',
         'sensors-c',
         'conduite_principale_ec',
         'bv',

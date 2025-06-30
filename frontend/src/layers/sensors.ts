@@ -14,7 +14,7 @@ import { SensorSpecs } from 'src/utils/options';
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
 
 export class SensorsLayerManager extends LayerManager {
-  family = ''; // A, B, C or D
+  family = ''; // A, A_Unil, B, C or D
 
   data: FeatureCollection | null = null;
 
