@@ -12,7 +12,7 @@
     <a href="https://epfl.ch" target="_blank" class="q-mt-sm">
       <img src="EPFL.svg" style="height: 25px" />
     </a>
-    <span class="q-ml-md text-h6">{{ $t('app_title') }}</span>
+    <span class="q-ml-md" :class="$q.screen.lt.sm ? 'text-bold' : 'text-h6'">{{ $t($q.screen.lt.sm ? 'app_title_sm' : 'app_title') }}</span>
     <!--q-tabs v-if="!$q.screen.lt.sm" shrink stretch active-color="primary" class="q-ml-md">
       <q-route-tab
         to="/"

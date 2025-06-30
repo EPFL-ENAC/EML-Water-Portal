@@ -3,6 +3,7 @@
 
 export default {
   app_title: 'EPFL Campus Water Portal',
+  app_title_sm: 'Water Portal',
   error_not_found: 'Oops. Nothing here...',
   filters: 'Filters',
   it4r_contrib: 'UI/UX design, application development and deployment',
