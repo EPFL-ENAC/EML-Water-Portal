@@ -20,7 +20,6 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
-import 'maplibregl-theme-switcher/styles.css';
 import {
   AttributionControl,
   FullscreenControl,
