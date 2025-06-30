@@ -6,6 +6,13 @@
       <div class="col-12 col-md-3 bg-grey-2">
         <q-card bordered class="q-ma-sm q-mb-md">
           <div style="height: 250px">
+            <q-btn
+              dense
+              @click="onToggle"
+              size="13px"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+              class="fullscreen-toggle"
+            />
             <maplibre-map
               position
               :center="[6.57, 46.5225]"
@@ -248,6 +255,7 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import MaplibreMap from 'src/components/MaplibreMap.vue';
 import { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
@@ -263,6 +271,7 @@ import {
 import { Scenario } from 'src/stores/scenarii';
 import { getLabel } from 'src/utils/misc';
 
+const $q = useQuasar();
 const { locale } = useI18n();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
@@ -355,4 +364,21 @@ function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
 }
 
+function onToggle(e) {
+  const target = e.target.parentNode.parentNode.parentNode;
+  $q.fullscreen.toggle(target);
+}
+
 </script>
+
+<style scoped>
+.fullscreen-toggle {
+  position: absolute;
+  top: 108px;
+  right: 9px;
+  z-index: 2000;
+  background-color: white;
+  border: solid 1px #e2e2e2;
+  border-radius: 5px;
+}
+</style>

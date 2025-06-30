@@ -22,7 +22,6 @@ export default defineComponent({
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
   AttributionControl,
-  FullscreenControl,
   Map,
   MapMouseEvent,
   NavigationControl,
@@ -75,7 +74,6 @@ onMounted(() => {
 
   map.addControl(new NavigationControl());
   map.addControl(new ScaleControl());
-  map.addControl(new FullscreenControl());
 
   const settings = settingsStore.settings;
 
