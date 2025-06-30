@@ -16,6 +16,7 @@ export default {
     rejets_ec: 'Discharges (clear waters)',
     rejets_eu: 'Discharges (waste)',
     'sensors-a': 'Sensors A',
+    'sensors-a_unil': 'Sensors A (Unil)',
     'sensors-b': 'Sensors B',
     'sensors-c': 'Sensors C',
     'sensors-d': 'Sensors D',
@@ -77,6 +78,14 @@ export default {
       label: 'Tank volume',
       axis_label: 'Tank volume',
     },
+    fdom: {
+      label: 'Fluorescent dissolved organic matter',
+      axis_label: 'FDOM',
+    },
+    nitrate: {
+      label: 'Nitrate',
+      axis_label: 'Nitrate',
+    }
   },
   about: 'About',
   add_scenario: 'Add scenario',

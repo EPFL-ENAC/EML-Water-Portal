@@ -319,6 +319,158 @@
       }
     },
     {
+      "name": "A_Unil1",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5077335102324736"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil2",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5492673698725888"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil3",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5603918924873728"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil4",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "6533528899420160"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "C1",
       "db_spec": {
         "measurement": "ijinus",

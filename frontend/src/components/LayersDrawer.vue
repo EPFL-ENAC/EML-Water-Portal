@@ -146,6 +146,7 @@ const mainLayersIds = [
   'river',
   'bv',
   'sensors-a',
+  'sensors-a_unil',
   'sensors-b',
   'sensors-c',
   'sensors-d',

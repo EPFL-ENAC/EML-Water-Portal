@@ -79,6 +79,18 @@ export const MeasureOptions: MeasureOption[] = [
     is_scenario_measure: false,
   },
   {
+    key: 'fdom',
+    unit: 'ppb',
+    precision: 2,
+    is_scenario_measure: false,
+  },
+  {
+    key: 'nitrate',
+    unit: 'mg/L',
+    precision: 2,
+    is_scenario_measure: false,
+  },
+  {
     key: 'outflow_total',
     unit: 'L/s',
     precision: 1,
@@ -105,6 +117,7 @@ export const MeasureOptions: MeasureOption[] = [
 ];
 
 const gradientA = getSensorFamilyColorGradient('A', 6);
+const gradientAUnil = getSensorFamilyColorGradient('A_Unil', 4);
 const gradientB = getSensorFamilyColorGradient('B', 15);
 const gradientC = getSensorFamilyColorGradient('C', 3);
 
@@ -129,6 +142,26 @@ export const SensorSpecs = [
       'dissolved_oxygen',
       'ph',
       'oxidation_reduction_potential',
+    ],
+  },
+  {
+    color: gradientAUnil[1],
+    label: 'A_Unil',
+    layer: 'sensors-a_unil',
+    title: {
+      en: 'Multi-parameters sensors (Unil)',
+      fr: 'Capteurs multi-paramétriques (Unil)',
+    },
+    device: 'In-Situ',
+    icon: 'opacity',
+    locations: ['A_Unil1', 'A_Unil2', 'A_Unil3', 'A_Unil4'],
+    colors: gradientAUnil,
+    measures: [
+      'water_temperature',
+      'electro_conductivity',
+      'turbidity',
+      'fdom',
+      'nitrate',
     ],
   },
   {
@@ -164,9 +197,10 @@ export function getSensorFamilyColorGradient(name: string, midpoints: number) {
   let colors = [];
   switch (name) {
     case 'A':
-      // colors = ['#440154','#414487','#2a788e','#22a884','#7ad151','#fde725']; // viridis
-      // colors = ['#000004','#420a68','#932667','#dd513a','#fca50a','#fcffa4']; // inferno
       colors = ['#0d0887','#6a00a8','#b12a90','#e16462','#fca636','#f0f921'].reverse(); // plasma
+      break;
+    case 'A_Unil':
+      colors = ['#002051','#575c6e','#a49d78','#fdea45'].reverse(); // cividis
       break;
     case 'B':
       colors = ['#92ffc0', '#002661'];
@@ -177,6 +211,13 @@ export function getSensorFamilyColorGradient(name: string, midpoints: number) {
   const gradient = new Gradient();
 
   if (colors.length === 2) gradient.setColorGradient(colors[0], colors[1]);
+  else if (colors.length === 4)
+    gradient.setColorGradient(
+      colors[0],
+      colors[1],
+      colors[2],
+      colors[3],
+    );
   else
     gradient.setColorGradient(
       colors[0],
