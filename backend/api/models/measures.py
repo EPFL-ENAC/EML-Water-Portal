@@ -6,6 +6,8 @@ class Column(BaseModel):
     name: str
     measure: str
     format: Optional[str] = None
+    min: Optional[float] = None
+    max: Optional[float] = None
 
 
 class DataFileSpec(BaseModel):
@@ -22,10 +24,14 @@ class DBFilter(BaseModel):
 class DBMeasure(BaseModel):
     measure: str
     value: str
+    min: Optional[float] = None
+    max: Optional[float] = None
+
 
 class DBFilters(BaseModel):
     field: str
     measures: List[DBMeasure]
+
 
 class DataDBSpec(BaseModel):
     measurement: str

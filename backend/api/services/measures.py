@@ -14,7 +14,7 @@ from api.models.measures import (
     SensorDataSpec,
     Vector,
 )
-from api.services.db import DBQuery, db_client
+from api.services.db import DBQuery, DBUnionQuery, db_client
 from api.services.s3 import s3_client
 from fastapi.exceptions import HTTPException
 from fastapi.logger import logger
@@ -103,6 +103,12 @@ class MeasuresService:
                     df[column.name] = (
                         df[column.name].str.replace(",", ".").astype("float")
                     )
+                    if column.min is not None or column.max is not None:
+                        df[column.name] = df[column.name].where(
+                            ((column.min is None) or (df[column.name] >= column.min)) &
+                            ((column.max is None) or (
+                                df[column.name] <= column.max))
+                        )
 
         # remove columns that are not in the file
         df = df[
@@ -163,19 +169,26 @@ class MeasuresService:
     ) -> SensorData:
         from_datetime = from_date if from_date else START_DATETIME
         to_datetime = to_date if to_date else datetime.datetime.now()
-        query = DBQuery(
-            sensor.db_spec.measurement,
-            from_datetime,
-            to_date if to_date else "now()",
-        )
-        query.filter(
-            sensor.db_spec.location.field, sensor.db_spec.location.value
-        )
-        # handle multiple measures
-        query.filters(sensor.db_spec.filters)
-        if self.to_resample(from_datetime, to_datetime) and allow_resample:
-            query.aggregate(sensor.db_spec.aggregate, "mean")
-        # query.not_null()
+
+        query = DBUnionQuery()
+
+        to_date_str = to_date if to_date else "now()"
+        for filter in sensor.db_spec.filters.measures:
+            # create a query for each filter
+            q = DBQuery(
+                filter.measure,
+                sensor.db_spec.measurement,
+                from_datetime,
+                to_date_str,
+            )\
+                .filter(sensor.db_spec.location.field,
+                        sensor.db_spec.location.value)\
+                .filter(sensor.db_spec.filters.field, filter.value)\
+                .min_max(filter.min, filter.max)
+            if self.to_resample(from_datetime, to_datetime) and allow_resample:
+                q.aggregate(sensor.db_spec.aggregate, "mean")
+
+            query.add_query(q)
 
         content = await redis.get(query.to_string())
         vectors = []
