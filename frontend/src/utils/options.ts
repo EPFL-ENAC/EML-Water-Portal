@@ -80,7 +80,7 @@ export const MeasureOptions: MeasureOption[] = [
   },
   {
     key: 'fdom',
-    unit: 'ppb',
+    unit: 'RFU',
     precision: 2,
     is_scenario_measure: false,
   },
