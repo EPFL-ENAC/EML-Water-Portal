@@ -50,7 +50,7 @@ export const useHelpStore = defineStore('help', () => {
             };
           });
         },
-        error: function(error) {
+        error: function(error: Error) {
           console.error('Error parsing CSV:', error);
           sensorsInfo.value = []; // Fallback to an empty array
         }

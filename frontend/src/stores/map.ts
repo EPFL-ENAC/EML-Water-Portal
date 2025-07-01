@@ -8,7 +8,7 @@ import { RejetsECLayerManager } from 'src/layers/rejets_ec';
 import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
-import { Map, MapGeoJSONFeature } from 'maplibre-gl';
+import type { Map, MapGeoJSONFeature } from 'maplibre-gl';
 
 export type LayerSelection = {
   id: string;

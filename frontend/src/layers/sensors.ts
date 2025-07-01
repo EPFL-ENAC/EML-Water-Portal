@@ -1,14 +1,14 @@
-import { Map, GeoJSONSource } from 'maplibre-gl';
-import {
+import type { Map, GeoJSONSource } from 'maplibre-gl';
+import type {
   Feature,
   FeatureCollection,
   GeoJSON,
   GeoJsonProperties,
   Geometry,
 } from 'geojson';
-import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
+import { LayerManager, type FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
-import { State } from 'src/layers/models';
+import type { State } from 'src/layers/models';
 import { SensorSpecs } from 'src/utils/options';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/sensors.geojson`;
@@ -47,7 +47,7 @@ export class SensorsLayerManager extends LayerManager {
       const name = feature.properties?.name || '';
       const idx = sensorSpec?.locations.indexOf(name);
       const familyColor = sensorSpec?.color || '#FFFFFF';
-      const color = idx >= 0 ? sensorSpec?.colors[idx] || familyColor : familyColor;
+      const color = idx !== undefined && idx >= 0 ? sensorSpec?.colors[idx] || familyColor : familyColor;
       return {
         ...feature,
         properties: {
@@ -119,7 +119,7 @@ export class SensorsLayerManager extends LayerManager {
     });
   }
 
-  applyState(map: Map, state: State): void {
+  override applyState(map: Map, state: State): void {
     if (!this.data) return;
     const updatedFeatures = this.data.features.map(
       (feature: Feature<Geometry, GeoJsonProperties>) => {

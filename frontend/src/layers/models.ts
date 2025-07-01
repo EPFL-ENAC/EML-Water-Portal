@@ -1,5 +1,5 @@
-import { Map, MapGeoJSONFeature } from 'maplibre-gl';
-import { Scenario } from 'src/stores/scenarii';
+import type { Map, MapGeoJSONFeature } from 'maplibre-gl';
+import type { Scenario } from 'src/stores/scenarii';
 
 export type State = {
   sensors: string[]; // selected sensors

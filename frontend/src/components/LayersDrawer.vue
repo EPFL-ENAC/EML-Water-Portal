@@ -2,11 +2,11 @@
   <q-list>
     <q-item-label header class="text-h6">
       <q-icon name="model_training" class="q-pb-xs" />
-      <span class="q-ml-sm">{{ $t('scenarios') }}</span>
+      <span class="q-ml-sm">{{ t('scenarios') }}</span>
     </q-item-label>
     <q-item>
       <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
-        {{ $t('scenario_info') }}
+        {{ t('scenario_info') }}
       </div>
       <div v-else>
         <q-chip
@@ -23,7 +23,7 @@
     <q-item-label header>
       <span class="text-h6">
         <q-icon name="filter_alt" class="q-pb-xs" />
-        <span class="q-ml-sm">{{ $t('filters') }}</span>
+        <span class="q-ml-sm">{{ t('filters') }}</span>
       </span>
       <q-btn
         flat
@@ -31,14 +31,14 @@
         color="primary"
         size="12px"
         icon="restart_alt"
-        :label="$t('reset_filters')"
+        :label="t('reset_filters')"
         @click="onResetFilters"
         class="q-mt-xs q-pl-xs q-pr-xs float-right"
       />
     </q-item-label>
     <q-item>
       <div v-if="filtersStore.sensors.length === 0" class="text-help">
-        {{ $t('sensors_to_filter_info') }}
+        {{ t('sensors_to_filter_info') }}
       </div>
       <div v-else>
         <q-chip
@@ -56,7 +56,7 @@
     </q-item>
     <q-item-label header class="text-h6">
       <q-icon name="layers" class="q-pb-xs" />
-      <span class="q-ml-sm">{{ $t('layers') }}</span>
+      <span class="q-ml-sm">{{ t('layers') }}</span>
     </q-item-label>
     <q-item
       v-for="layer in mainLayerSelections"
@@ -66,7 +66,7 @@
       <q-item-section>
         <q-checkbox
           v-model="layer.visible"
-          :label="$t(`layer.${layer.id}`)"
+          :label="t(`layer.${layer.id}`)"
           @click="onToggleLayer(layer.id)"
         />
       </q-item-section>
@@ -82,7 +82,7 @@
     <q-list>
       <q-expansion-item
         header-class="text-secondary"
-        :label="$t('other_layers')"
+        :label="t('other_layers')"
       >
         <q-item
           v-for="layer in otherLayerSelections"
@@ -92,7 +92,7 @@
           <q-item-section>
             <q-checkbox
               v-model="layer.visible"
-              :label="$t(`layer.${layer.id}`)"
+              :label="t(`layer.${layer.id}`)"
               @click="onToggleLayer(layer.id)"
             />
           </q-item-section>
@@ -109,12 +109,12 @@
     </q-list>
     <q-item-label header class="text-h6">
       <q-icon name="info" class="q-pb-xs" />
-      <span class="q-ml-sm">{{ $t('legends') }}</span>
+      <span class="q-ml-sm">{{ t('legends') }}</span>
     </q-item-label>
     <q-item-label>
-      <span class="q-ml-md">{{ $t('sensors') }}</span>
+      <span class="q-ml-md">{{ t('sensors') }}</span>
     </q-item-label>
-    <q-item v-for="sensor in SensorSpecs" :key="sensor.color">
+    <q-item v-for="sensor in SensorSpecs" :key="sensor.label">
       <q-item-section avatar>
         <q-avatar
           size="md"
@@ -128,15 +128,11 @@
   </q-list>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'LayersDrawer',
-});
-</script>
 <script setup lang="ts">
-import { Scenario } from 'src/stores/scenarii';
+import type { Scenario } from 'src/stores/scenarii';
 import { SensorSpecs } from 'src/utils/options';
 
+const { t } = useI18n();
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
 const filtersStore = useFiltersStore();

@@ -6,17 +6,17 @@
       </q-card-actions>
       <q-card-section>
         <div class="text-h6 q-mb-sm q-pl-sm q-pr-sm">
-          {{ $t('scenario_for_watershed', { name: stationName }) }}
+          {{ t('scenario_for_watershed', { name: stationName }) }}
         </div>
         <div class="q-pl-sm q-pr-sm">
           <scenario-panel v-model="watershedScenario" />
         </div>
       </q-card-section>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
-        <q-btn flat :label="$t('cancel')" color="grey-6" v-close-popup />
+        <q-btn flat :label="t('cancel')" color="grey-6" v-close-popup />
         <q-btn
           flat
-          :label="$t('apply')"
+          :label="t('apply')"
           color="primary"
           @click="onApply"
           v-close-popup
@@ -26,14 +26,10 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'ScenarioDialog',
-});
-</script>
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import ScenarioPanel from 'src/components/modelling/ScenarioPanel.vue';
-import { Scenario } from 'src/stores/scenarii';
+import type { Scenario } from 'src/stores/scenarii';
 
 interface Props {
   modelValue: boolean;
@@ -42,6 +38,8 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
+const $q = useQuasar();
+const { t } = useI18n();
 const mapStore = useMapStore();
 const scenariiStore = useScenariiStore();
 

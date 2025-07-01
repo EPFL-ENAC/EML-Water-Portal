@@ -194,7 +194,7 @@ export const SensorSpecs = [
 ];
 
 export function getSensorFamilyColorGradient(name: string, midpoints: number) {
-  let colors = [];
+  let colors: string[] = [];
   switch (name) {
     case 'A':
       colors = ['#0d0887','#6a00a8','#b12a90','#e16462','#fca636','#f0f921'].reverse(); // plasma
@@ -210,23 +210,12 @@ export function getSensorFamilyColorGradient(name: string, midpoints: number) {
   }
   const gradient = new Gradient();
 
-  if (colors.length === 2) gradient.setColorGradient(colors[0], colors[1]);
+  if (colors.length === 2)
+    gradient.setColorGradient(...colors.slice(0, 2));
   else if (colors.length === 4)
-    gradient.setColorGradient(
-      colors[0],
-      colors[1],
-      colors[2],
-      colors[3],
-    );
+    gradient.setColorGradient(...colors.slice(0, 4));
   else
-    gradient.setColorGradient(
-      colors[0],
-      colors[1],
-      colors[2],
-      colors[3],
-      colors[4],
-      colors[5],
-    );
+    gradient.setColorGradient(...colors.slice(0, 6));
 
   gradient.setMidpoint(Math.max(colors.length, midpoints));
   return gradient.getColors().reverse();

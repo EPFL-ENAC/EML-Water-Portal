@@ -1,4 +1,4 @@
-import { Datasets, SensorData } from 'src/models';
+import type { Datasets, SensorData } from 'src/models';
 import { api } from 'src/boot/api';
 import { roundToNearestHours, addDays } from 'date-fns';
 
@@ -31,7 +31,7 @@ export const useMeasuresStore = defineStore('measures', () => {
       startDate.value = roundToNearestHours(startDateRange);
       endDate.value = addDays(startDate.value, 7);
       if (loading.value) return;
-      loadDatasetsRaw();
+      await loadDatasetsRaw();
     } else {
       startDate.value = undefined;
       endDate.value = undefined;
