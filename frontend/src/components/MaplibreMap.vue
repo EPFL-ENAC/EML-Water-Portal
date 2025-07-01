@@ -13,27 +13,21 @@
   ></div>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'MaplibreMap',
-});
-</script>
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
   AttributionControl,
   Map,
-  MapMouseEvent,
+  type MapMouseEvent,
   NavigationControl,
   ScaleControl,
-  type LngLatLike,
   type StyleSpecification,
 } from 'maplibre-gl';
 import { DivControl } from 'src/utils/control';
 
 interface Props {
   styleSpec?: string | StyleSpecification | undefined;
-  center?: LngLatLike;
+  center: [number, number];
   zoom?: number;
   minZoom?: number;
   maxZoom?: number;
@@ -43,15 +37,13 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   styleSpec: 'style.json',
   zoom: 12,
-  aspectRatio: undefined,
+  attribution: '',
   minZoom: 0,
-  maxZoom: undefined,
+  maxZoom: 0,
   position: false,
 });
 
 const emit = defineEmits(['map:loaded', 'map:click']);
-
-const settingsStore = useSettingsStore();
 
 const DEFAULT_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.swisstopo.admin.ch/" target="_blank">Swisstopo</a>, <a href="https://www.epfl.ch/" target="_blank">EPFL</a>';
@@ -74,8 +66,6 @@ onMounted(() => {
 
   map.addControl(new NavigationControl());
   map.addControl(new ScaleControl());
-
-  const settings = settingsStore.settings;
 
   map.addControl(
     new AttributionControl({
@@ -103,7 +93,7 @@ onMounted(() => {
     });
   }
 
-  map.once('load', () => {
+  void map.once('load', () => {
     emit('map:loaded', map as Map);
     loading.value = false;
   });

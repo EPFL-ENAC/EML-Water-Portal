@@ -41,8 +41,8 @@
                   <q-item dense class="q-pa-none">
                     <q-item-section class="q-pa-none">
                       <q-btn-group flat spread>
-                        <q-btn flat size="sm" :label="$t('all')" @click="onApplySensors(sensor.label)" />
-                        <q-btn flat size="sm" :label="$t('clear')" @click="onRemoveSensors(sensor.label)" />
+                        <q-btn flat size="sm" :label="t('all')" @click="onApplySensors(sensor.label)" />
+                        <q-btn flat size="sm" :label="t('clear')" @click="onRemoveSensors(sensor.label)" />
                       </q-btn-group>
                     </q-item-section>
                   </q-item>
@@ -65,11 +65,11 @@
             </template>
           </div>
         </q-card>
-        <div class="q-ml-md"><q-icon name="lightbulb" size="xs"/> <span class="text-help">{{ $t('map_help') }}</span></div>
+        <div class="q-ml-md"><q-icon name="lightbulb" size="xs"/> <span class="text-help">{{ t('map_help') }}</span></div>
         <q-list>
           <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
             <q-item-label header class="text-h6">{{
-              $t(category)
+              t(category)
             }}</q-item-label>
             <q-list separator dense>
               <q-item
@@ -82,7 +82,7 @@
                     <q-checkbox
                       v-model="measuresVisible[measure.key]"
                       :disable="measuresStore.loading"
-                      :label="$t(`measure.${measure.key}.label`)"
+                      :label="t(`measure.${measure.key}.label`)"
                     />
                     <template
                       v-for="spec in getSensorSpec(measure.key)"
@@ -124,14 +124,14 @@
             </div>
             <q-space />
             <q-btn
-              :title="$t('charts_height')"
+              :title="t('charts_height')"
               :disable="measuresStore.loading"
               icon="height"
               size="xs"
               class="q-mr-sm"
             >
               <q-menu class="q-pa-sm">
-                <div class="text-caption q-mb-sm">{{ $t('charts_height') }}</div>
+                <div class="text-caption q-mb-sm">{{ t('charts_height') }}</div>
                 <q-slider
                   v-model="chartHeight"
                   :disable="measuresStore.loading"
@@ -172,12 +172,12 @@
         </div>
         <template v-for="category in ['parameters_measured', 'parameters_scenario']" :key="category">
           <q-item-label header class="text-h6">{{
-            $t(category)
+            t(category)
           }}</q-item-label>
           <div v-if="category === 'parameters_scenario'">
             <q-item>
               <div v-if="scenariiStore.scenarii.length === 0" class="text-help">
-                {{ $t('scenario_info') }}
+                {{ t('scenario_info') }}
               </div>
               <div v-else>
                 <q-chip
@@ -207,7 +207,7 @@
                   <q-card-section>
                     <timeseries-chart
                       :measure="measure.key"
-                      :label="$t(`measure.${measure.key}.axis_label`)"
+                      :label="t(`measure.${measure.key}.axis_label`)"
                       :unit="measure.unit"
                       :precision="measure.precision"
                       :height="chartHeight"
@@ -219,7 +219,7 @@
             </template>
           </div>
           <div v-else class="text-help q-ml-md">
-            {{ $t('no_measure_selected') }}
+            {{ t('no_measure_selected') }}
           </div>
         </template>
       </div>
@@ -232,7 +232,7 @@
       <q-card>
         <q-bar class="bg-white q-ma-md">
           <div class="text-h5">
-            {{ measureSelected.label }}
+            {{ t(`measure.${measureSelected.key}.label`) }}
           </div>
           <q-space />
           <q-btn dense flat icon="close" size="lg" v-close-popup> </q-btn>
@@ -240,7 +240,7 @@
         <q-card-section>
           <timeseries-chart
             :measure="measureSelected.key"
-            :label="$t(`measure.${measureSelected.key}.label`)"
+            :label="t(`measure.${measureSelected.key}.label`)"
             :unit="measureSelected.unit"
             :precision="measureSelected.precision"
             :height="80"
@@ -258,20 +258,21 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 import MaplibreMap from 'src/components/MaplibreMap.vue';
-import { Map } from 'maplibre-gl';
+import type { Map } from 'maplibre-gl';
 import TimeseriesChart from 'src/components/charts/TimeseriesChart.vue';
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
 import ScenariiDialog from 'src/components/ScenariiDialog.vue';
 import SensorDialog from 'src/components/SensorDialog.vue';
-import { Settings } from 'src/stores/settings';
+import type { Settings } from 'src/stores/settings';
 import {
   type MeasureOption,
   MeasureOptions,
   SensorSpecs,
 } from 'src/utils/options';
-import { Scenario } from 'src/stores/scenarii';
+import type { Scenario } from 'src/stores/scenarii';
 import { getLabel } from 'src/utils/misc';
 
+const { t } = useI18n();
 const $q = useQuasar();
 const { locale } = useI18n();
 const settingsStore = useSettingsStore();
@@ -293,7 +294,9 @@ const measuresVisible = ref<Record<string, boolean>>(
 );
 
 onMounted(() => {
-  measuresStore.loadDatasets();
+  measuresStore.loadDatasets().catch((err) => {
+    console.error('Error loading datasets:', err);
+  });
 });
 
 watch(
@@ -331,6 +334,8 @@ const measuresFiltered = (category: string) => {
 function onMapLoaded(map: Map) {
   mapStore.initLayers(map).then(() => {
     mapStore.applyState();
+  }).catch((err) => {
+    console.error('Error initializing map layers:', err);
   });
 }
 
@@ -365,9 +370,16 @@ function onRemoveScenario(scenario: Scenario) {
   scenariiStore.removeScenario(scenario);
 }
 
-function onToggle(e) {
-  const target = e.target.parentNode.parentNode.parentNode;
-  $q.fullscreen.toggle(target);
+function onToggle(e: Event) {
+  if (!e.target) return;
+  let target = (e.target as HTMLElement).parentNode as HTMLElement;
+  if (!target) return;
+  target = target.parentNode as HTMLElement;
+  if (!target) return;
+  target = target.parentNode as HTMLElement;
+  $q.fullscreen.toggle(target).catch((err) => {
+    console.error('Error toggling fullscreen:', err);
+  });
 }
 
 </script>

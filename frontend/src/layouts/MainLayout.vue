@@ -4,7 +4,7 @@
       <app-toolbar no-menu @toggle="toggleLeftDrawer" />
     </q-header>
 
-    <q-drawer v-model="mapStore.showDrawer" overlay elevated width="400">
+    <q-drawer v-model="mapStore.showDrawer" overlay elevated :width="400">
       <layers-drawer />
       <div class="absolute" style="top: 10px; right: 15px">
         <q-btn dense round unelevated icon="close" @click="toggleLeftDrawer" />
@@ -31,10 +31,12 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import AppToolbar from 'src/components/AppToolbar.vue';
 import LayersDrawer from 'src/components/LayersDrawer.vue';
 import HelpDrawer from 'src/components/HelpDrawer.vue';
 
+const $q = useQuasar();
 const mapStore = useMapStore();
 const helpStore = useHelpStore();
 

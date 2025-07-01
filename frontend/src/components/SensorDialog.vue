@@ -6,7 +6,7 @@
       </q-card-actions>
       <q-card-section>
         <div class="text-h6 q-mb-sm">
-          {{ $t('sensor_label', {name: sensorProperties?.name}) }} 
+          {{ t('sensor_label', {name: sensorProperties?.name}) }} 
           <q-chip :label="getLabel(locale, sensorSpec?.title)" size="sm" class="q-ml-sm" color="primary" text-color="white" />
         </div>
         <div>
@@ -44,7 +44,7 @@
               <q-item-section>
                 <ul class="q-pl-md">
                 <template v-for="measure in sensorMeasures" :key="measure">
-                  <li>{{ $t(`measure.${measure.replaceAll(' ', '_')}.label`) }}</li>
+                  <li>{{ t(`measure.${measure.replaceAll(' ', '_')}.label`) }}</li>
                 </template>
               </ul>
               </q-item-section>
@@ -69,18 +69,14 @@
         </div>
       </q-card-section>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
-        <q-btn flat :label="$t('close')" color="primary" v-close-popup />
+        <q-btn flat :label="t('close')" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'SensorDialog',
-});
-</script>
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import { MeasureOptions, SensorSpecs } from 'src/utils/options';
 import { getLabel } from 'src/utils/misc';
 import { type SensorInfo } from 'src/models';
@@ -92,6 +88,7 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
+const $q = useQuasar();
 const mapStore = useMapStore();
 const filtersStore = useFiltersStore();
 const helpStore = useHelpStore();
@@ -121,13 +118,13 @@ const sensorSpec = computed(() => sensorProperties.value?.name ? SensorSpecs.fin
 
 const sensorMeasures = computed(() => sensorProperties.value?.measures
   .split('|')
-  .map((m: string) => MeasureOptions.find((mo) => mo.key === m)?.label || m.replaceAll('_',' ')) || []);
+  .map((m: string) => MeasureOptions.find((mo) => mo.key === m)?.key || m.replaceAll('_',' ')) || []);
 
 function onHide() {
   emit('update:modelValue', false);
 }
 
-function onSelectionUpdate(value: boolean) {
+function onSelectionUpdate() {
   if (!sensorProperties.value) return;
   filtersStore.toggleSensor(sensorProperties.value.name);
 }

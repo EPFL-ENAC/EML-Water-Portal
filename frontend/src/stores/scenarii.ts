@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { api } from 'src/boot/api';
-import { ScenarioData } from 'src/models';
+import { type ScenarioData } from 'src/models';
 
 export interface Scenario {
   name: string; // unique
@@ -28,7 +28,7 @@ export const useScenariiStore = defineStore(
       // TODO reset scenario
     }
 
-    function getNewScenarioColor(): string {
+    function getNewScenarioColor(): string | undefined {
       const index = scenarii.value.length % colors.length;
       return colors[index];
     }
@@ -58,7 +58,9 @@ export const useScenariiStore = defineStore(
       } else {
         scenarii.value[idx] = scenario;
       }
-      updateScenarioData(scenario);
+      updateScenarioData(scenario).catch((error) => {
+        console.error('Error updating scenario data:', error)
+      });
     }
 
     function removeScenario(scenario: Scenario) {
@@ -69,7 +71,7 @@ export const useScenariiStore = defineStore(
     }
 
     async function updateScenarioData(scenario: Scenario) {
-      api.get('scenarii/', {
+      await api.get('scenarii/', {
         params: {
           name: scenario.name,
           watershed: scenario.watershed,
@@ -82,7 +84,8 @@ export const useScenariiStore = defineStore(
         },
       }).then((response) => {
         scenario.data = response.data;
-        scenario.data.lineColor = scenario.lineColor;
+        if (scenario.data)
+          scenario.data.lineColor = scenario.lineColor;
         // console.log('scenario.data', scenario.data);
       });
     }
