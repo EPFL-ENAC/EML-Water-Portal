@@ -21,14 +21,17 @@
             >
               <q-item :class="{ 'item-disabled': !scenario.enabled }" >
                 <q-item-section>
-                  <q-item-label>
+                  <q-item-label
+                    class="q-mb-xs"
+                  >
                     <q-checkbox
                       v-model="scenario.enabled"
-                      :style="{ marginLeft: '-0.5rem', marginRight: '-0.3rem', position: 'relative', top: '-0.1rem' }"
+                      dense
+                      :style="{ position: 'relative', top: '-0.1rem' }"
                     />
                     <span
                       :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '0.06rem', fontWeight: 'bold' }"
-                      class="q-mr-xs"
+                      class="q-ml-xs q-mr-xs"
                     >
                     --
                     </span>

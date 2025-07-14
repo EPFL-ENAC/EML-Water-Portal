@@ -190,11 +190,12 @@
                 >
                   <q-checkbox
                     v-model="scenario.enabled"
-                    :style="{ marginLeft: '-0.5rem' }"
+                    dense
                     size="xs"
                   />
                   <span
-                    :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', left: '-0.2rem', top: '-0.1rem', fontWeight: 'bold' }"
+                    :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '-0.1rem', fontWeight: 'bold' }"
+                    class="q-mr-xs q-ml-xs"
                   >
                   --
                   </span>
