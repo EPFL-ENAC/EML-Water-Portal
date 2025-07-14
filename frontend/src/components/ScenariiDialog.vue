@@ -19,9 +19,13 @@
               v-for="scenario in watershedScenarii"
               :key="scenario.name"
             >
-              <q-item>
+              <q-item :class="{ 'chip-disabled': !scenario.enabled }" >
                 <q-item-section>
                   <q-item-label>
+                    <q-checkbox
+                      v-model="scenario.enabled"
+                      :style="{ marginLeft: '-0.5rem', marginRight: '-0.3rem', position: 'relative', top: '-0.1rem' }"
+                    />
                     <span
                       :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '0.06rem', fontWeight: 'bold' }"
                       class="q-mr-xs"
@@ -30,7 +34,7 @@
                     </span>
                     {{ scenario.name }}
                   </q-item-label>
-                  <div class="q-mt-sm">
+                  <div>
                     <q-badge color="grey-7">{{
                       `${t('tank_volume')}: ${scenario.tank}`
                     }}</q-badge>
@@ -160,3 +164,11 @@ function getVegetationIcon(vegetation: string) {
   return VegetationIcons.find((v) => v.value === vegetation)?.name;
 }
 </script>
+
+<style scoped>
+
+.chip-disabled {
+  opacity: 0.6;
+}
+
+</style>
