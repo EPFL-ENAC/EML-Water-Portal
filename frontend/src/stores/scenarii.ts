@@ -3,6 +3,7 @@ import { api } from 'src/boot/api';
 import { type ScenarioData } from 'src/models';
 
 export interface Scenario {
+  enabled: boolean;
   name: string; // unique
   watershed: string; // station name/id
   tank: number; // volume
@@ -35,6 +36,7 @@ export const useScenariiStore = defineStore(
 
     function makeScenario(name: string) {
       return {
+        enabled: true,
         name: name,
         watershed: name,
         tank: 10,

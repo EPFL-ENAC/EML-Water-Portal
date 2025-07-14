@@ -183,10 +183,16 @@
                 <q-chip
                   v-for="scenario in scenariiStore.scenarii"
                   :key="`${scenario.watershed}:${scenario.name}`"
+                  :class="{ 'chip-disabled': !scenario.enabled }"
                   removable
                   @remove="onRemoveScenario(scenario)"
                   size="sm"
                 >
+                  <q-checkbox
+                    v-model="scenario.enabled"
+                    :style="{ marginLeft: '-0.5rem' }"
+                    size="xs"
+                  />
                   <span
                     :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', left: '-0.2rem', top: '-0.1rem', fontWeight: 'bold' }"
                   >
@@ -394,4 +400,9 @@ function onToggle(e: Event) {
   border: solid 1px #e2e2e2;
   border-radius: 5px;
 }
+
+.chip-disabled {
+  opacity: 0.6;
+}
+
 </style>
