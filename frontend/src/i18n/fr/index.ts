@@ -110,6 +110,8 @@ export default {
   custom_time_range: 'Personnalisé',
   custom_percent_paved: 'Pourcentage personnalisé de surface pavée',
   deep_rooted_trees: 'Arbres à racines profondes',
+  design: 'Conception',
+  design_for_watershed: 'Conception pour le bassin versant : {name}',
   device_model: 'Modèle de l\'appareil',
   download_data: 'Télécharger les données',
   filter_data: 'Montrer les données',

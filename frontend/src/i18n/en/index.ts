@@ -110,6 +110,8 @@ export default {
   custom_percent_paved: 'Custom percentage of paved area',
   custom_time_range: 'Custom',
   deep_rooted_trees: 'Deep-rooted trees',
+  design: 'Design',
+  design_for_watershed: 'Design for watershed: {name}',
   device_model: 'Device model',
   download_data: 'Download data',
   filter_data: 'Show data',
