@@ -99,6 +99,8 @@ export default {
   custom_percent_paved: 'Custom percentage of paved area',
   custom_time_range: 'Custom',
   deep_rooted_trees: 'Deep-rooted trees',
+  design: 'Design',
+  design_for_watershed: 'Design for watershed: {name}',
   device_model: 'Device model',
   filter_data: 'Filter data',
   flushing_frequency: 'Tank flushing frequency (per hour)',
