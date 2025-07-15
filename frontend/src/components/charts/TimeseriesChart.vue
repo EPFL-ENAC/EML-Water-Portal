@@ -377,7 +377,7 @@ function buildOptions() {
         top: 5,
         left: 60,
         right: 10,
-        bottom: props.stacked ? 20 : 20,
+        bottom: 20,
       },
     ],
     xAxis: [
@@ -386,6 +386,7 @@ function buildOptions() {
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
         axisLabel: {
+          hideOverlap: true,
           formatter: {
             month: '{monthStyle|{dd}/{MM}}',
             day: '{dd}/{MM}',
