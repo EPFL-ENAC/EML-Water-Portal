@@ -100,7 +100,7 @@ export default {
   custom_percent_paved: 'Pourcentage personnalisé de surface pavée',
   deep_rooted_trees: 'Arbres à racines profondes',
   device_model: 'Modèle de l\'appareil',
-  filter_data: 'Filtrer les données',
+  filter_data: 'Montrer les données',
   flushing_frequency: 'Fréquence de vidange du réservoir (par heure)',
   from_date: 'Depuis le',
   grass: 'Herbe',

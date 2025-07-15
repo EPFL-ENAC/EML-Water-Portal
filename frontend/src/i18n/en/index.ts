@@ -100,7 +100,7 @@ export default {
   custom_time_range: 'Custom',
   deep_rooted_trees: 'Deep-rooted trees',
   device_model: 'Device model',
-  filter_data: 'Filter data',
+  filter_data: 'Show data',
   flushing_frequency: 'Tank flushing frequency (per hour)',
   from_date: 'From date',
   grass: 'Grass',
