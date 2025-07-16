@@ -88,6 +88,14 @@ export default {
       axis_label: 'Nitrate',
     }
   },
+  download: {
+    label: 'Download',
+    content: 'Download data for the selected sensors and time range.',
+    group: {
+      measures: 'Group by measured parameters',
+      sensors: 'Group by sensors',
+    },
+  },
   about: 'About',
   add_scenario: 'Add scenario',
   all: 'All',
@@ -100,6 +108,7 @@ export default {
   custom_time_range: 'Custom',
   deep_rooted_trees: 'Deep-rooted trees',
   device_model: 'Device model',
+  download_data: 'Download data',
   filter_data: 'Show data',
   flushing_frequency: 'Tank flushing frequency (per hour)',
   from_date: 'From date',
