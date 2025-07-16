@@ -59,6 +59,7 @@ class ScenariiService:
             from_date,
             to_date,
             False,
+            False,
         )
         vector_map = {
             vector.measure: vector.values for vector in sensor_data.vectors

@@ -40,12 +40,16 @@ class MeasuresService:
         return Datasets()
 
     async def get_dataset(
-        self, name: str, from_date=None, to_date=None, allow_resample=True
+        self, name: str, from_date=None, to_date=None, allow_resample=True, with_min_max=True
     ) -> SensorData:
         """Get a dataset from the S3 or the InfluxDB storage
 
         Args:
-            dataset_id (str): The dataset identifier
+            name (str): The dataset identifier
+            from_date (datetime.datetime, optional): The start date of the dataset. Defaults to None.
+            to_date (datetime.datetime, optional): The end date of the dataset. Defaults to None
+            allow_resample (bool, optional): Whether to resample the dataset if the time range is too large. Defaults to True.
+            with_min_max (bool, optional): Whether to apply min/max filters. Defaults to True
 
         Returns:
             dict: The dataset description
@@ -56,7 +60,7 @@ class MeasuresService:
                 if sensor.db_spec:
                     try:
                         return await self.get_dataset_from_db(
-                            sensor, from_date, to_date, allow_resample
+                            sensor, from_date, to_date, allow_resample, with_min_max
                         )
                     except Exception as e:
                         logger.error(
@@ -73,10 +77,11 @@ class MeasuresService:
                                 from_date,
                                 to_date,
                                 allow_resample,
+                                with_min_max,
                             )
                 elif sensor.file_spec:
                     return await self.get_dataset_from_file(
-                        datasets, sensor, from_date, to_date, allow_resample
+                        datasets, sensor, from_date, to_date, allow_resample, with_min_max
                     )
         raise HTTPException(status_code=404, detail="Sensor not found")
 
@@ -87,6 +92,7 @@ class MeasuresService:
         from_date: datetime.datetime = None,
         to_date: datetime.datetime = None,
         allow_resample=True,
+        with_min_max=True,
     ) -> SensorData:
         file_specs = self.get_file_specs(datasets, sensor.file_spec.file)
         df = await self.read_dataset_file(file_specs)
@@ -103,7 +109,7 @@ class MeasuresService:
                     df[column.name] = (
                         df[column.name].str.replace(",", ".").astype("float")
                     )
-                    if column.min is not None or column.max is not None:
+                    if with_min_max and (column.min is not None or column.max is not None):
                         df[column.name] = df[column.name].where(
                             ((column.min is None) or (df[column.name] >= column.min)) &
                             ((column.max is None) or (
@@ -166,6 +172,7 @@ class MeasuresService:
         from_date: datetime.datetime = None,
         to_date: datetime.datetime = None,
         allow_resample=True,
+        with_min_max=True,
     ) -> SensorData:
         from_datetime = from_date if from_date else START_DATETIME
         to_datetime = to_date if to_date else datetime.datetime.now()
@@ -183,8 +190,9 @@ class MeasuresService:
             )\
                 .filter(sensor.db_spec.location.field,
                         sensor.db_spec.location.value)\
-                .filter(sensor.db_spec.filters.field, filter.value)\
-                .min_max(filter.min, filter.max)
+                .filter(sensor.db_spec.filters.field, filter.value)
+            if with_min_max:
+                q.min_max(filter.min, filter.max)
             if self.to_resample(from_datetime, to_datetime) and allow_resample:
                 q.aggregate(sensor.db_spec.aggregate, "mean")
 
