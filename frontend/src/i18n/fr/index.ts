@@ -88,6 +88,14 @@ export default {
       axis_label: 'Nitrate',
     }
   },
+  download: {
+    label: 'Télécharger',
+    content: 'Télécharger les données pour les capteurs et la plage de temps sélectionnés.',
+    group: {
+      measures: 'Grouper par paramètres mesurés',
+      sensors: 'Grouper par capteurs',
+    },
+  },
   about: 'À propos',
   add_scenario: 'Ajouter un scénario',
   all: 'Tous',
@@ -100,6 +108,7 @@ export default {
   custom_percent_paved: 'Pourcentage personnalisé de surface pavée',
   deep_rooted_trees: 'Arbres à racines profondes',
   device_model: 'Modèle de l\'appareil',
+  download_data: 'Télécharger les données',
   filter_data: 'Montrer les données',
   flushing_frequency: 'Fréquence de vidange du réservoir (par heure)',
   from_date: 'Depuis le',

@@ -5,6 +5,15 @@
     </div>
     <q-space />
     <q-btn
+      :title="t('download_data')"
+      :disable="measuresStore.loading"
+      icon="download"
+      color="secondary"
+      size="xs"
+      class="q-mr-sm"
+      @click="showDownload = true"
+    />
+    <q-btn
       :title="t('charts_height')"
       :disable="measuresStore.loading"
       icon="height"
@@ -50,17 +59,22 @@
         </div>
       </template>
     </q-btn-toggle>
+
+    <download-dialog v-model="showDownload" />
+
   </q-toolbar>
 </template>
 
 <script setup lang="ts">
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
+import DownloadDialog from 'src/components/DownloadDialog.vue';
 
 const { t } = useI18n();
 const measuresStore = useMeasuresStore();
 
 const chartHeight = ref(200);
 const colsSpan = ref('6');
+const showDownload = ref(false);
 
 const emit = defineEmits(['colsSpanChange', 'chartHeightChange']);
 </script>
