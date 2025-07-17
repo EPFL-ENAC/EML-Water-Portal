@@ -18,6 +18,8 @@
         />
       </q-card-section>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
+        <span class="text-help q-ml-md">{{ message }}</span>
+        <q-space />
         <q-spinner-dots v-if="downloading" size="20px" color="primary" class="on-left"/>
         <q-btn flat :label="t('cancel')" color="grey-6" v-close-popup />
         <q-btn
@@ -58,6 +60,7 @@ const timeseriesStore = useTimeseriesChartsStore();
 const showDialog = ref(props.modelValue);
 const group = ref('measures');
 const downloading = ref(false);
+const message = ref('');
 
 const groupOptions = computed(() => [
   { label: t('download.group.measures'), value: 'measures' },
@@ -72,11 +75,13 @@ watch(
   (value) => {
     showDialog.value = value;
     downloading.value = false;
+    message.value = '';
   },
 );
 
 function onHide() {
   downloading.value = false;
+  message.value = '';
   emit('update:modelValue', false);
 }
 
@@ -85,8 +90,10 @@ function onDownload() {
   // Logic to handle data download
   const [start, end] = timeseriesStore.timeRange;
   const promises = [];
+  const sensorErrors: string[] = [];
+  message.value = t('download.downloading');
   for (const sensor of SensorSpecs) {
-    const locations = sensor.locations.filter((location) => filtersStore.sensors.includes(location));
+    const locations = sensor.locations.filter((location) => filtersStore.sensors.length === 0 || filtersStore.sensors.includes(location));
     const measures = sensor.measures.filter((m) => measuresVisible.value.includes(m));
     if (locations.length && measures.length) {
       for (const location of locations) {
@@ -94,6 +101,13 @@ function onDownload() {
           .then((response) => {
             // Handle successful download
             return response.data;
+          })
+          .catch((error) => {
+            // Handle error in download
+            console.error(`Error downloading data for ${location}:`, error);
+            message.value = t('download.error', { sensor: location });
+            sensorErrors.push(location);
+            return [];
           }));
       }
     }
@@ -129,24 +143,27 @@ function onDownload() {
       URL.revokeObjectURL(link.href);
     })
     .catch((error) => {
-      console.error('Error downloading data:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('download.error'),
-      });
+      console.error('Error processing data:', error);
     })
     .finally(() => {
       downloading.value = false;
       emit('update:modelValue', false);
       emit('download');
+      if (sensorErrors.length > 0) {
+        $q.notify({
+          type: 'negative',
+          message: t('download.partial_error', { sensors: sensorErrors.join(', ') }),
+        });
+      }
     });
 }
 
 function groupByMeasures(data: SensorData[]) {
   // Group data by measures
+  const groupedData = new Map<string, { [key: string]: string | number | null }[]>();
   const measureSensors = new Map<string, string[]>();
-  data.forEach((d: SensorData) => {
-    d.vectors.forEach((v: Vector) => {
+  data?.forEach((d: SensorData) => {
+    d?.vectors?.forEach((v: Vector) => {
       if (v.measure === 'timestamp') return; // Skip timestamp, not a measure
       const ms = measureSensors.get(v.measure);
       if (!ms) {
@@ -157,17 +174,16 @@ function groupByMeasures(data: SensorData[]) {
       }
     });
   });
-  const groupedData = new Map<string, { [key: string]: string | number | null }[]>();
   measureSensors.forEach((sensors, measure) => {
     if (!sensors || sensors.length === 0) return;
     groupedData.set(measure, []);
     const rowObjs = new Map<string, { [key: string]: string | number | null }>();
-    data.forEach((d: SensorData) => {
+    data?.forEach((d: SensorData) => {
       if (!sensors.includes(d.name)) return;
-      const timestamps = d.vectors.find((v: Vector) => v.measure === 'timestamp');
+      const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
       timestamps?.values.forEach((timestamp: string | null | number, index: number) => {
         if (timestamp === null || timestamp === undefined) return;
-        d.vectors.forEach((vector) => {
+        d?.vectors?.forEach((vector) => {
           if (vector.measure === measure) {
             if (!rowObjs.has(timestamp as string)) {
               rowObjs.set(timestamp as string, { timestamp });
@@ -191,11 +207,11 @@ function groupByMeasures(data: SensorData[]) {
 function groupBySensors(data: SensorData[]) {
   // Group data by sensors
   const groupedData = new Map<string, (string | number)[][]>();
-  data.forEach((d: SensorData) => {
-    const timestamps = d.vectors.find((v: Vector) => v.measure === 'timestamp');
-    const csv: (string | number)[][] = [d.vectors.map((v: Vector) => v.measure)];
+  data?.forEach((d: SensorData) => {
+    const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
+    const csv: (string | number)[][] = [d?.vectors?.map((v: Vector) => v.measure)];
     timestamps?.values?.forEach((timestamp: string | null | number, index: number) => {
-      csv.push(d.vectors.map((v: Vector) => v.values[index] || '') || []);
+      csv.push(d?.vectors?.map((v: Vector) => v.values[index] || '') || []);
     });
     groupedData.set(d.name, csv);
   });
