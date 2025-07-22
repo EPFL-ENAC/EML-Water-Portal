@@ -241,7 +241,7 @@ function onPointerSelection() {
           continue;
         }
         dataIndex = timestampsMSData.findIndex(
-          (t) => Math.abs(t || 0 - timeMs) < 1000 * 60 * 15,
+          (t) => Math.abs((t || 0) - timeMs) < 1000 * 60 * 15,
         );
         if (dataIndex > -1) {
           seriesIndex = i;
