@@ -86,7 +86,7 @@ export const useScenariiStore = defineStore(
         },
       }).then((response) => {
         scenario.data = response.data;
-        if (scenario.data)
+        if (scenario.data !== undefined && scenario.data !== null)
           scenario.data.lineColor = scenario.lineColor;
         // console.log('scenario.data', scenario.data);
       });
