@@ -107,6 +107,6 @@ export const useMeasuresStore = defineStore('measures', () => {
     datasets,
     sensors,
     loadDatasets,
-    downloadSensorRawData
+    downloadSensorRawData,
   };
 });
