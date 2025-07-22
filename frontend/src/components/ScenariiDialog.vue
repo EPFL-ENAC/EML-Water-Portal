@@ -6,7 +6,7 @@
       </q-card-actions>
       <q-card-section>
         <div class="text-h6 q-mb-sm">
-          {{ $t('scenarios_for_watershed', { name: stationName }) }}
+          {{ t('scenarios_for_watershed', { name: stationName }) }}
         </div>
         <div>
           <q-list
@@ -19,32 +19,42 @@
               v-for="scenario in watershedScenarii"
               :key="scenario.name"
             >
-              <q-item>
+              <q-item :class="{ 'item-disabled': !scenario.enabled }" >
                 <q-item-section>
-                  <q-item-label>
+                  <q-item-label
+                    class="q-mb-xs"
+                  >
+                    <q-checkbox
+                      v-model="scenario.enabled"
+                      dense
+                      :style="{ position: 'relative', top: '-0.1rem' }"
+                    />
                     <span
                       :style="{ color: scenario.lineColor, fontSize: '1.2rem', position: 'relative', top: '0.06rem', fontWeight: 'bold' }"
-                      class="q-mr-xs"
+                      class="q-ml-xs q-mr-xs"
                     >
                     --
                     </span>
                     {{ scenario.name }}
                   </q-item-label>
-                  <div class="q-mt-sm">
+                  <div>
                     <q-badge color="grey-7">{{
-                      `${$t('tank_volume')}: ${scenario.tank}`
+                      `${t('tank_volume')}: ${scenario.tank}`
                     }}</q-badge>
                     <q-badge color="grey-7">{{
-                      `${$t('roof_to_tank')}: ${scenario.roofToTank}`
+                      `${t('roof_to_tank')}: ${scenario.roofToTank}`
                     }}</q-badge>
                     <q-badge color="grey-7">{{
-                      `${$t('flushing_frequency')}: ${scenario.flushingFrequency}`
+                      `${t('flushing_frequency')}: ${scenario.flushingFrequency}`
+                    }}</q-badge>
+                    <q-badge color="grey-7" v-if="scenario.useCustomPercentPaved">{{
+                      `${t('custom_percent_paved')}: ${scenario.customPercentPaved}%`
                     }}</q-badge>
                   </div>
                   <div>
                     <q-icon
                       :name="getVegetationIcon(scenario.vegetation)"
-                      :title="$t(scenario.vegetation)"
+                      :title="t(scenario.vegetation)"
                     />
                   </div>
                 </q-item-section>
@@ -74,7 +84,7 @@
             </template>
           </q-list>
           <q-btn
-            :label="$t('add_scenario')"
+            :label="t('add_scenario')"
             color="secondary"
             icon="add"
             size="sm"
@@ -83,7 +93,7 @@
         </div>
       </q-card-section>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
-        <q-btn flat :label="$t('close')" color="primary" v-close-popup />
+        <q-btn flat :label="t('close')" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
     <scenario-dialog
@@ -94,13 +104,9 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'ScenariiDialog',
-});
-</script>
 <script setup lang="ts">
-import { Scenario } from 'src/stores/scenarii';
+import { useQuasar } from 'quasar';
+import type { Scenario } from 'src/stores/scenarii';
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
 import { VegetationIcons } from 'src/utils/icons';
 
@@ -120,6 +126,8 @@ watch(
   },
 );
 
+const $q = useQuasar();
+const { t } = useI18n();
 const mapStore = useMapStore();
 const scenariiStore = useScenariiStore();
 
@@ -159,3 +167,11 @@ function getVegetationIcon(vegetation: string) {
   return VegetationIcons.find((v) => v.value === vegetation)?.name;
 }
 </script>
+
+<style scoped>
+
+.item-disabled {
+  opacity: 0.6;
+}
+
+</style>

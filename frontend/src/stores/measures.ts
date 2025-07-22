@@ -1,4 +1,4 @@
-import { Datasets, SensorData } from 'src/models';
+import type { Datasets, SensorData } from 'src/models';
 import { api } from 'src/boot/api';
 import { roundToNearestHours, addDays } from 'date-fns';
 
@@ -31,7 +31,7 @@ export const useMeasuresStore = defineStore('measures', () => {
       startDate.value = roundToNearestHours(startDateRange);
       endDate.value = addDays(startDate.value, 7);
       if (loading.value) return;
-      loadDatasetsRaw();
+      await loadDatasetsRaw();
     } else {
       startDate.value = undefined;
       endDate.value = undefined;
@@ -67,7 +67,7 @@ export const useMeasuresStore = defineStore('measures', () => {
   async function loadDatasetsRaw() {
     loading.value = true;
     sensorsRaw.value = [];
-    
+
     let loaded = 0;
     const promises: Promise<void>[] = [];
     datasets.value?.sensors.forEach((sensor) => {
@@ -90,10 +90,23 @@ export const useMeasuresStore = defineStore('measures', () => {
     return Promise.all(promises);
   }
 
+  async function downloadSensorRawData(name: string, start: Date | undefined, end: Date | undefined, measures: string[] | undefined) {
+    return api.get(`measures/dataset/${name}`, {
+        params: {
+          start: start ? start.toISOString() : startDate.value?.toISOString(),
+          end: end ? end.toISOString() : endDate.value?.toISOString(),
+          resample: false,
+          filter: false,
+          measures: measures?.join(','),
+        },
+      })
+  }
+
   return {
     loading,
     datasets,
     sensors,
     loadDatasets,
+    downloadSensorRawData,
   };
 });

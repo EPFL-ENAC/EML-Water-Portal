@@ -14,7 +14,7 @@ from api.models.measures import (
     SensorDataSpec,
     Vector,
 )
-from api.services.db import DBQuery, db_client
+from api.services.db import DBQuery, DBUnionQuery, db_client
 from api.services.s3 import s3_client
 from fastapi.exceptions import HTTPException
 from fastapi.logger import logger
@@ -40,12 +40,22 @@ class MeasuresService:
         return Datasets()
 
     async def get_dataset(
-        self, name: str, from_date=None, to_date=None, allow_resample=True
+        self, name: str,
+        from_date=None,
+        to_date=None,
+        allow_resample=True,
+        with_min_max=True,
+        measures: list[str] = None,
     ) -> SensorData:
         """Get a dataset from the S3 or the InfluxDB storage
 
         Args:
-            dataset_id (str): The dataset identifier
+            name (str): The dataset identifier
+            from_date (datetime.datetime, optional): The start date of the dataset. Defaults to None.
+            to_date (datetime.datetime, optional): The end date of the dataset. Defaults to None
+            allow_resample (bool, optional): Whether to resample the dataset if the time range is too large. Defaults to True.
+            with_min_max (bool, optional): Whether to apply min/max filters. Defaults to True
+            measures (list[str], optional): List of measures to filter the dataset. Defaults to None.
 
         Returns:
             dict: The dataset description
@@ -56,7 +66,7 @@ class MeasuresService:
                 if sensor.db_spec:
                     try:
                         return await self.get_dataset_from_db(
-                            sensor, from_date, to_date, allow_resample
+                            sensor, from_date, to_date, allow_resample, with_min_max, measures
                         )
                     except Exception as e:
                         logger.error(
@@ -73,10 +83,12 @@ class MeasuresService:
                                 from_date,
                                 to_date,
                                 allow_resample,
+                                with_min_max,
+                                measures,
                             )
                 elif sensor.file_spec:
                     return await self.get_dataset_from_file(
-                        datasets, sensor, from_date, to_date, allow_resample
+                        datasets, sensor, from_date, to_date, allow_resample, with_min_max, measures
                     )
         raise HTTPException(status_code=404, detail="Sensor not found")
 
@@ -87,6 +99,8 @@ class MeasuresService:
         from_date: datetime.datetime = None,
         to_date: datetime.datetime = None,
         allow_resample=True,
+        with_min_max=True,
+        measures: list[str] = None,
     ) -> SensorData:
         file_specs = self.get_file_specs(datasets, sensor.file_spec.file)
         df = await self.read_dataset_file(file_specs)
@@ -103,6 +117,12 @@ class MeasuresService:
                     df[column.name] = (
                         df[column.name].str.replace(",", ".").astype("float")
                     )
+                    if with_min_max and (column.min is not None or column.max is not None):
+                        df[column.name] = df[column.name].where(
+                            ((column.min is None) or (df[column.name] >= column.min)) &
+                            ((column.max is None) or (
+                                df[column.name] <= column.max))
+                        )
 
         # remove columns that are not in the file
         df = df[
@@ -145,7 +165,7 @@ class MeasuresService:
                             values=df[column.name].astype(str).tolist(),
                         )
                     )
-                else:
+                elif measures is None or column.measure in measures:
                     vectors.append(
                         Vector(
                             measure=column.measure,
@@ -160,24 +180,36 @@ class MeasuresService:
         from_date: datetime.datetime = None,
         to_date: datetime.datetime = None,
         allow_resample=True,
+        with_min_max=True,
+        measures: list[str] = None,
     ) -> SensorData:
         from_datetime = from_date if from_date else START_DATETIME
         to_datetime = to_date if to_date else datetime.datetime.now()
-        query = DBQuery(
-            sensor.db_spec.measurement,
-            from_datetime,
-            to_date if to_date else "now()",
-        )
-        query.filter(
-            sensor.db_spec.location.field, sensor.db_spec.location.value
-        )
-        # handle multiple measures
-        query.filters(sensor.db_spec.filters)
-        if self.to_resample(from_datetime, to_datetime) and allow_resample:
-            query.aggregate(sensor.db_spec.aggregate, "mean")
-        # query.not_null()
 
-        content = await redis.get(query.to_string())
+        query = DBUnionQuery()
+
+        to_date_str = to_date if to_date else "now()"
+        for filter in sensor.db_spec.filters.measures:
+            if measures is None or filter.measure in measures:
+                # create a query for each filter
+                q = DBQuery(
+                    filter.measure,
+                    sensor.db_spec.measurement,
+                    from_datetime,
+                    to_date_str,
+                )\
+                    .filter(sensor.db_spec.location.field,
+                            sensor.db_spec.location.value)\
+                    .filter(sensor.db_spec.filters.field, filter.value)
+                if with_min_max:
+                    q.min_max(filter.min, filter.max)
+                if self.to_resample(from_datetime, to_datetime) and allow_resample:
+                    q.aggregate(sensor.db_spec.aggregate, "mean")
+
+                query.add_query(q)
+
+        cache_key = query.to_string()
+        content = await redis.get(cache_key)
         vectors = []
         if not content:
             logger.info(
@@ -216,7 +248,7 @@ class MeasuresService:
                         Vector(measure=column, values=df[column].tolist())
                     )
             await redis.set(
-                query.to_string(),
+                cache_key,
                 json.dumps([vector.model_dump() for vector in vectors]),
                 ex=config.CACHE_SOURCE_EXPIRY,
             )

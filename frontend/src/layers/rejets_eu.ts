@@ -1,5 +1,5 @@
-import { Map, Popup } from 'maplibre-gl';
-import { FeatureCollection } from 'geojson';
+import { type Map, Popup } from 'maplibre-gl';
+import type { FeatureCollection } from 'geojson';
 import { LayerManager } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
 

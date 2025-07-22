@@ -4,13 +4,13 @@
       v-if="props.measure === 'water_samples'"
       class="text-center text-negative q-pa-sm"
     >
-      {{ $t('water_samples_data_on_demand') }}
+      {{ t('water_samples_data_on_demand') }}
     </div>
     <div v-else-if="sensors.length === 0 && scenarii.length === 0" class="text-center text-help q-pa-sm">
-      {{ $t('no_sensor_selected', { measure: props.label }) }}
+      {{ t('no_sensor_selected', { measure: props.label }) }}
     </div>
     <div v-else-if="!option.series" class="text-center text-help q-pa-sm">
-      {{ $t('no_sensor_data', { measure: props.label }) }}
+      {{ t('no_sensor_data', { measure: props.label }) }}
     </div>
     <div v-else :style="`height: ${height}${heightUnit}; width: 100%;`">
       <!-- <q-spinner-dots color="primary" v-if="measuresStore.loading || loading" /> -->
@@ -20,7 +20,6 @@
         group="timeseries"
         :init-options="initOptions"
         :option="option"
-        :update-options="updateOptions"
         :loading="loading"
         @highlight="onHighlight"
         @datazoom="onDataZoomChange"
@@ -30,17 +29,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'TimeseriesChart',
-});
-</script>
-
 <script setup lang="ts">
-import { ScenarioData, SensorData } from 'src/models';
+import type { ScenarioData, SensorData } from 'src/models';
 import { SensorSpecs } from 'src/utils/options';
 import ECharts from 'vue-echarts';
-import type { EChartsOption, ECElementEvent, SeriesOption, LineStyleOption } from 'echarts';
+import type { EChartsOption, ECElementEvent, SeriesOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -79,6 +72,8 @@ const props = withDefaults(defineProps<Props>(), {
   heightUnit: 'px',
   zoom: false,
 });
+
+const { t } = useI18n();
 
 const onDataZoomChange = (e: ECElementEvent) => {
   if (!e.batch || !timeseriesStore.timeRange) return;
@@ -133,6 +128,7 @@ const scenarii = computed(() => {
   return scenariiStore.scenarii
     ? scenariiStore.scenarii.filter((scenario) => {
         return (
+          scenario.enabled &&
           scenario.data &&
           scenario.data.vectors.find(
             (col) => col.measure === props.measure && col.values,
@@ -159,7 +155,7 @@ const timestamps = computed(() => {
 
 const timestampsMS = computed(() => {
   const rval = timestamps.value?.map((tdata) =>
-    tdata?.map((t) => new Date(t).getTime()),
+    tdata?.map((t) => t ? new Date(t).getTime() : undefined),
   );
   return rval;
 });
@@ -168,7 +164,7 @@ function initChartOptions() {
   if (measuresStore.loading) {
     return;
   }
-  if (option.value.series && option.value.series.length > 0) {
+  if (option.value.series && Object.keys(option.value.series).length > 0) {
     updateOptions();
   } else {
     option.value = {};
@@ -193,7 +189,9 @@ const onHighlight = (e: ECElementEvent) => {
   if (timestamps.value && seriesIndex > -1 && dataIndex > -1) {
     const col = timestamps.value[seriesIndex];
     if (col && col[dataIndex]) {
-      timestamp = new Date(col[dataIndex]);
+      const val = col[dataIndex];
+      // Convert to Date object if it's a timestamp
+      timestamp = val === null || val === undefined ? null : new Date(val);
     }
   }
 
@@ -243,7 +241,7 @@ function onPointerSelection() {
           continue;
         }
         dataIndex = timestampsMSData.findIndex(
-          (t) => Math.abs(t - timeMs) < 1000 * 60 * 15,
+          (t) => Math.abs((t || 0) - timeMs) < 1000 * 60 * 15,
         );
         if (dataIndex > -1) {
           seriesIndex = i;
@@ -273,7 +271,7 @@ function onPointerSelection() {
 
 watch(() => timeseriesStore.timeRange, onRangeChange);
 
-watch(() => scenarii.value.map(scenario => scenario.data), (newData, oldData) => {
+watch(() => scenarii.value.map(scenario => scenario.data), () => {
   updateOptions();
 });
 
@@ -292,7 +290,7 @@ function onRangeChange() {
   }
 }
 
-function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) => string, lineStyle: LineStyleOption): SeriesOption {
+function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) => string | undefined, lineStyle: {[key: string]: string }): SeriesOption {
   const timestamps = s.vectors.find(
     (col) => col.measure === 'timestamp',
   )?.values;
@@ -307,19 +305,18 @@ function makeSerie<S extends ScenarioData | SensorData>(s: S, getColor: (s: S) =
     name: s.name,
     showSymbol: false,
     animation: false,
-    large: true,
     symbol: 'none',
     symbolSize: 0,
     colorBy: 'series',
     type: 'line',
     lineStyle: lineStyle,
-    color: getColor(s),
-    data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]),
+    color: getColor(s) || '#000000',
+    data: timestamps?.map((t, index) => [t, colData ? colData[index] : 0]) || [],
   };
 }
 
 function makeSensorsSeries(): SeriesOption[] {
-  return sensors.value.map((s, index) => {
+  return sensors.value.map((s) => {
     return makeSerie(s, getSensorColor, {});
   });
 }
@@ -350,7 +347,16 @@ function buildOptions() {
         animation: false,
       },
       confine: true,
-      valueFormatter: (value: number | string) => value === null || value === undefined || value === '' ? '-' : `${Number.parseFloat(value + '').toFixed(2)} ${props.unit}`,
+      valueFormatter: (value) => {
+        if (value === null || value === undefined || value === '') return '-';
+        if (typeof value === 'string') {
+          return `${(Number.parseFloat(value).toFixed(2))} ${props.unit}`;
+        }
+        if (typeof value === 'number') {
+          return `${value.toFixed(2)} ${props.unit}`;
+        }
+        return '?';
+      },
     },
     axisPointer: {
       link: [
@@ -371,7 +377,7 @@ function buildOptions() {
         top: 5,
         left: 60,
         right: 10,
-        bottom: props.stacked ? 20 : 20,
+        bottom: 20,
       },
     ],
     xAxis: [
@@ -380,6 +386,7 @@ function buildOptions() {
         min: timeseriesStore.MIN_DATE,
         max: timeseriesStore.MAX_DATE,
         axisLabel: {
+          hideOverlap: true,
           formatter: {
             month: '{monthStyle|{dd}/{MM}}',
             day: '{dd}/{MM}',

@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import { api } from 'src/boot/api';
-import { ScenarioData } from 'src/models';
+import { type ScenarioData } from 'src/models';
 
 export interface Scenario {
+  enabled: boolean;
   name: string; // unique
   watershed: string; // station name/id
   tank: number; // volume
@@ -10,6 +11,8 @@ export interface Scenario {
   vegetation: string;
   flushingFrequency: number; // per hour
   lineColor: string;
+  useCustomPercentPaved: boolean;
+  customPercentPaved?: number; // 0-100
   useHistoricalData?: boolean;
   data?: ScenarioData;
 }
@@ -26,13 +29,14 @@ export const useScenariiStore = defineStore(
       // TODO reset scenario
     }
 
-    function getNewScenarioColor(): string {
+    function getNewScenarioColor(): string | undefined {
       const index = scenarii.value.length % colors.length;
       return colors[index];
     }
 
     function makeScenario(name: string) {
       return {
+        enabled: true,
         name: name,
         watershed: name,
         tank: 10,
@@ -40,6 +44,8 @@ export const useScenariiStore = defineStore(
         vegetation: 'none',
         flushingFrequency: 2,
         lineColor: getNewScenarioColor(),
+        useCustomPercentPaved: false,
+        customPercentPaved: 70,
         useHistoricalData: false,
       } as Scenario;
     }
@@ -54,7 +60,9 @@ export const useScenariiStore = defineStore(
       } else {
         scenarii.value[idx] = scenario;
       }
-      updateScenarioData(scenario);
+      updateScenarioData(scenario).catch((error) => {
+        console.error('Error updating scenario data:', error)
+      });
     }
 
     function removeScenario(scenario: Scenario) {
@@ -65,7 +73,7 @@ export const useScenariiStore = defineStore(
     }
 
     async function updateScenarioData(scenario: Scenario) {
-      api.get('scenarii/', {
+      await api.get('scenarii/', {
         params: {
           name: scenario.name,
           watershed: scenario.watershed,
@@ -73,11 +81,13 @@ export const useScenariiStore = defineStore(
           roofToTank: scenario.roofToTank,
           vegetation: scenario.vegetation,
           flushingFrequency: scenario.flushingFrequency,
+          customPercentPaved: scenario.useCustomPercentPaved ? scenario.customPercentPaved : undefined,
           // useHistoricalData: scenario.useHistoricalData,
         },
       }).then((response) => {
         scenario.data = response.data;
-        scenario.data.lineColor = scenario.lineColor;
+        if (scenario.data !== undefined && scenario.data !== null)
+          scenario.data.lineColor = scenario.lineColor;
         // console.log('scenario.data', scenario.data);
       });
     }

@@ -5,7 +5,7 @@
         <template v-for="range in DateRangeOptions" :key="range.value">
           <q-btn
             :disable="measuresStore.loading"
-            :label="$t(range.label)"
+            :label="t(range.label)"
             :value="range.value"
             size="sm"
             flat
@@ -16,7 +16,7 @@
         </template>
         <q-btn
           :disable="measuresStore.loading"
-          :label="$t('all')"
+          :label="t('all')"
           size="sm"
           flat
           no-caps
@@ -42,11 +42,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'TimeRangeSlider',
-});
-</script>
 <script setup lang="ts">
 import TimeRangeDialog from 'src/components/charts/TimeRangeDialog.vue';
 import noUiSlider from 'nouislider';
@@ -54,6 +49,7 @@ import { PipsMode, type API as SliderAPI } from 'nouislider';
 import 'nouislider/dist/nouislider.css';
 import { DateRangeOptions } from 'src/utils/options';
 
+const { t } = useI18n();
 const measuresStore = useMeasuresStore();
 
 const props = defineProps<{
@@ -114,9 +110,7 @@ watch(
       slider.value &&
       timeseriesStore.lastUpdatedChartID !== 'timeRangeSlider'
     ) {
-      const [min, max] = timeseriesStore.timeRange.map((date) =>
-        date.getTime(),
-      );
+      const [min, max] = [timeseriesStore.timeRange[0].getTime(), timeseriesStore.timeRange[1].getTime()];
       slider.value.set([min, max]);
     }
   },
@@ -126,6 +120,7 @@ const play = () => {
   if (!slider.value || playing.value) return;
   playing.value = true;
   const [min, max] = (slider.value.get() as [string, string]).map(Number);
+  if (min === undefined || max === undefined) return;
   if (max === timeseriesStore.MAX_DATE.getTime()) {
     const range = max - min;
     slider.value.set([
@@ -136,7 +131,7 @@ const play = () => {
   playInterval = setInterval(() => {
     if (slider.value) {
       const current = (slider.value.get() as [string, string]).map(Number);
-      if (current[1] >= timeseriesStore.MAX_DATE.getTime()) {
+      if (!current || !current[0] || !current[1] || current[1] >= timeseriesStore.MAX_DATE.getTime()) {
         stop();
       } else {
         slider.value.set([
@@ -213,6 +208,9 @@ const formatter = {
   },
   from: (value: string) => {
     const [day, month, year2] = value.split('/').map(Number);
+    if (!day || !month) {
+      return new Date().getTime(); // Fallback to current time if format is incorrect
+    }
     const year = year2 ? 2000 + year2 : new Date().getFullYear(); // Use the current year if not in string
     return new Date(year, month - 1, day).getTime();
   },
@@ -230,7 +228,13 @@ const formatterTooltip = {
   },
   from: (value: string) => {
     const [datePart, timePart] = value.split(' ');
+    if (!datePart || !timePart) {
+      return new Date().getTime(); // Fallback to current time if format is incorrect
+    }
     const [day, month, year] = datePart.split('/').map(Number);
+    if (!year || !month || !day) {
+      return new Date().getTime(); // Fallback to current time if year is missing
+    }
     const [hours, minutes] = timePart.split(':').map(Number);
     return new Date(year, month - 1, day, hours, minutes).getTime();
   },

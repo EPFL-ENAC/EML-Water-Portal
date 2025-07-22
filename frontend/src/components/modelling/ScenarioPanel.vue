@@ -2,15 +2,15 @@
   <div>
     <q-input
       v-model="selected.name"
-      :label="$t('name')"
+      :label="t('name')"
       @update:model-value="onUpdate"
       class="q-mb-md"
     />
 
-    <div>{{ $t('tank_volume') }}</div>
+    <div>{{ t('tank_volume') }}</div>
     <q-slider
       v-model="selected.tank"
-      :min="0"
+      :min="10"
       :max="5000"
       :step="10"
       debounce="300"
@@ -20,7 +20,7 @@
       class="q-mb-md"
     />
 
-    <div>{{ $t('roof_to_tank') }}</div>
+    <div>{{ t('roof_to_tank') }}</div>
     <q-slider
       v-model="selected.roofToTank"
       :min="0.1"
@@ -33,7 +33,7 @@
       class="q-mb-md"
     />
 
-    <div>{{ $t('flushing_frequency') }}</div>
+    <div>{{ t('flushing_frequency') }}</div>
     <q-slider
       v-model="selected.flushingFrequency"
       :min="0"
@@ -47,7 +47,7 @@
     />
   </div>
 
-  <div>{{ $t('vegetation') }}</div>
+  <div>{{ t('vegetation') }}</div>
   <div class="q-gutter-sm q-mb-md">
     <template v-for="vege in VegetationIcons" :key="vege.value">
       <q-radio
@@ -55,13 +55,33 @@
         :checked-icon="vege.name"
         :unchecked-icon="vege.name"
         :val="vege.value"
-        :title="$t(vege.value)"
+        :title="t(vege.value)"
         @update:model-value="onUpdate"
       />
     </template>
   </div>
 
-  <div>{{ $t('line_color') }}</div>
+  <div>
+    <q-checkbox
+      v-model="selected.useCustomPercentPaved"
+      :label="t('use_custom_percent_paved')"
+      @update:model-value="onUpdate"
+    />
+
+    <q-slider
+      v-if="selected.useCustomPercentPaved"
+      v-model="selected.customPercentPaved"
+      :min="0"
+      :max="99"
+      :step="1"
+      debounce="300"
+      label
+      :marker-labels="percentPavedMarkerLabels"
+      @update:model-value="onUpdate"
+    />
+  </div>
+
+  <div class="q-mt-md">{{ t('line_color') }}</div>
   <q-input
     v-model="selected.lineColor"
     filled
@@ -90,13 +110,8 @@
   </q-input>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'ScenarioPanel',
-});
-</script>
 <script setup lang="ts">
-import { Scenario, colors } from 'src/stores/scenarii';
+import { type Scenario, colors } from 'src/stores/scenarii';
 import { VegetationIcons } from 'src/utils/icons';
 
 interface Props {
@@ -106,32 +121,41 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
+const { t } = useI18n();
+
 const selected = ref({ ...props.modelValue });
 
 const tankMarkerLabels = computed(() => {
-  const obj = {};
-  for (let i = 0; i <= 5; i++) {
-    // eslint-disable-next-line
+  const obj: { [key: string]: string } = {};
+  obj[10] = '10';
+  for (let i = 1; i <= 10; i++) {
     obj[i * 1000] = `${i * 1000}`;
   }
   return obj;
 });
 
 const rt2tkMarkerLabels = computed(() => {
-  const obj = {};
+  const obj: { [key: string]: string } = {};
   for (let i = 1; i <= 10; i++) {
-    // eslint-disable-next-line
     obj[i * 0.1] = `${(i / 10).toFixed(1)}`;
   }
   return obj;
 });
 
 const ffMarkerLabels = computed(() => {
-  const obj = {};
+  const obj: { [key: string]: string } = {};
   for (let i = 0; i <= 5; i++) {
-    // eslint-disable-next-line
     obj[i * 10] = `${i * 10}`;
   }
+  return obj;
+});
+
+const percentPavedMarkerLabels = computed(() => {
+  const obj: { [key: string]: string } = {};
+  for (let i = 0; i < 5; i++) {
+    obj[i * 20] = `${i * 20}%`;
+  }
+  obj[99] = '99%';
   return obj;
 });
 

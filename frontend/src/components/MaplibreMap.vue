@@ -13,64 +13,41 @@
   ></div>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'MaplibreMap',
-});
-</script>
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css';
-import 'maplibregl-theme-switcher/styles.css';
-import {
-  ThemeSwitcherControl,
-  ThemeDefinition,
-} from 'maplibregl-theme-switcher';
 import {
   AttributionControl,
-  FullscreenControl,
   Map,
-  MapMouseEvent,
+  type MapMouseEvent,
   NavigationControl,
   ScaleControl,
-  type LngLatLike,
   type StyleSpecification,
 } from 'maplibre-gl';
 import { DivControl } from 'src/utils/control';
-import { Settings } from 'src/stores/settings';
 
 interface Props {
   styleSpec?: string | StyleSpecification | undefined;
-  center?: LngLatLike;
+  center: [number, number];
   zoom?: number;
   minZoom?: number;
   maxZoom?: number;
-  themes?: ThemeDefinition[];
   position?: boolean | string | undefined;
   attribution?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
   styleSpec: 'style.json',
   zoom: 12,
-  aspectRatio: undefined,
+  attribution: '',
   minZoom: 0,
-  maxZoom: undefined,
+  maxZoom: 0,
   position: false,
 });
 
 const emit = defineEmits(['map:loaded', 'map:click']);
 
-const settingsStore = useSettingsStore();
-
 const DEFAULT_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.swisstopo.admin.ch/" target="_blank">Swisstopo</a>, <a href="https://www.epfl.ch/" target="_blank">EPFL</a>';
 // to be adapted to the style.json
-const DEFAULT_THEME = 'light';
-const THEMES: ThemeDefinition[] = [
-  { id: 'classic', label: 'Classic' },
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
-  { id: 'swissimage', label: 'Aerial' },
-];
 
 const loading = ref(true);
 
@@ -89,21 +66,6 @@ onMounted(() => {
 
   map.addControl(new NavigationControl());
   map.addControl(new ScaleControl());
-  map.addControl(new FullscreenControl());
-
-  const settings = settingsStore.settings;
-  map.addControl(
-    new ThemeSwitcherControl(THEMES, {
-      defaultStyle: settings?.theme || DEFAULT_THEME,
-      eventListeners: {
-        onChange(event: MouseEvent, style) {
-          // persist the last theme choice
-          settingsStore.saveSettings({ theme: style } as Settings);
-          return false;
-        },
-      },
-    }),
-  );
 
   map.addControl(
     new AttributionControl({
@@ -131,14 +93,7 @@ onMounted(() => {
     });
   }
 
-  map.once('load', () => {
-    THEMES.map((th) => th.id).forEach((id) => {
-      map?.setLayoutProperty(
-        id,
-        'visibility',
-        id === settings?.theme ? 'visible' : 'none',
-      );
-    });
+  void map.once('load', () => {
     emit('map:loaded', map as Map);
     loading.value = false;
   });

@@ -23,6 +23,9 @@ async def get_sensor_dataset(
     name: str,
     start: str = None,
     end: str = None,
+    resample: bool = True,
+    filter: bool = True,
+    measures: str = None,
 ) -> Datasets:
     """Get dataset from sensor name"""
     service = MeasuresService()
@@ -30,4 +33,4 @@ async def get_sensor_dataset(
         start, "%Y-%m-%dT%H:%M:%S.%fZ") if start is not None else None
     end = datetime.strptime(
         end, "%Y-%m-%dT%H:%M:%S.%fZ") if end is not None else None
-    return await service.get_dataset(name, start, end)
+    return await service.get_dataset(name, start, end, resample, filter, measures.split(",") if measures else None)

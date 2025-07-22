@@ -8,7 +8,7 @@ import { RejetsECLayerManager } from 'src/layers/rejets_ec';
 import { RejetsEULayerManager } from 'src/layers/rejets_eu';
 import { MeteoLayerManager } from 'src/layers/meteo';
 import { SensorsLayerManager } from 'src/layers/sensors';
-import { Map, MapGeoJSONFeature } from 'maplibre-gl';
+import type { Map, MapGeoJSONFeature } from 'maplibre-gl';
 
 export type LayerSelection = {
   id: string;
@@ -35,6 +35,7 @@ export const useMapStore = defineStore('map', () => {
     new MeteoLayerManager(),
     new SensorsLayerManager('B'),
     new SensorsLayerManager('A'),
+    new SensorsLayerManager('A_Unil'),
     new SensorsLayerManager('C'),
   ];
 
@@ -45,6 +46,7 @@ export const useMapStore = defineStore('map', () => {
         'river',
         'sensors-b',
         'sensors-a',
+        'sensors-a_unil',
         'sensors-c',
         'conduite_principale_ec',
         'bv',

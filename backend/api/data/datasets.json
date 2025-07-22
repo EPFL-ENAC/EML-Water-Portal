@@ -30,27 +30,34 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
             }
           ]
         }
@@ -74,27 +81,34 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
             }
           ]
         }
@@ -118,27 +132,34 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
             }
           ]
         }
@@ -162,27 +183,34 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
             }
           ]
         }
@@ -206,27 +234,34 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
             }
           ]
         }
@@ -250,27 +285,186 @@
             },
             {
               "measure": "depth",
-              "value": "3"
+              "value": "3",
+              "min": 0
             },
             {
               "measure": "electro_conductivity",
-              "value": "10"
+              "value": "10",
+              "min": 0
             },
             {
               "measure": "turbidity",
-              "value": "25"
+              "value": "25",
+              "min": 0
             },
             {
               "measure": "dissolved_oxygen",
-              "value": "20"
+              "value": "20",
+              "min": 0
             },
             {
               "measure": "ph",
-              "value": "17"
+              "value": "17",
+              "min": 0,
+              "max": 14
             },
             {
               "measure": "oxidation_reduction_potential",
-              "value": "19"
+              "value": "19",
+              "min": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil1",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5077335102324736"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil2",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5492673698725888"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil3",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "5603918924873728"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A_Unil4",
+      "db_spec": {
+        "measurement": "hydrovu",
+        "aggregate": "1h",
+        "location": {
+          "field": "locationId",
+          "value": "6533528899420160"
+        },
+        "filters": {
+          "field": "parameterId",
+          "measures": [
+            {
+              "measure": "water_temperature",
+              "value": "1"
+            },
+            {
+              "measure": "electro_conductivity",
+              "value": "10",
+              "min": 0
+            },
+            {
+              "measure": "turbidity",
+              "value": "25",
+              "min": 0
+            },
+            {
+              "measure": "fdom",
+              "value": "70"
+            },
+            {
+              "measure": "nitrate",
+              "value": "38"
             }
           ]
         }
@@ -290,7 +484,8 @@
           "measures": [
             {
               "measure": "water_level",
-              "value": "15[0] mm"
+              "value": "15[0] mm",
+              "min": 0
             }
           ]
         }
@@ -310,7 +505,8 @@
           "measures": [
             {
               "measure": "water_level",
-              "value": "15[0] mm"
+              "value": "15[0] mm",
+              "min": 0
             }
           ]
         }
@@ -330,7 +526,8 @@
           "measures": [
             {
               "measure": "precipitation",
-              "value": "22[0]"
+              "value": "22[0]",
+              "min": 0
             }
           ]
         }
@@ -348,7 +545,8 @@
           },
           {
             "name": "precipitation",
-            "measure": "precipitation"
+            "measure": "precipitation",
+            "min": 0
           }
         ]
       }

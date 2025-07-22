@@ -28,6 +28,8 @@ export const useSettingsStore = defineStore('settings', () => {
         ph: true,
         turbidity: true,
         oxidation_reduction_potential: true,
+        fdom: true,
+        nitrate: true,
         outflow_total: true,
         outflow_tank: true,
         soil_moisture: true,

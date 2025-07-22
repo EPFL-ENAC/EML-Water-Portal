@@ -17,6 +17,7 @@ class ScenariiService:
         roof_to_tank: float,
         vegetation: str,
         flushing_frequency: float,
+        custom_percent_paved: float | None = None,
         use_historical_data: bool = False,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
@@ -41,11 +42,23 @@ class ScenariiService:
                 ),
             )
 
+        if custom_percent_paved is not None and (
+            custom_percent_paved < 0 or custom_percent_paved >= 100
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Custom percentage of paved area must be within the range"
+                    " of 0 (inclusive) to 100 (exclusive)."
+                ),
+            )
+
         measures_service = MeasuresService()
         sensor_data = await measures_service.get_dataset(
             "10_years" if use_historical_data else "C3",
             from_date,
             to_date,
+            False,
             False,
         )
         vector_map = {
@@ -74,8 +87,14 @@ class ScenariiService:
         ).mean()
         input_data["time"] = input_data.index
 
+        area_params = uhm.area_params[watershed]
+        if custom_percent_paved is not None:
+            area_params = uhm.set_percent_paved(
+                area_params, percent_paved=custom_percent_paved
+            )
+
         model_params = uhm.ModelParameters(
-            area_params=uhm.area_params[watershed],
+            area_params=area_params,
             Vmax=tank,
             frac_rt2tk=roof_to_tank,
             vegetation=uhm.vegetation_params[vegetation],

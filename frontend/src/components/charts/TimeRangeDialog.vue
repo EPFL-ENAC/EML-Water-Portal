@@ -5,7 +5,7 @@
         <q-btn flat icon="close" color="grey-6" v-close-popup />
       </q-card-actions>
       <q-card-section>
-        <q-input v-model="fromDate" :label="$t('from_date')" class="q-mb-md">
+        <q-input v-model="fromDate" :label="t('from_date')" class="q-mb-md">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy
@@ -36,7 +36,7 @@
           </template>
         </q-input>
 
-        <q-input v-model="toDate" :label="$t('to_date')">
+        <q-input v-model="toDate" :label="t('to_date')">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy
@@ -68,10 +68,10 @@
         </q-input>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat :label="$t('cancel')" color="grey-6" v-close-popup />
+        <q-btn flat :label="t('cancel')" color="grey-6" v-close-popup />
         <q-btn
           flat
-          :label="$t('apply')"
+          :label="t('apply')"
           color="primary"
           @click="onApply"
           v-close-popup
@@ -81,12 +81,8 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'TimeRangeDialog',
-});
-</script>
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import { format, parse } from 'date-fns';
 
 interface Props {
@@ -97,6 +93,8 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
+const $q = useQuasar();
+const { t } = useI18n();
 const timeseriesStore = useTimeseriesChartsStore();
 
 const showDialog = ref(props.modelValue);

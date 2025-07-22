@@ -1,14 +1,14 @@
-import { Map, GeoJSONSource } from 'maplibre-gl';
-import {
+import type { Map, GeoJSONSource } from 'maplibre-gl';
+import type {
   Feature,
   FeatureCollection,
   GeoJSON,
   GeoJsonProperties,
   Geometry,
 } from 'geojson';
-import { LayerManager, FeatureSelectionCallback } from 'src/layers/models';
+import { LayerManager, type FeatureSelectionCallback } from 'src/layers/models';
 import { fileStoreUrl } from 'src/boot/api';
-import { State } from 'src/layers/models';
+import type { State } from 'src/layers/models';
 
 const GEOJSON_URL = `${fileStoreUrl}/geojson/bv.geojson`;
 
@@ -97,7 +97,7 @@ export class BVLayerManager extends LayerManager {
     });
   }
 
-  applyState(map: Map, state: State): void {
+  override applyState(map: Map, state: State): void {
     if (!this.data) return;
     const updatedFeatures = this.data.features.map(
       (feature: Feature<Geometry, GeoJsonProperties>) => {

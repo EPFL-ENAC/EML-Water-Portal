@@ -15,15 +15,9 @@
   </div>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: 'TimeAxis',
-});
-</script>
-
 <script setup lang="ts">
 import ECharts from 'vue-echarts';
-import type { EChartsOption, ECElementEvent } from 'echarts';
+import type { EChartsOption } from 'echarts';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -81,7 +75,7 @@ function onRangeChange() {
   }
 }
 
-const onDataZoomChange = (e: ECElementEvent) => {
+const onDataZoomChange = () => {
   initChartOptions();
 };
 
