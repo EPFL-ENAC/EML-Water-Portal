@@ -17,13 +17,13 @@ export interface Scenario {
   data?: ScenarioData;
 }
 
+// Paul Tol's "muted" color scheme
 export const colors = ['#333288', '#88ccee', '#44aa99', '#117733', '#999933', '#ddcc77', '#cc6677', '#882255', '#aa4499', '#dddddd'];
 
 export const useScenariiStore = defineStore(
   'scenarii',
   () => {
     const scenarii = ref<Scenario[]>([]);
-    // Paul Tol's "muted" color scheme
 
     function reset() {
       // TODO reset scenario

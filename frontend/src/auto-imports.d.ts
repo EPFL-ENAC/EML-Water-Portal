@@ -78,6 +78,8 @@ declare global {
   const useCounterStore: (typeof import('./stores/help'))['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
+  const useDesignChartsStore: typeof import('./stores/design')['useDesignChartsStore']
+  const useDesignStore: typeof import('./stores/design')['useDesignStore']
   const useFiltersStore: typeof import('./stores/filters')['useFiltersStore']
   const useHelpStore: typeof import('./stores/help')['useHelpStore']
   const useI18n: typeof import('vue-i18n')['useI18n']
@@ -181,6 +183,7 @@ declare module 'vue' {
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useDesignStore: UnwrapRef<typeof import('./stores/design')['useDesignStore']>
     readonly useFiltersStore: UnwrapRef<typeof import('./stores/filters')['useFiltersStore']>
     readonly useHelpStore: UnwrapRef<typeof import('./stores/help')['useHelpStore']>
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>

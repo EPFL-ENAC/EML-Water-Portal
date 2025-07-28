@@ -105,6 +105,7 @@
           <div class="text-h6 q-mb-sm">
             {{ t('design_for_watershed', { name: stationName }) }}
           </div>
+          <design-tab :watershed="stationName" />
         </q-tab-panel>
       </q-tab-panels>
       <q-card-actions v-if="$q.screen.gt.xs" align="right">
@@ -123,6 +124,7 @@
 import { useQuasar } from 'quasar';
 import type { Scenario } from 'src/stores/scenarii';
 import ScenarioDialog from 'src/components/ScenarioDialog.vue';
+import DesignTab from 'src/components/DesignTab.vue';
 import { VegetationIcons } from 'src/utils/icons';
 
 interface Props {
@@ -136,9 +138,6 @@ watch(
   () => props.modelValue,
   (value) => {
     showDialog.value = value;
-    if (value && watershedScenarii.value.length === 0) {
-      onAdd();
-    }
   },
 );
 
