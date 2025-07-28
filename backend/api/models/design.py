@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+Watersheds = list[str]
+
 
 class DesignCurve(BaseModel):
     x: list[float]
