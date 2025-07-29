@@ -61,21 +61,49 @@ const tankVolumeChartSeries = computed(() => {
     watershed = DEFAULT_WATERSHED;
   }
 
-  const designCurves = designData.value[watershed]?.tank_volume || [];
-  return designCurves.map((design_curve, index) => ({
+  const tankVolumeCurves = designData.value[watershed]?.tank_volume || [];
+  const tankVolumeSeries = tankVolumeCurves.map((design_curve, index) => ({
     name: design_curve.label,
     type: 'line',
     smooth: false,
-    symbol: 'none',
+    symbol: 'circle',
+    symbolSize: 6,
     lineStyle: {
-      color: getSensorFamilyColorGradient('design_tank_volume', designCurves.length)[index],
+      color: getSensorFamilyColorGradient('design_tank_volume', tankVolumeCurves.length)[index],
       width: 2
+    },
+    itemStyle: {
+      color: getSensorFamilyColorGradient('design_tank_volume', tankVolumeCurves.length)[index],
     },
     data: design_curve.x.map((x, i) => [
       x,
       design_curve.y[i]
     ])
   }));
+
+  const runoffCoefficientCurves = designData.value[watershed]?.runoff_coefficient || [];
+  const runoffCoefficientSeries = runoffCoefficientCurves.map((design_curve, index) => ({
+    name: design_curve.label,
+    type: 'line',
+    yAxisIndex: 1,
+    smooth: false,
+    symbol: 'square',
+    symbolSize: 6,
+    lineStyle: {
+      type: 'dashed',
+      color: getSensorFamilyColorGradient('design_runoff_coefficient', tankVolumeCurves.length)[index],
+      width: 2
+    },
+    itemStyle: {
+      color: getSensorFamilyColorGradient('design_runoff_coefficient', tankVolumeCurves.length)[index]
+    },
+    data: design_curve.x.map((x, i) => [
+      x,
+      design_curve.y[i]
+    ])
+  }));
+
+  return [...tankVolumeSeries, ...runoffCoefficientSeries];
 })
 
 const failureRateChartSeries = computed(() => {
@@ -93,6 +121,9 @@ const failureRateChartSeries = computed(() => {
     lineStyle: {
       color: getSensorFamilyColorGradient('design_failure_rate', designCurves.length)[index],
       width: 2
+    },
+    itemStyle: {
+      color: getSensorFamilyColorGradient('design_failure_rate', designCurves.length)[index]
     },
     data: design_curve.x.map((x, i) => [
       x,
@@ -142,6 +173,9 @@ const historicalChartOptions = computed(() => ({
       color: getSensorFamilyColorGradient('C', 3)[1],
       width: 2
     },
+    itemStyle: {
+      color: getSensorFamilyColorGradient('C', 3)[1]
+    },
     data: historicalChartData.value
   }]
 }))
@@ -150,7 +184,10 @@ const tankVolumeChartOptions = computed(() => ({
   tooltip: {
     trigger: 'axis',
   },
-  grid: chartGrid,
+  grid: {
+    ...chartGrid,
+    right: 60,
+  },
   xAxis: {
     type: 'value',
     name: `${t('Roof runoff')} (-)`,
@@ -166,20 +203,37 @@ const tankVolumeChartOptions = computed(() => ({
       show: true
     }
   },
-  yAxis: {
-    type: 'value',
-    name: `${t('Tank volume')} (m³)`,
-    nameLocation: 'middle',
-    nameGap: 40,
-    nameTextStyle: {
-      fontWeight: 'bold',
-    },
-    splitLine: {
-      lineStyle: {
-        type: 'solid'
+  yAxis: [
+    {
+      type: 'value',
+      name: `${t('Tank volume')} (m³)`,
+      nameLocation: 'middle',
+      nameGap: 40,
+      nameTextStyle: {
+        fontWeight: 'bold',
+      },
+      splitLine: {
+        lineStyle: {
+          type: 'solid'
+        }
       }
-    }
-  },
+    },
+    {
+      type: 'value',
+      name: `${t('Runoff coefficient')} (Vout/Vin)`,
+      position: 'right',
+      nameLocation: 'middle',
+      nameGap: 40,
+      nameTextStyle: {
+        fontWeight: 'bold',
+      },
+      splitLine: {
+        lineStyle: {
+          type: 'solid'
+        }
+      }
+    },
+  ],
   series: tankVolumeChartSeries.value
 }))
 
