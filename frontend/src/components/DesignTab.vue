@@ -237,7 +237,16 @@ const tankVolumeChartOptions = computed(() => ({
       }
     },
   ],
-  series: tankVolumeChartSeries.value
+  series: tankVolumeChartSeries.value,
+  legend: {
+    show: true,
+    orient: 'vertical',
+    top: 20,
+    left: 65,
+    icon: 'roundedRect',
+    itemHeight: 8,
+    itemGap: 5,
+  },
 }))
 
 const failureRateChartOptions = computed(() => ({
@@ -274,7 +283,16 @@ const failureRateChartOptions = computed(() => ({
       }
     }
   },
-  series: failureRateChartSeries.value
+  series: failureRateChartSeries.value,
+  legend: {
+    show: true,
+    orient: 'vertical',
+    top: 15,
+    right: 20,
+    icon: 'roundedRect',
+    itemHeight: 8,
+    itemGap: 5,
+  },
 }))
 
 const handleResize = () => {
