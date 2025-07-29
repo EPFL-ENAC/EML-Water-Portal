@@ -51,3 +51,14 @@ export interface SensorInfo {
   site_description: { en: string; fr: string }
 }
 
+export interface DesignCurve {
+  x: number[];
+  y: number[];
+  label: string;
+}
+
+export interface DesignData {
+  tank_volume: DesignCurve[];
+  runoff_coefficient: DesignCurve[];
+  failure_rate: DesignCurve[];
+}
