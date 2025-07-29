@@ -99,6 +99,11 @@ export default {
     error: 'Error downloading data for sensor {sensor}',
     downloading: 'Downloading data...',
   },
+  design_tab: {
+    introduction: 'The charts shown in this tab can help you scale a tank for a given watershed. The curves were generated using historical precipitation data (shown below) and by computing scenarios with variable input parameters.',
+    graph_1: 'The next graph shows how increasing the fraction of roof runoff directed to the tank affects the runoff coefficient (dashed lines) and the required tank volume (solid lines) for different target failure rates.',
+    graph_2: 'The last graph shows how the failure rate decreases with increasing tank volume for different values of the roof-to-tank fraction (Fₜ).',
+  },
   about: 'About',
   add_scenario: 'Add scenario',
   all: 'All',

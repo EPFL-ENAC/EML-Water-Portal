@@ -99,6 +99,11 @@ export default {
     error: 'Erreur lors du téléchargement des données pour le capteur : {sensor}',
     downloading: 'Téléchargement des données...',
   },
+  design_tab: {
+    introduction: 'Les graphiques présentés dans cet onglet peuvent vous aider à dimensionner un réservoir pour un bassin versant donné. Les courbes ont été générées en utilisant des données historiques de précipitations (voir ci-dessous) et en calculant des scénarios avec des paramètres d\'entrée variables.',
+    graph_1: 'Le graphique suivant montre comment l\'augmentation de la fraction du ruissellement du toit dirigée vers le réservoir affecte le coefficient de ruissellement (lignes en pointillés) et le volume nécessaire du réservoir (lignes pleines) pour différents taux de défaillance cible.',
+    graph_2: 'Le dernier graphique montre comment le taux de défaillance diminue avec l\'augmentation du volume du réservoir pour différentes valeurs de la fraction toit-réservoir (Fₜ).',
+  },
   about: 'À propos',
   add_scenario: 'Ajouter un scénario',
   all: 'Tous',

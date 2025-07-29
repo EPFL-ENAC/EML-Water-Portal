@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div ref="historicalChartContainer" style="height: 200px;"></div>
-    <div ref="tankVolumeChartContainer" style="height: 300px;"></div>
-    <div ref="failureRateChartContainer" style="height: 300px;"></div>
+    <div>{{ t('design_tab.introduction') }}</div>
+    <div ref="historicalChartContainer" style="height: 200px;" class="q-mt-md q-mb-md"></div>
+    <div>{{ t('design_tab.graph_1') }}</div>
+    <div ref="tankVolumeChartContainer" style="height: 300px;" class="q-mt-md q-mb-md"></div>
+    <div>{{ t('design_tab.graph_2') }}</div>
+    <div ref="failureRateChartContainer" style="height: 300px;" class="q-mt-md q-mb-md"></div>
   </div>
 </template>
 
