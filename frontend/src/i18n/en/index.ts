@@ -149,6 +149,7 @@ export default {
   reset_filters: 'Reset filters',
   resources: 'Resources',
   roof_to_tank: 'Fraction of roof runoff directed to tank',
+  runoff_coefficient: 'Runoff coefficient',
   scenario_for_watershed: 'Scenario for watershed "{name}"',
   scenario_info: 'Select a watershed to apply one or more scenarios.',
   scenario: 'Scenario',

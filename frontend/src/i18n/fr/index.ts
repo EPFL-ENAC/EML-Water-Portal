@@ -149,6 +149,7 @@ export default {
   reset_filters: 'Réinitialiser les filtres',
   resources: 'Ressources',
   roof_to_tank: 'Fraction de ruissellement de toit dirigée vers le réservoir',
+  runoff_coefficient: 'Coefficient de ruissellement',
   scenario_for_watershed: 'Scénario pour le bassin versant "{name}"',
   scenario_info: 'Sélectionnez un bassin versant pour appliquer un ou plusieurs scénarios.',
   scenario: 'Scénario',

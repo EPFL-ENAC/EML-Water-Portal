@@ -223,7 +223,7 @@ const tankVolumeChartOptions = computed(() => ({
     },
     {
       type: 'value',
-      name: `${t('Runoff coefficient')} (Vout/Vin)`,
+      name: `${t('runoff_coefficient')} (Vout/Vin)`,
       position: 'right',
       nameLocation: 'middle',
       nameGap: 40,

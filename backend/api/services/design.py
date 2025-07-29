@@ -36,12 +36,12 @@ class DesignService:
         return df
 
     async def get_watersheds(self) -> list[str]:
-        df = await DesignService().read_design_file()
+        df = await self.read_design_file()
         watersheds = df.index.get_level_values("watershed").unique()
         return list(watersheds)
 
     async def get_design_data(self, watershed: str) -> DesignData:
-        df = await DesignService().read_design_file()
+        df = await self.read_design_file()
         watersheds = df.index.get_level_values("watershed").unique()
 
         if watershed not in watersheds:
