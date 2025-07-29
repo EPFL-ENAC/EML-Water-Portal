@@ -190,7 +190,7 @@ const tankVolumeChartOptions = computed(() => ({
   },
   xAxis: {
     type: 'value',
-    name: `${t('Roof runoff')} (-)`,
+    name: `${t('roof_to_tank')}`,
     nameLocation: 'middle',
     nameGap: 25,
     nameTextStyle: {
@@ -206,7 +206,7 @@ const tankVolumeChartOptions = computed(() => ({
   yAxis: [
     {
       type: 'value',
-      name: `${t('Tank volume')} (m³)`,
+      name: `${t('tank_volume')} (m³)`,
       nameLocation: 'middle',
       nameGap: 40,
       nameTextStyle: {
@@ -244,7 +244,7 @@ const failureRateChartOptions = computed(() => ({
   grid: chartGrid,
   xAxis: {
     type: 'value',
-    name: `${t('Tank volume')} (m³)`,
+    name: `${t('tank_volume')} (m³)`,
     nameLocation: 'middle',
     nameGap: 25,
     nameTextStyle: {
@@ -256,7 +256,7 @@ const failureRateChartOptions = computed(() => ({
   },
   yAxis: {
     type: 'value',
-    name: `${t('Failure rate')} (-)`,
+    name: `${t('failure_rate')}`,
     nameLocation: 'middle',
     nameGap: 40,
     nameTextStyle: {

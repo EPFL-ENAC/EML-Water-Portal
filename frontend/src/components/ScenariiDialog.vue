@@ -48,7 +48,7 @@
                     </q-item-label>
                     <div>
                       <q-badge color="grey-7">{{
-                        `${t('tank_volume')}: ${scenario.tank}`
+                        `${t('tank_volume')} (m³): ${scenario.tank}`
                       }}</q-badge>
                       <q-badge color="grey-7">{{
                         `${t('roof_to_tank')}: ${scenario.roofToTank}`

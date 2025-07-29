@@ -7,7 +7,7 @@
       class="q-mb-md"
     />
 
-    <div>{{ t('tank_volume') }}</div>
+    <div>{{ `${t('tank_volume')} (m³)` }}</div>
     <q-slider
       v-model="selected.tank"
       :min="10"
