@@ -90,7 +90,7 @@ export default {
   },
   download: {
     label: 'Download',
-    content: 'Download data for the selected sensors and time range.',
+    content: 'Download data for the selected sensors, measured parameters and time range.',
     group: {
       measures: 'Group by measured parameters',
       sensors: 'Group by sensors',

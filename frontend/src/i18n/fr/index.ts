@@ -90,7 +90,7 @@ export default {
   },
   download: {
     label: 'Télécharger',
-    content: 'Télécharger les données pour les capteurs et la plage de temps sélectionnés.',
+    content: 'Télécharger les données pour les capteurs, les paramètres mesurés et la plage de temps sélectionnés.',
     group: {
       measures: 'Grouper par paramètres mesurés',
       sensors: 'Grouper par capteurs',
