@@ -56,6 +56,10 @@ export const useMeasuresStore = defineStore('measures', () => {
     datasets.value?.sensors.forEach((sensor) => {
       promises.push(downloadDataset(sensor.name, {})
       .then((response) => {
+        if (!response?.data) {
+          console.warn(`No data found for sensor: ${sensor.name}`);
+          return;
+        }
         sensorsSampled.value.push(response.data);
       }).finally(() => {
         loaded++;
@@ -81,6 +85,10 @@ export const useMeasuresStore = defineStore('measures', () => {
     datasets.value?.sensors.forEach((sensor) => {
       promises.push(downloadDataset(sensor.name, params)
       .then((response) => {
+        if (!response?.data) {
+          console.warn(`No data found for sensor: ${sensor.name}`);
+          return;
+        }
         const data = response.data as SensorData;
         sensorsRaw.value.push(data);
       }).finally(() => {

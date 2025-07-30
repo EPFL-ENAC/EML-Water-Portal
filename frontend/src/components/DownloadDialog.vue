@@ -100,7 +100,7 @@ function onDownload() {
         promises.push(measuresStore.downloadSensorRawData(location, start, end, measures)
           .then((response) => {
             // Handle successful download
-            return response.data;
+            return response?.data || [];
           })
           .catch((error) => {
             // Handle error in download
