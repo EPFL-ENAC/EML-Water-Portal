@@ -101,8 +101,7 @@ export const useMeasuresStore = defineStore('measures', () => {
    * @param {Object} params - The parameters for the dataset download.
    * @returns {Promise<any>} - A promise that resolves with the downloaded dataset.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function downloadDataset(name: string, params: any) {
+  async function downloadDataset(name: string, params: Record<string, unknown>) {
     let attempts = 0;
     while (attempts < DOWNLOAD_ATTEMPTS) {
       try {
@@ -117,9 +116,6 @@ export const useMeasuresStore = defineStore('measures', () => {
         await new Promise(resolve => setTimeout(resolve, DOWNLOAD_TIMEOUT));
       }
     }
-    // If we reach here, it means all attempts failed
-    console.error(`Failed to load dataset after ${DOWNLOAD_ATTEMPTS} attempts: ${name}`);
-    throw new Error(`Failed to load dataset: ${name}`);
   }
 
   /**
