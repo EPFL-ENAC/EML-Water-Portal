@@ -2,6 +2,9 @@ import type { Datasets, SensorData } from 'src/models';
 import { api } from 'src/boot/api';
 import { roundToNearestHours, addDays } from 'date-fns';
 
+const DOWNLOAD_ATTEMPTS = 3; // Number of attempts to download sensor data
+const DOWNLOAD_TIMEOUT = 2000; // Timeout between attempts in milliseconds (2 seconds)
+
 export const useMeasuresStore = defineStore('measures', () => {
   const datasets = ref<Datasets>();
   const loading = ref(false);
@@ -51,7 +54,8 @@ export const useMeasuresStore = defineStore('measures', () => {
     let loaded = 0;
     const promises: Promise<void>[] = [];
     datasets.value?.sensors.forEach((sensor) => {
-      promises.push(api.get(`measures/dataset/${sensor.name}`).then((response) => {
+      promises.push(downloadDataset(sensor.name, {})
+      .then((response) => {
         sensorsSampled.value.push(response.data);
       }).finally(() => {
         loaded++;
@@ -70,13 +74,13 @@ export const useMeasuresStore = defineStore('measures', () => {
 
     let loaded = 0;
     const promises: Promise<void>[] = [];
+    const params = {
+      start: startDate.value?.toISOString(),
+      end: endDate.value?.toISOString(),
+    };
     datasets.value?.sensors.forEach((sensor) => {
-      promises.push(api.get(`measures/dataset/${sensor.name}`, {
-        params: {
-          start: startDate.value?.toISOString(),
-          end: endDate.value?.toISOString(),
-        },
-      }).then((response) => {
+      promises.push(downloadDataset(sensor.name, params)
+      .then((response) => {
         const data = response.data as SensorData;
         sensorsRaw.value.push(data);
       }).finally(() => {
@@ -90,16 +94,49 @@ export const useMeasuresStore = defineStore('measures', () => {
     return Promise.all(promises);
   }
 
+  /**
+   * Downloads a dataset by name with retry logic.
+   * Retries the download if it fails, up to a specified number of attempts.
+   * @param {string} name - The name of the dataset to download.
+   * @param {Object} params - The parameters for the dataset download.
+   * @returns {Promise<any>} - A promise that resolves with the downloaded dataset.
+   */
+  async function downloadDataset(name: string, params: Record<string, unknown>) {
+    let attempts = 0;
+    while (attempts < DOWNLOAD_ATTEMPTS) {
+      try {
+        return await api.get(`measures/dataset/${name}`, { params });
+      } catch (error) {
+        attempts++;
+        if (attempts >= DOWNLOAD_ATTEMPTS) {
+          console.error(`Failed to load dataset after ${DOWNLOAD_ATTEMPTS} attempts: ${name}`, error);
+          throw error;
+        }
+        console.warn(`Attempt ${attempts} failed for ${name}, retrying in ${DOWNLOAD_TIMEOUT}ms...`);
+        await new Promise(resolve => setTimeout(resolve, DOWNLOAD_TIMEOUT));
+      }
+    }
+  }
+
+  /**
+   * Downloads raw sensor data for a specific sensor within a given time range.
+   * Retries the download if it fails, up to a specified number of attempts.
+   *
+   * @param {string} name - The name of the sensor to download data for.
+   * @param {Date | undefined} start - The start date for the data range.
+   * @param {Date | undefined} end - The end date for the data range.
+   * @param {string[] | undefined} measures - Optional array of measures to filter by.
+   * @returns {Promise<any>} - A promise that resolves with the downloaded data.
+   */
   async function downloadSensorRawData(name: string, start: Date | undefined, end: Date | undefined, measures: string[] | undefined) {
-    return api.get(`measures/dataset/${name}`, {
-        params: {
-          start: start ? start.toISOString() : startDate.value?.toISOString(),
-          end: end ? end.toISOString() : endDate.value?.toISOString(),
-          resample: false,
-          filter: false,
-          measures: measures?.join(','),
-        },
-      })
+    const params = {
+      start: start ? start.toISOString() : startDate.value?.toISOString(),
+      end: end ? end.toISOString() : endDate.value?.toISOString(),
+      resample: false,
+      filter: false,
+      measures: measures?.join(','),
+    };
+    return downloadDataset(name, params);
   }
 
   return {
