@@ -146,6 +146,8 @@ export default {
   past_30d: 'Past month',
   past_3d: 'Past 3 days',
   past_7d: 'Past 7 days',
+  previous: 'Previous',
+  reset: 'Reset',
   reset_filters: 'Reset filters',
   resources: 'Resources',
   roof_to_tank: 'Fraction of roof runoff directed to tank',
@@ -172,4 +174,5 @@ export default {
   vegetation: 'Vegetation',
   water_reuse: 'Water reuse',
   water_samples_data_on_demand: 'Water samples data are available on demand',
+  zoom: 'Zoom',
 };

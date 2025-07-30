@@ -60,6 +60,7 @@
                       :precision="measure.precision"
                       :height="chartHeight"
                       stacked
+                      zoom
                     />
                   </q-card-section>
                 </q-card>

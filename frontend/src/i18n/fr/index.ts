@@ -146,6 +146,8 @@ export default {
   past_30d: 'Dernier mois',
   past_3d: 'Derniers 3 jours',
   past_7d: 'Derniers 7 jours',
+  previous: 'Précédent',
+  reset: 'Réinitialiser',
   reset_filters: 'Réinitialiser les filtres',
   resources: 'Ressources',
   roof_to_tank: 'Fraction de ruissellement de toit dirigée vers le réservoir',
@@ -172,4 +174,5 @@ export default {
   vegetation: 'Végétation',
   water_reuse: 'Réutilisation de l\'eau',
   water_samples_data_on_demand: 'Les données des échantillons d\'eau sont disponibles sur demande',
+  zoom: 'Zoom',
 };

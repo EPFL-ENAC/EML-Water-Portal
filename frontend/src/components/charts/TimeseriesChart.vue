@@ -23,6 +23,7 @@
         :loading="loading"
         @highlight="onHighlight"
         @datazoom="onDataZoomChange"
+        @restore="onRestore"
         @downplay="onDownplay"
       />
     </div>
@@ -43,6 +44,7 @@ import {
   TooltipComponent,
   GridComponent,
   DataZoomComponent,
+  ToolboxComponent,
 } from 'echarts/components';
 
 use([
@@ -52,6 +54,7 @@ use([
   TooltipComponent,
   GridComponent,
   DataZoomComponent,
+  ToolboxComponent,
 ]);
 
 interface Props {
@@ -77,16 +80,11 @@ const { t } = useI18n();
 
 const onDataZoomChange = (e: ECElementEvent) => {
   if (!e.batch || !timeseriesStore.timeRange) return;
-  const { start, end } = e.batch[0];
-
-  const { MIN_DATE_MS, DATE_RANGE_MS } = timeseriesStore;
-
-  const startMs = MIN_DATE_MS + (DATE_RANGE_MS * start) / 100;
-  const endMs = MIN_DATE_MS + (DATE_RANGE_MS * end) / 100;
+  const { startValue, endValue } = e.batch[0];
 
   // Update only if there is an actual change to avoid unnecessary store updates
-  const newStartDate = new Date(startMs);
-  const newEndDate = new Date(endMs);
+  const newStartDate = new Date(startValue);
+  const newEndDate = new Date(endValue);
 
   if (
     timeseriesStore.timeRange[0].getTime() !== newStartDate.getTime() ||
@@ -96,6 +94,15 @@ const onDataZoomChange = (e: ECElementEvent) => {
     timeseriesStore.timeRange = [newStartDate, newEndDate];
   }
 };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onRestore = (e: ECElementEvent) => {
+  // Reset to full time range
+  timeseriesStore.lastUpdatedChartID = props.measure;
+  timeseriesStore.timeRange = [timeseriesStore.MIN_DATE, timeseriesStore.MAX_DATE];
+};
+
+// ...existing code...
 
 const measuresStore = useMeasuresStore();
 const scenariiStore = useScenariiStore();
@@ -365,16 +372,37 @@ function buildOptions() {
         },
       ],
     },
+    toolbox: {
+      show: props.zoom,
+      orient: 'horizontal',
+      left: 'right',
+      top: 10,
+      feature: {
+        dataZoom: {
+          yAxisIndex: false,
+          xAxisIndex: 0,
+          title: {
+            zoom: t('zoom'),
+            back: t('previous'),
+          }
+        },
+        restore: {
+          title: t('reset')
+        }
+      }
+    },
     dataZoom: [
       {
         type: 'inside',
         xAxisIndex: 0,
+        moveOnMouseMove: false,
+        zoomOnMouseWheel: false,
         disabled: !props.zoom,
       },
     ],
     grid: [
       {
-        top: 5,
+        top: props.zoom ? 45 : 5,
         left: 60,
         right: 10,
         bottom: 20,
