@@ -119,7 +119,20 @@ function onDownload() {
       if (group.value === 'measures') {
         const zip = new JSZip();
         for (const [measure, rows] of groupByMeasures(data).entries()) {
-          const csv = Papa.unparse(rows, { quotes: false });
+          const columns = new Set<string>();
+          columns.add('timestamp');
+          rows.forEach((row) => {
+            Object.keys(row).forEach((key) => {
+              columns.add(key);
+            });
+          });
+          // sort rows per timestamp alphabetically
+          rows.sort((a, b) => {
+            const aTimestamp = a.timestamp as string;
+            const bTimestamp = b.timestamp as string;
+            return aTimestamp.localeCompare(bTimestamp);
+          });
+          const csv = Papa.unparse(rows, { quotes: false, header: true, columns: Array.from(columns) });
           zip.file(`${measure}.csv`, csv);
         }
         return zip.generateAsync({ type: 'blob' });
