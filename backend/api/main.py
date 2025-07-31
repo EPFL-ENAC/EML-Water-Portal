@@ -4,6 +4,7 @@ from logging import INFO, basicConfig
 
 from api.cache import redis
 from api.config import config
+from api.views.design import router as design_router
 from api.views.measures import router as measures_router
 from api.views.scenarii import router as scenarii_router
 from fastapi import FastAPI, status
@@ -62,4 +63,10 @@ app.include_router(
     scenarii_router,
     prefix="/scenarii",
     tags=["Scenarios"],
+)
+
+app.include_router(
+    design_router,
+    prefix="/design",
+    tags=["Design"],
 )

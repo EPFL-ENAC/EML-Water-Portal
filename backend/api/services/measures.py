@@ -209,6 +209,10 @@ class MeasuresService:
                 query.add_query(q)
 
         cache_key = query.to_string()
+        if cache_key == "":
+            logger.info("Empty query string, returning empty SensorData")
+            return SensorData(name=sensor.name, vectors=[])
+        # Check if the query result is cached
         content = await redis.get(cache_key)
         vectors = []
         if not content:

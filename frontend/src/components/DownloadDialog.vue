@@ -100,7 +100,7 @@ function onDownload() {
         promises.push(measuresStore.downloadSensorRawData(location, start, end, measures)
           .then((response) => {
             // Handle successful download
-            return response.data;
+            return response?.data || [];
           })
           .catch((error) => {
             // Handle error in download
@@ -119,7 +119,20 @@ function onDownload() {
       if (group.value === 'measures') {
         const zip = new JSZip();
         for (const [measure, rows] of groupByMeasures(data).entries()) {
-          const csv = Papa.unparse(rows, { quotes: false });
+          const columns = new Set<string>();
+          columns.add('timestamp');
+          rows.forEach((row) => {
+            Object.keys(row).forEach((key) => {
+              columns.add(key);
+            });
+          });
+          // sort rows per timestamp alphabetically
+          rows.sort((a, b) => {
+            const aTimestamp = a.timestamp as string;
+            const bTimestamp = b.timestamp as string;
+            return aTimestamp.localeCompare(bTimestamp);
+          });
+          const csv = Papa.unparse(rows, { quotes: false, header: true, columns: Array.from(columns) });
           zip.file(`${measure}.csv`, csv);
         }
         return zip.generateAsync({ type: 'blob' });
@@ -211,7 +224,7 @@ function groupBySensors(data: SensorData[]) {
     const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
     const csv: (string | number)[][] = [d?.vectors?.map((v: Vector) => v.measure)];
     timestamps?.values?.forEach((timestamp: string | null | number, index: number) => {
-      csv.push(d?.vectors?.map((v: Vector) => v.values[index] || '') || []);
+      csv.push(d?.vectors?.map((v: Vector) => v.values[index] === undefined || v.values[index] === null ? '' : v.values[index]) || []);
     });
     groupedData.set(d.name, csv);
   });

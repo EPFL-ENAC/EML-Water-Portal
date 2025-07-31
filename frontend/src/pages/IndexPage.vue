@@ -60,6 +60,7 @@
                       :precision="measure.precision"
                       :height="chartHeight"
                       stacked
+                      zoom
                     />
                   </q-card-section>
                 </q-card>
@@ -88,6 +89,7 @@ import type { Scenario } from 'src/stores/scenarii';
 const { t } = useI18n();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
+const designStore = useDesignStore();
 const filtersStore = useFiltersStore();
 const measuresStore = useMeasuresStore();
 const scenariiStore = useScenariiStore();
@@ -103,6 +105,9 @@ const measuresVisible = ref<Record<string, boolean>>(
 onMounted(() => {
   measuresStore.loadDatasets().catch((err) => {
     console.error('Error loading datasets:', err);
+  });
+  designStore.fetchDesignData().catch((err) => {
+    console.error('Error fetching design data:', err);
   });
 });
 
