@@ -211,7 +211,7 @@ function groupBySensors(data: SensorData[]) {
     const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
     const csv: (string | number)[][] = [d?.vectors?.map((v: Vector) => v.measure)];
     timestamps?.values?.forEach((timestamp: string | null | number, index: number) => {
-      csv.push(d?.vectors?.map((v: Vector) => v.values[index] || '') || []);
+      csv.push(d?.vectors?.map((v: Vector) => v.values[index] === undefined || v.values[index] === null ? '' : v.values[index]) || []);
     });
     groupedData.set(d.name, csv);
   });
