@@ -228,6 +228,10 @@ onMounted(() => {
 
 watch([() => measuresStore.loading, () => sensors.value], () => {
   initChartOptions();
+  // delay the initial range change to ensure the chart is ready
+  setTimeout(() => {
+    onRangeChange();
+  }, 100);
 });
 
 watch(() => timeseriesStore.axisPointer, onPointerSelection);
@@ -411,8 +415,8 @@ function buildOptions() {
     xAxis: [
       {
         type: 'time',
-        min: timeseriesStore.timeRange ? timeseriesStore.timeRange[0] : timeseriesStore.MIN_DATE,
-        max: timeseriesStore.timeRange ? timeseriesStore.timeRange[1] : timeseriesStore.MAX_DATE,
+        min: timeseriesStore.MIN_DATE,
+        max: timeseriesStore.MAX_DATE,
         axisLabel: {
           hideOverlap: true,
           formatter: {
