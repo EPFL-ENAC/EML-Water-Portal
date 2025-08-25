@@ -19,7 +19,7 @@
         "aggregate": "1h",
         "location": {
           "field": "locationId",
-          "value": "5590260778401792"
+          "value": "4920595030540288"
         },
         "filters": {
           "field": "parameterId",
