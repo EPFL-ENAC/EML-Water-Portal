@@ -132,7 +132,7 @@ function onDownload() {
             const bTimestamp = b.timestamp as string;
             return aTimestamp.localeCompare(bTimestamp);
           });
-          const csv = Papa.unparse(rows, { quotes: false, header: true, columns: Array.from(columns) });
+          const csv = Papa.unparse(rows, { delimiter: ';', quotes: false, header: true, columns: Array.from(columns) });
           zip.file(`${measure}.csv`, csv);
         }
         return zip.generateAsync({ type: 'blob' });
@@ -140,7 +140,7 @@ function onDownload() {
         const groupedData = groupBySensors(data);
         const zip = new JSZip();
         for (const key of groupedData.keys()) {
-          const csv = Papa.unparse(groupedData.get(key) || [], { quotes: false });
+          const csv = Papa.unparse(groupedData.get(key) || [], { delimiter: ';', quotes: false });
           zip.file(`${key}.csv`, csv);
         }
         return zip.generateAsync({ type: 'blob' });
