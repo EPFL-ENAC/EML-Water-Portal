@@ -23,7 +23,7 @@ La section « Paramètres mesurés » permet de sélectionner les types de graph
 
 ### Plage temporelle
 
-Dans cette section, vous pouvez sélectionner la période de temps des données à afficher sur les graphiques à l’aide des icônes de calendrier. Certaines plages temporelles sont déjà pré-enregistrées au-dessus de la barre temporelle. Il est aussi possible de zoomer sur une zone d’intérêt dans un graphique en utilisant l’icône correspondant se trouvant en haut à droite de chaque graphique. En haut à droit de chaque graphique se trouve aussi les boutons pour revenir au zoom precédent ainsi que le bouton pour afficher toute la plage temporelle.
+Dans cette section, vous pouvez sélectionner la période de temps des données à afficher sur les graphiques à l’aide des icônes de calendrier. Certaines plages temporelles sont déjà pré-enregistrées au-dessus de la barre temporelle. Il est aussi possible de zoomer sur une zone d’intérêt dans un graphique en utilisant l’icône correspondant se trouvant en haut à droite de chaque graphique. En haut à droite de chaque graphique se trouvent aussi les boutons pour revenir au zoom précédent ainsi que le bouton pour afficher toute la plage temporelle.
 
 ### Paramètres modélisés
 
@@ -34,6 +34,7 @@ Les paramètres modélisés en fonction des scénarios que vous définissez via 
 * Dans le coin supérieur droit du portail, vous trouverez des informations et ressources supplémentaires en cliquant sur les icônes correspondantes.
 * Un curseur « Hauteur des graphiques » permet d’ajuster la hauteur des graphiques. Vous pouvez également choisir d’afficher les graphiques en une ou deux colonnes en cliquant sur les icônes correspondantes.
 * L’icône de téléchargement permet de télécharger l’ensemble des données représentées sur les différents graphiques. Il est donc nécessaire de choisir la plage temporelle, les capteurs d’intérêts ainsi que les paramètres d’intérêts avant de télécharger les données. 
-Données Supplémentaires
+
+### Données Supplémentaires
 
 Des échantillons d’eau provenant de la rivière et des rejets de ruissellement sont également collectés dans le cadre de ce projet. Ces échantillons sont analysés en laboratoire pour mesurer les concentrations de certains métaux tels que le cuivre (Cu), le fer (Fe), le cadmium (Cd), le plomb (Pb), le zinc (Zn), le chrome (Cr), le nickel (Ni), l’uranium (U), le manganèse (Mn) et le cobalt (Co). Les résultats d’analyse des concentrations de ces métaux peuvent être obtenus sur demande par email uniquement, à l’adresse suivante : [dan.andersson@epfl.ch](mailto:dan.andersson@epfl.ch).
