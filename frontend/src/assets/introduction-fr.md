@@ -38,3 +38,11 @@ Les paramètres modélisés en fonction des scénarios que vous définissez via 
 ### Données Supplémentaires
 
 Des échantillons d’eau provenant de la rivière et des rejets de ruissellement sont également collectés dans le cadre de ce projet. Ces échantillons sont analysés en laboratoire pour mesurer les concentrations de certains métaux tels que le cuivre (Cu), le fer (Fe), le cadmium (Cd), le plomb (Pb), le zinc (Zn), le chrome (Cr), le nickel (Ni), l’uranium (U), le manganèse (Mn) et le cobalt (Co). Les résultats d’analyse des concentrations de ces métaux peuvent être obtenus sur demande par email uniquement, à l’adresse suivante : [dan.andersson@epfl.ch](mailto:dan.andersson@epfl.ch).
+
+### Tutoriels Vidéo
+
+**Guide d'utilisation du portail de données**
+[![Guide d'utilisation du portail de données](https://img.youtube.com/vi/UIAejpHyFiQ/2.jpg)](https://www.youtube.com/watch?v=UIAejpHyFiQ)
+
+**Utilisation de la section Scénario dans le portail**
+[![Utilisation de la section Scénario dans le portail](https://img.youtube.com/vi/H-usX50j2mo/2.jpg)](https://www.youtube.com/watch?v=H-usX50j2mo)
