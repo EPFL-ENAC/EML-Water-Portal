@@ -7,6 +7,14 @@ En plus des données mentionnées, le portail fournit des informations sur les p
 
 ## Utilisation du Portail
 
+### Tutoriels Vidéo
+
+**Guide d'utilisation du portail de données**
+[![Guide d'utilisation du portail de données](https://img.youtube.com/vi/UIAejpHyFiQ/2.jpg)](https://www.youtube.com/watch?v=UIAejpHyFiQ)
+
+**Utilisation de la section Scénario dans le portail**
+[![Utilisation de la section Scénario dans le portail](https://img.youtube.com/vi/H-usX50j2mo/2.jpg)](https://www.youtube.com/watch?v=H-usX50j2mo)
+
 ### Carte Interactive (à gauche du portail)
 
 * Mini carte interactive : la carte affiche tous les capteurs installés, les bassins versants du campus de l’EPFL, ainsi que les principales conduites de rejet vers la rivière Sorge ou le lac Léman. En cliquant sur les icônes des capteurs, vous pouvez afficher les informations les concernant. Vous pouvez également sélectionner les capteurs à afficher dans les graphiques directement depuis la carte.
@@ -38,11 +46,3 @@ Les paramètres modélisés en fonction des scénarios que vous définissez via 
 ### Données Supplémentaires
 
 Des échantillons d’eau provenant de la rivière et des rejets de ruissellement sont également collectés dans le cadre de ce projet. Ces échantillons sont analysés en laboratoire pour mesurer les concentrations de certains métaux tels que le cuivre (Cu), le fer (Fe), le cadmium (Cd), le plomb (Pb), le zinc (Zn), le chrome (Cr), le nickel (Ni), l’uranium (U), le manganèse (Mn) et le cobalt (Co). Les résultats d’analyse des concentrations de ces métaux peuvent être obtenus sur demande par email uniquement, à l’adresse suivante : [dan.andersson@epfl.ch](mailto:dan.andersson@epfl.ch).
-
-### Tutoriels Vidéo
-
-**Guide d'utilisation du portail de données**
-[![Guide d'utilisation du portail de données](https://img.youtube.com/vi/UIAejpHyFiQ/2.jpg)](https://www.youtube.com/watch?v=UIAejpHyFiQ)
-
-**Utilisation de la section Scénario dans le portail**
-[![Utilisation de la section Scénario dans le portail](https://img.youtube.com/vi/H-usX50j2mo/2.jpg)](https://www.youtube.com/watch?v=H-usX50j2mo)

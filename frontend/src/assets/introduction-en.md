@@ -7,6 +7,14 @@ In addition to the mentioned data, the portal provides information on precipitat
 
 ## Using the Portal
 
+### Video Tutorials
+
+**User Guide for the Data Portal**
+[![User Guide for the Data Portal](https://img.youtube.com/vi/N1L0AwLa0TI/2.jpg)](https://www.youtube.com/watch?v=N1L0AwLa0TI)
+
+**Using the scenario section of the portal**
+[![Using the scenario section of the portal](https://img.youtube.com/vi/4OxPEuhCZw4/2.jpg)](https://www.youtube.com/watch?v=4OxPEuhCZw4)
+
 ### Interactive Map (on the left side of the portal)
 
 * Mini interactive map: the map displays all installed sensors, the catchment areas of the EPFL campus, as well as the main discharge pipes to the Sorge River or Lake Geneva. By clicking on the sensor icons, you can view information about them. You can also select the sensors to display in the graphs directly from the map.
@@ -32,11 +40,3 @@ The parameters modeled according to the scenarios you define via the interactive
 
 ### Additional Data
 Water samples from the river and runoff discharges are also collected as part of this project. These samples are analyzed in the laboratory to measure the concentrations of certain metals such as copper (Cu), iron (Fe), cadmium (Cd), lead (Pb), zinc (Zn), chromium (Cr), nickel (Ni), uranium (U), manganese (Mn), and cobalt (Co). The analysis results of these metal concentrations can be obtained upon request by email only, at the following address: [dan.andersson@epfl.ch](mailto:dan.andersson@epfl.ch).
-
-### Video Tutorials
-
-**User Guide for the Data Portal**
-[![User Guide for the Data Portal](https://img.youtube.com/vi/N1L0AwLa0TI/2.jpg)](https://www.youtube.com/watch?v=N1L0AwLa0TI)
-
-**Using the scenario section of the portal**
-[![Using the scenario section of the portal](https://img.youtube.com/vi/4OxPEuhCZw4/2.jpg)](https://www.youtube.com/watch?v=4OxPEuhCZw4)
