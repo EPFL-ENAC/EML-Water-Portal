@@ -6,10 +6,10 @@
       </q-card-actions>
       <q-card-section>
         <div class="text-h6 q-mb-sm">
-          {{ t('download_data') }}
+          {{ t('download.modeled_data.title') }}
         </div>
         <div class="q-mb-md text-help">
-          {{ t('download.content') }}
+          {{ t('download.modeled_data.content') }}
         </div>
         <q-option-group
           v-model="group"
@@ -25,8 +25,8 @@
         <q-btn
           flat
           :label="t('download.label')"
+          :disable="downloading || scenarii.length === 0 || measuresVisible.length === 0"
           color="primary"
-          :disable="downloading"
           @click="onDownload"
         />
       </q-card-actions>
@@ -36,10 +36,9 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import type { SensorData, Vector } from 'src/models';
+import type { ScenarioData, Vector } from 'src/models';
 import {
   MeasureOptions,
-  SensorSpecs,
 } from 'src/utils/options';
 import Papa from 'papaparse';
 import JSZip from "jszip";
@@ -53,22 +52,22 @@ const emit = defineEmits(['update:modelValue', 'download']);
 const $q = useQuasar();
 const { t } = useI18n();
 const settingsStore = useSettingsStore();
-const filtersStore = useFiltersStore();
-const measuresStore = useMeasuresStore();
 const timeseriesStore = useTimeseriesChartsStore();
+const scenariiStore = useScenariiStore();
 
 const showDialog = ref(props.modelValue);
-const group = ref('measures');
+const group = ref('parameters');
 const downloading = ref(false);
 const message = ref('');
 
 const groupOptions = computed(() => [
-  { label: t('download.group.measures'), value: 'measures' },
-  { label: t('download.group.sensors'), value: 'sensors' },
+  { label: t('download.modeled_data.group.parameters'), value: 'parameters' },
+  { label: t('download.modeled_data.group.sources'), value: 'sources' },
 ]);
 const measuresVisible = computed(() => Object.entries(settingsStore.settings?.measuresVisible || {})
   .map((m) => m[1] ? m[0] : undefined)
-  .filter((m) => MeasureOptions.find((opt) => opt.key === m)?.is_scenario_measure === false) || []);
+  .filter((m) => MeasureOptions.find((opt) => opt.key === m)?.is_scenario_measure === true) || []);
+const scenarii = computed(() => scenariiStore.scenarii.filter((s) => s.enabled && s.data));
 
 watch(
   () => props.modelValue,
@@ -89,64 +88,66 @@ function onDownload() {
   downloading.value = true;
   // Logic to handle data download
   const [start, end] = timeseriesStore.timeRange;
-  const promises = [];
   const sensorErrors: string[] = [];
+  const data : ScenarioData[] = [];
   message.value = t('download.downloading');
-  for (const sensor of SensorSpecs) {
-    const locations = sensor.locations.filter((location) => filtersStore.sensors.length === 0 || filtersStore.sensors.includes(location));
-    const measures = sensor.measures.filter((m) => measuresVisible.value.includes(m));
-    if (locations.length && measures.length) {
-      for (const location of locations) {
-        promises.push(measuresStore.downloadSensorRawData(location, start, end, measures)
-          .then((response) => {
-            // Handle successful download
-            return response?.data || [];
-          })
-          .catch((error) => {
-            // Handle error in download
-            console.error(`Error downloading data for ${location}:`, error);
-            message.value = t('download.error', { sensor: location });
-            sensorErrors.push(location);
-            return [];
-          }));
-      }
+  for (const scenario of scenarii.value) {
+    const vectors = scenario.data?.vectors.filter((v) => measuresVisible.value.includes(v.measure) || v.measure === 'timestamp');
+    if (vectors && vectors.length > 1) {
+      // filter vectors per time range
+      vectors.forEach((v) => {
+        const filteredValues: (number | null)[] = [];
+        const timestamps = scenario.data?.vectors.find((vec) => vec.measure === 'timestamp');
+        if (!timestamps) return;
+        timestamps.values.forEach((timestamp: string | number | null, index: number) => {
+          if (timestamp === null || timestamp === undefined) return;
+          const currentTimestamp = typeof timestamp === 'number' ? timestamp : Date.parse(timestamp);
+          if (currentTimestamp >= start.getTime() && currentTimestamp <= end.getTime()) {
+            filteredValues.push(v.values[index] === undefined ? null : v.values[index] as number);
+          }
+        });
+        v.values = filteredValues;
+      });
+      data.push({
+        name: scenario.data?.name || scenario.name || 'unknown',
+        vectors,
+      });
     }
   }
-  Promise.all(promises)
-    .then((data) => {
-      // Handle all downloaded data
-      // Process by group
-      if (group.value === 'measures') {
-        const zip = new JSZip();
-        for (const [measure, rows] of groupByMeasures(data).entries()) {
-          const columns = new Set<string>();
-          columns.add('timestamp');
-          rows.forEach((row) => {
-            Object.keys(row).forEach((key) => {
-              columns.add(key);
-            });
-          });
-          // sort rows per timestamp alphabetically
-          rows.sort((a, b) => {
-            const aTimestamp = a.timestamp as string;
-            const bTimestamp = b.timestamp as string;
-            return aTimestamp.localeCompare(bTimestamp);
-          });
-          const csv = Papa.unparse(rows, { delimiter: ';', quotes: false, header: true, columns: Array.from(columns) });
-          zip.file(`${measure}.csv`, csv);
-        }
-        return zip.generateAsync({ type: 'blob' });
-      } else {
-        const groupedData = groupBySensors(data);
-        const zip = new JSZip();
-        for (const key of groupedData.keys()) {
-          const csv = Papa.unparse(groupedData.get(key) || [], { delimiter: ';', quotes: false });
-          zip.file(`${key}.csv`, csv);
-        }
-        return zip.generateAsync({ type: 'blob' });
-      }
-    })
-    .then((content) => {
+  // Handle all downloaded data
+  // Process by group
+  let content = null;
+  if (group.value === 'parameters') {
+    const zip = new JSZip();
+    for (const [measure, rows] of groupByMeasures(data).entries()) {
+      const columns = new Set<string>();
+      columns.add('timestamp');
+      rows.forEach((row) => {
+        Object.keys(row).forEach((key) => {
+          columns.add(key);
+        });
+      });
+      // sort rows per timestamp alphabetically
+      rows.sort((a, b) => {
+        const aTimestamp = a.timestamp as string;
+        const bTimestamp = b.timestamp as string;
+        return aTimestamp.localeCompare(bTimestamp);
+      });
+      const csv = Papa.unparse(rows, { delimiter: ';', quotes: false, header: true, columns: Array.from(columns) });
+      zip.file(`${measure}.csv`, csv);
+    }
+    content = zip.generateAsync({ type: 'blob' });
+  } else {
+    const groupedData = groupByScenarios(data);
+    const zip = new JSZip();
+    for (const key of groupedData.keys()) {
+      const csv = Papa.unparse(groupedData.get(key) || [], { delimiter: ';', quotes: false });
+      zip.file(`${key}.csv`, csv);
+    }
+    content = zip.generateAsync({ type: 'blob' });
+  }
+  if (content === null) return;
+  content.then((content) => {
       if (!downloading.value) return;
       const now = new Date();
       const link = document.createElement('a');
@@ -171,11 +172,11 @@ function onDownload() {
     });
 }
 
-function groupByMeasures(data: SensorData[]) {
+function groupByMeasures(data: ScenarioData[]) {
   // Group data by measures
   const groupedData = new Map<string, { [key: string]: string | number | null }[]>();
   const measureSensors = new Map<string, string[]>();
-  data?.forEach((d: SensorData) => {
+  data?.forEach((d: ScenarioData) => {
     d?.vectors?.forEach((v: Vector) => {
       if (v.measure === 'timestamp') return; // Skip timestamp, not a measure
       const ms = measureSensors.get(v.measure);
@@ -191,7 +192,7 @@ function groupByMeasures(data: SensorData[]) {
     if (!sensors || sensors.length === 0) return;
     groupedData.set(measure, []);
     const rowObjs = new Map<string, { [key: string]: string | number | null }>();
-    data?.forEach((d: SensorData) => {
+    data?.forEach((d: ScenarioData) => {
       if (!sensors.includes(d.name)) return;
       const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
       timestamps?.values.forEach((timestamp: string | null | number, index: number) => {
@@ -217,10 +218,10 @@ function groupByMeasures(data: SensorData[]) {
   return groupedData;
 }
 
-function groupBySensors(data: SensorData[]) {
-  // Group data by sensors
+function groupByScenarios(data: ScenarioData[]) {
+  // Group data by scenarios
   const groupedData = new Map<string, (string | number)[][]>();
-  data?.forEach((d: SensorData) => {
+  data?.forEach((d: ScenarioData) => {
     const timestamps = d?.vectors?.find((v: Vector) => v.measure === 'timestamp');
     const csv: (string | number)[][] = [d?.vectors?.map((v: Vector) => v.measure)];
     timestamps?.values?.forEach((timestamp: string | null | number, index: number) => {

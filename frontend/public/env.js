@@ -1,5 +1,5 @@
 window.env = {
-  API_URL: 'http://localhost:8000',
-  API_PATH: '',
+  API_URL: 'https://water-portal-dev.epfl.ch/',
+  API_PATH: '/api',
   CDN_FOLDER: 'dev',
 }

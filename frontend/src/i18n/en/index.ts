@@ -90,10 +90,23 @@ export default {
   },
   download: {
     label: 'Download',
-    content: 'Download data for the selected sensors, measured parameters and time range.',
-    group: {
-      measures: 'Group by measured parameters',
-      sensors: 'Group by sensors',
+    measured_data: {
+      label: 'Measured data',
+      title: 'Download measured data',
+      content: 'Download data for the selected sensors, measured parameters and time range.',
+      group: {
+        parameters: 'Group by measured parameters',
+        sources: 'Group by sensors',
+      },
+    },
+    modeled_data: {
+      label: 'Modeled data',
+      title: 'Download modeled data',
+      content: 'Download data for the selected scenarios, modeled parameters and time range.',
+      group: {
+        parameters: 'Group by modeled parameters',
+        sources: 'Group by scenarios',
+      },
     },
     partial_error: 'Error downloading data for sensors: {sensors}',
     error: 'Error downloading data for sensor {sensor}',

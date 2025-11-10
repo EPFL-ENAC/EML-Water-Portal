@@ -5,15 +5,25 @@
         <time-range-slider player style="min-height: 70px;" />
       </div>
       <div class="actions-item q-ma-md">
-        <q-btn
-          :title="t('download_data')"
-          :disable="measuresStore.loading"
-          icon="download"
+        <q-btn-dropdown icon="download"
           color="secondary"
           size="xs"
           class="q-mr-sm"
-          @click="showDownload = true"
-        />
+          :title="t('download_data')"
+          :disable="measuresStore.loading">
+          <q-list>
+            <q-item clickable v-close-popup @click="showDownloadMeasured = true">
+              <q-item-section>
+                <q-item-label>{{ t('download.measured_data.label') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="showDownloadModeled = true">
+              <q-item-section>
+                <q-item-label>{{ t('download.modeled_data.label') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-btn
           :title="t('charts_height')"
           :disable="measuresStore.loading"
@@ -63,21 +73,24 @@
       </div>
     </div>
 
-    <download-dialog v-model="showDownload" />
+    <download-measured-data-dialog v-model="showDownloadMeasured" />
+    <download-modeled-data-dialog v-model="showDownloadModeled" />
 
   </div>
 </template>
 
 <script setup lang="ts">
 import TimeRangeSlider from 'src/components/charts/TimeRangeSlider.vue';
-import DownloadDialog from 'src/components/DownloadDialog.vue';
+import DownloadMeasuredDataDialog from 'src/components/DownloadMeasuredDataDialog.vue';
+import DownloadModeledDataDialog from 'src/components/DownloadModeledDataDialog.vue';
 
 const { t } = useI18n();
 const measuresStore = useMeasuresStore();
 
 const chartHeight = ref(200);
 const colsSpan = ref('6');
-const showDownload = ref(false);
+const showDownloadMeasured = ref(false);
+const showDownloadModeled = ref(false);
 
 const emit = defineEmits(['colsSpanChange', 'chartHeightChange']);
 </script>

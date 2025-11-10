@@ -90,10 +90,23 @@ export default {
   },
   download: {
     label: 'Télécharger',
-    content: 'Télécharger les données pour les capteurs, les paramètres mesurés et la plage de temps sélectionnés.',
-    group: {
-      measures: 'Grouper par paramètres mesurés',
-      sensors: 'Grouper par capteurs',
+    measured_data: {
+      label: 'Données mesurées',
+      title: 'Télécharger les données mesurées',
+      content: 'Télécharger les données pour les capteurs, les paramètres mesurés et la plage de temps sélectionnés.',
+      group: {
+        parameters: 'Grouper par paramètres mesurés',
+        sources: 'Grouper par capteurs',
+      },
+    },
+    modeled_data: {
+      label: 'Données modélisées',
+      title: 'Télécharger les données modélisées',
+      content: 'Télécharger les données pour les scénarios, les paramètres modélisés et la plage de temps sélectionnés.',
+      group: {
+        parameters: 'Grouper par paramètres modélisés',
+        sources: 'Grouper par scénarios',
+      },
     },
     partial_error: 'Erreur lors du téléchargement des données pour les capteurs : {sensors}',
     error: 'Erreur lors du téléchargement des données pour le capteur : {sensor}',
