@@ -45,6 +45,12 @@
                       --
                       </span>
                       {{ scenario.name }}
+                      <q-spinner-dots
+                        v-if="scenario.loading"
+                        size="2em"
+                        color="primary"
+                        class="q-ml-sm"
+                      />
                     </q-item-label>
                     <div>
                       <q-badge color="grey-7">{{

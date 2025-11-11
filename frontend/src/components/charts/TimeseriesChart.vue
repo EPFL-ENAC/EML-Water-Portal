@@ -168,7 +168,7 @@ const timestampsMS = computed(() => {
 });
 
 function initChartOptions() {
-  if (measuresStore.loading) {
+  if (measuresStore.loading && scenariiStore.loading) {
     return;
   }
   if (option.value.series && Object.keys(option.value.series).length > 0) {
@@ -226,7 +226,7 @@ onMounted(() => {
   }, 100);
 });
 
-watch([() => measuresStore.loading, () => sensors.value], () => {
+watch([() => measuresStore.loading, () => scenariiStore.loading, () => sensors.value], () => {
   initChartOptions();
   // delay the initial range change to ensure the chart is ready
   setTimeout(() => {

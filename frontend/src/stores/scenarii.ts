@@ -15,6 +15,7 @@ export interface Scenario {
   customPercentPaved?: number; // 0-100
   useHistoricalData?: boolean;
   data?: ScenarioData;
+  loading?: boolean;
 }
 
 // Paul Tol's "muted" color scheme
@@ -24,6 +25,10 @@ export const useScenariiStore = defineStore(
   'scenarii',
   () => {
     const scenarii = ref<Scenario[]>([]);
+
+    const loading = computed(() => {
+      return scenarii.value.some((s) => s.loading);
+    });
 
     function reset() {
       // TODO reset scenario
@@ -47,6 +52,7 @@ export const useScenariiStore = defineStore(
         useCustomPercentPaved: false,
         customPercentPaved: 70,
         useHistoricalData: false,
+        loading: false,
       } as Scenario;
     }
 
@@ -73,6 +79,8 @@ export const useScenariiStore = defineStore(
     }
 
     async function updateScenarioData(scenario: Scenario) {
+      scenario.loading = true;
+
       await api.get('scenarii/', {
         params: {
           name: scenario.name,
@@ -89,6 +97,8 @@ export const useScenariiStore = defineStore(
         if (scenario.data !== undefined && scenario.data !== null)
           scenario.data.lineColor = scenario.lineColor;
         // console.log('scenario.data', scenario.data);
+      }).finally(() => {
+        scenario.loading = false;
       });
     }
 
@@ -102,6 +112,7 @@ export const useScenariiStore = defineStore(
 
     return {
       scenarii,
+      loading,
       reset,
       makeScenario,
       applyScenario,

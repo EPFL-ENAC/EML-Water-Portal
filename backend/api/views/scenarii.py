@@ -27,14 +27,10 @@ async def get_scenario_data(
 
     service = ScenariiService()
     from_date = (
-        datetime.strptime(start, "%Y-%m-%dT%H:%M:%S.%fZ")
-        if start is not None
-        else None
+        datetime.strptime(start, "%Y-%m-%dT%H:%M:%S.%fZ") if start is not None else None
     )
     to_date = (
-        datetime.strptime(end, "%Y-%m-%dT%H:%M:%S.%fZ")
-        if end is not None
-        else None
+        datetime.strptime(end, "%Y-%m-%dT%H:%M:%S.%fZ") if end is not None else None
     )
 
     return await service.get_scenario_data(

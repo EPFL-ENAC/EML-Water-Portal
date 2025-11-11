@@ -41,6 +41,12 @@
                   --
                   </span>
                   {{ `${scenario.watershed}: ${scenario.name}` }}
+                  <q-spinner-dots
+                    v-if="scenario.loading"
+                    color="primary"
+                    class="q-ml-sm q-mr-sm"
+                    size="2em"
+                  />
                 </q-chip>
               </div>
             </q-item>
@@ -108,6 +114,9 @@ onMounted(() => {
   });
   designStore.fetchDesignData().catch((err) => {
     console.error('Error fetching design data:', err);
+  });
+  scenariiStore.updateScenariiData().catch((err) => {
+    console.error('Error updating scenarii data:', err);
   });
 });
 
