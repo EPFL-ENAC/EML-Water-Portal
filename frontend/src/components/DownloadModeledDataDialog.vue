@@ -92,13 +92,13 @@ function onDownload() {
   const data : ScenarioData[] = [];
   message.value = t('download.downloading');
   for (const scenario of scenarii.value) {
-    const vectors = scenario.data?.vectors.filter((v) => measuresVisible.value.includes(v.measure) || v.measure === 'timestamp');
+    let vectors = scenario.data?.vectors.filter((v) => measuresVisible.value.includes(v.measure) || v.measure === 'timestamp');
     if (vectors && vectors.length > 1) {
       // filter vectors per time range
-      vectors.forEach((v) => {
+      vectors = vectors.map((v) => {
         const filteredValues: (number | null)[] = [];
         const timestamps = scenario.data?.vectors.find((vec) => vec.measure === 'timestamp');
-        if (!timestamps) return;
+        if (!timestamps) return {...v};
         timestamps.values.forEach((timestamp: string | number | null, index: number) => {
           if (timestamp === null || timestamp === undefined) return;
           const currentTimestamp = typeof timestamp === 'number' ? timestamp : Date.parse(timestamp);
@@ -106,7 +106,10 @@ function onDownload() {
             filteredValues.push(v.values[index] === undefined ? null : v.values[index] as number);
           }
         });
-        v.values = filteredValues;
+        return {
+          ...v,
+          values: filteredValues,
+        }
       });
       data.push({
         name: scenario.data?.name || scenario.name || 'unknown',
