@@ -45,7 +45,7 @@ class DBQuery:
             self.query_str += f" |> range(start: {self._stringify(start)})"
         self.query_str += f" |> filter(fn: (r) => r._measurement == \"{measurement}\")"
 
-    def aggregate(self, every: str, fn: str = "mean"):
+    def aggregate(self, every: str, fn: str = "max"):
         self.query_str += f" |> aggregateWindow(every: {every}, fn: {fn}, createEmpty: true)"
         # self.query_str += f" |> yield(name: \"{fn}\")"
         return self

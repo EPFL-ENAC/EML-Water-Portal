@@ -134,8 +134,8 @@ class MeasuresService:
         ]
 
         if (from_date is None or to_date is None) and allow_resample:
-            # no (or partial) time range defined: sample per hour mean
-            df = df.resample(sensor.file_spec.aggregate).mean()
+            # no (or partial) time range defined: sample per hour max
+            df = df.resample(sensor.file_spec.aggregate).max()
         else:
             # if the time range is less than a threshold,
             # keep the original data
@@ -152,7 +152,7 @@ class MeasuresService:
                 self.to_resample(from_date_range, to_date_range)
                 and allow_resample
             ):
-                df = df.resample(sensor.file_spec.aggregate).mean()
+                df = df.resample(sensor.file_spec.aggregate).max()
         df = df.replace({np.nan: None})
 
         vectors = []
@@ -204,7 +204,7 @@ class MeasuresService:
                 if with_min_max:
                     q.min_max(filter.min, filter.max)
                 if self.to_resample(from_datetime, to_datetime) and allow_resample:
-                    q.aggregate(sensor.db_spec.aggregate, "mean")
+                    q.aggregate(sensor.db_spec.aggregate, "max")
 
                 query.add_query(q)
 
