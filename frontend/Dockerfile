@@ -1,9 +1,9 @@
-FROM node:22-alpine AS build-stage
+FROM node:24-alpine AS build-stage
 
 WORKDIR /app
 COPY package*.json ./
 COPY . .
-RUN npm ci
+RUN npm install
 RUN npm run build
 
 FROM nginx:stable-alpine AS production-stage
