@@ -19,7 +19,7 @@
         "aggregate": "1h",
         "location": {
           "field": "locationId",
-          "value": "4845555545604096"
+          "value": "4694520248205312"
         },
         "filters": {
           "field": "parameterId",
@@ -70,7 +70,7 @@
         "aggregate": "1h",
         "location": {
           "field": "locationId",
-          "value": "5982192636657664"
+          "value": "6735832780701696"
         },
         "filters": {
           "field": "parameterId",
@@ -222,8 +222,8 @@
         "measurement": "hydrovu",
         "aggregate": "1h",
         "location": {
-          "field": "locationId",
-          "value": "6278022736248832"
+          "field": "locationName",
+          "value": "A5-CCTAval"
         },
         "filters": {
           "field": "parameterId",
@@ -273,8 +273,8 @@
         "measurement": "hydrovu",
         "aggregate": "1h",
         "location": {
-          "field": "locationId",
-          "value": "6013299219365888"
+          "field": "locationName",
+          "value": "NEW_A6-Aval"
         },
         "filters": {
           "field": "parameterId",
