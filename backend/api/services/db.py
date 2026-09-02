@@ -8,7 +8,7 @@ from api.models.measures import DBFilters
 class DBClient:
     def __init__(self):
         self.client = InfluxDBClient(
-            url=config.INFLUXDB_URL, token=config.INFLUXDB_TOKEN, org=config.INFLUXDB_ORG)
+            url=config.INFLUXDB_URL, token=config.INFLUXDB_TOKEN, org=config.INFLUXDB_ORG, verify_ssl=config.INFLUXDB_VERIFY_SSL)
 
     def close(self):
         self.client.close()

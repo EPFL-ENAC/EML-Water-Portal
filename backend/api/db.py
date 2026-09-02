@@ -3,4 +3,4 @@ from api.config import config
 
 
 influx = InfluxDBClient(
-    url=config.INFLUXDB_URL, token=config.INFLUXDB_TOKEN, org=config.INFLUXDB_ORG)
+    url=config.INFLUXDB_URL, token=config.INFLUXDB_TOKEN, org=config.INFLUXDB_ORG, verify_ssl=config.INFLUXDB_VERIFY_SSL)
