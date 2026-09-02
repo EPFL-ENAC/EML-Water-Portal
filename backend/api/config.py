@@ -15,6 +15,7 @@ class Config(BaseSettings):
     INFLUXDB_ORG: str
     INFLUXDB_TOKEN: str
     INFLUXDB_BUCKET: str
+    INFLUXDB_VERIFY_SSL: bool = True
 
     S3_ENDPOINT_PROTOCOL: str
     S3_ENDPOINT_HOSTNAME: str
